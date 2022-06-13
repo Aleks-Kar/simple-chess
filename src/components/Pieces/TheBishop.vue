@@ -70,5 +70,6 @@ const props = defineProps<{
   position: fixed;
   width: 45px;
   height: 45px;
+  cursor: pointer;
 }
 </style>
