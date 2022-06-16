@@ -3,8 +3,8 @@ import MyCell from './MyCell.vue'
 </script>
 <template>
   <div class="board">
-    <div v-for="j in 8" class="board__row">
-      <MyCell v-for="k in 8" :color="(j + k) % 2 === 0 ? 'white' : 'black'" />
+    <div v-for="r in 8" class="board__row">
+      <MyCell v-for="c in 8" :color="(r + c) % 2 === 0 ? 'white' : 'black'" />
     </div>
   </div>
 </template>

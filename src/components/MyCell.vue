@@ -2,6 +2,7 @@
 const props = defineProps<{
   color: String
 }>()
+
 </script>
 
 <template>
