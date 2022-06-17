@@ -1,13 +1,12 @@
 <script setup lang="ts">
-
 const props = defineProps<{
-  color: String
+  color: 'white' | 'black'
 }>()
 </script>
 
 <template>
   <div class="container">
-    <svg v-if="color === 'white'" width="45" height="45">
+    <svg v-if="props.color === 'white'" width="45" height="45">
       <g
         style="
           fill: #ffffff;
