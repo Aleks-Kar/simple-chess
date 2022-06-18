@@ -50,8 +50,6 @@ const isUpperCase = (char: string): boolean => char === toUpperCase(char)
   align-items: center;
   width: 90px;
   height: 90px;
-  /* background-image: url(/src/assets/pieces/pawn.svg);
-  background-size: cover; */
 }
 
 .square_color_white {
@@ -60,12 +58,5 @@ const isUpperCase = (char: string): boolean => char === toUpperCase(char)
 
 .square_color_black {
   background-color: hsl(27, 36%, 55%);
-}
-
-.square__text {
-  display: flex;
-  vertical-align: center;
-
-  font-size: 60px;
 }
 </style>

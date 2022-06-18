@@ -1,23 +1,12 @@
 <script setup lang="ts">
-import { isRef, onMounted, reactive } from 'vue'
+import { onMounted } from 'vue'
+import { useStore } from '../stores/board'
 import MySquare from './MySquare.vue'
 
-interface Board {
-  arrState: Array<string>
-}
-
-const board: Board = reactive({ arrState: new Array<string>(64) })
-
-function boardInit(): void {
-  board.arrState.fill('')
-  const blackStr: string = 'rnbqkbnrpppppppp'
-  const whiteStr: string = 'RNBQKBNRPPPPPPPP'
-  for (let i = 0; i < 16; i++) board.arrState[i] = blackStr[i]
-  for (let i = 63; i > 47; i--) board.arrState[i] = whiteStr[63 - i]
-}
+const store = useStore()
 
 onMounted(() => {
-  boardInit()
+  store.init()
 })
 </script>
 
@@ -26,13 +15,18 @@ onMounted(() => {
     <div v-for="(row, y) in 8" class="board__row">
       <MySquare
         v-for="(square, x) in 8"
-        :piece="String(board.arrState[x + y * 8])"
+        :piece="store.getSquare(x + y * 8)"
         :square-color="(row + square) % 2 === 0 ? 'white' : 'black'" />
     </div>
   </div>
 </template>
 
 <style>
+button {
+  width: 200px;
+  height: 200px;
+}
+
 .board {
   display: flex;
   flex-wrap: wrap;
