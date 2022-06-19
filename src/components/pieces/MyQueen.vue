@@ -6,7 +6,7 @@ const props = defineProps<{
 
 <template>
   <div class="container">
-    <svg v-if="props.color === 'white'" width="45" height="45">
+    <svg v-if="props.color === 'white'" viewBox="0 0 45 45">
       <g
         style="
           fill: #ffffff;
@@ -27,7 +27,7 @@ const props = defineProps<{
         <circle cx="39" cy="12" r="2" />
       </g>
     </svg>
-    <svg v-else width="45" height="45">
+    <svg v-else viewBox="0 0 45 45">
       <g
         style="
           fill: #000000;
@@ -65,9 +65,7 @@ const props = defineProps<{
 <style scoped>
 .container {
   position: fixed;
-  width: 45px;
-  height: 45px;
-  transform: scale(2);
-  cursor: pointer;
+  width: 90px;
+  height: 90px;
 }
 </style>

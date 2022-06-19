@@ -11,11 +11,15 @@ onMounted(() => {
 </script>
 
 <template>
+  <!-- <button @click="fn">проверка</button> -->
   <div class="board">
     <div v-for="(row, y) in 8" class="board__row">
       <MySquare
         v-for="(square, x) in 8"
-        :piece="store.getSquare(x + y * 8)"
+        :key="x + y * 8"
+        :piece="store.getPiece(x, y)"
+        :pos="[x, y]"
+        :is-active="store.checkActive(x, y)"
         :square-color="(row + square) % 2 === 0 ? 'white' : 'black'" />
     </div>
   </div>
@@ -23,8 +27,8 @@ onMounted(() => {
 
 <style>
 button {
-  width: 200px;
-  height: 200px;
+  width: 100px;
+  height: 100px;
 }
 
 .board {
