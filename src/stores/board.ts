@@ -8,8 +8,11 @@ function fromPosToIndex(position: Array<number>): number {
 export const useStore = defineStore('board', {
   state: () => {
     return {
-      pieces: Array<string>(64),
-      isActive: Array<boolean>(64)
+      pieces: new Array<string>(64),
+      indexActiveSquare: 64,
+      side: 'white',
+      squaresForMove: new Array<boolean>(64),
+      squaresForAttack: new Array<boolean>(64)
     }
   },
 
@@ -22,44 +25,72 @@ export const useStore = defineStore('board', {
       for (let i = 63; i > 47; i--) this.pieces[i] = whiteStr[63 - i]
     },
 
-    setActive(position: Array<number>): void {
+    toggleActiveSquare(position: Array<number>): void {
       if (position.length !== 2)
         throw new Error(
-          `exceeded the array length limit (${position.length} instead of 2)`
+          `unexpected array length (${position.length} instead of 2)`
         )
+
       const index = fromPosToIndex(position)
-      const lastTrueIndex = this.isActive.indexOf(true)
-      this.isActive[lastTrueIndex] = false
-      this.isActive[index] = true
+      if (this.indexActiveSquare === index) {
+        this.indexActiveSquare = 64
+      } else {
+        this.indexActiveSquare = index
+      }
+    },
+
+    clearActiveSquare(): void {
+      this.indexActiveSquare = 64
     },
 
     setPiece(index: number, char: string): void {
       if (char.length > 1)
         throw new Error(
-          `exceeded the character limit (${char.length} characters instead of 1)`
+          `unexpected character amount (${char.length} instead of 1)`
         )
       this.pieces[index] = char
+    },
+
+    toggleSide(): void {
+      this.side = this.side === 'white' ? 'black' : 'white'
+    },
+
+    setMoveableSquares(moveableSquares: Array<boolean>): void {
+      for (let i = 0; i < 64; i++) {
+        if (moveableSquares) {
+          this.squaresForMove[i] = moveableSquares[i]
+        } else {
+          this.squaresForMove[i] = false
+        }
+      }
     }
   },
 
   getters: {
-    checkActive:
-      state =>
-      (x: number, y: number): boolean => {
-        const index = x + y * 8
-        return Boolean(state.isActive[index])
-      },
-
-    getActiveIndex: state => (): number => {
-      const index = state.isActive.indexOf(true)
-      return index
-    },
-
     getPiece:
       state =>
       (x: number, y: number): string => {
-        const index = x + y * 8
+        const index = fromPosToIndex([x, y])
         return String(state.pieces[index])
+      },
+
+    isActive:
+      state =>
+      (x: number, y: number): boolean => {
+        const index = fromPosToIndex([x, y])
+        return index === state.indexActiveSquare
+      },
+
+    // getActiveIndex: state => (): number => {
+    //   const index = state.active.indexOf(true)
+    //   return index
+    // },
+
+    isMoveable:
+      state =>
+      (x: number, y: number): boolean => {
+        const index = fromPosToIndex([x, y])
+        return Boolean(state.squaresForMove[index])
       }
   }
 })
