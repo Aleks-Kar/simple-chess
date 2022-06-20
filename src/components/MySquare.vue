@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from '@vue/reactivity'
+import { computed, reactive } from '@vue/reactivity'
 import { useStore } from '../stores/board'
 import MyRook from '/src/components/pieces/MyRook.vue'
 import MyKnight from '/src/components/pieces/MyKnight.vue'
@@ -145,7 +145,7 @@ function onDrop(event: DragEvent, pos: Array<number>): void {
     <MyPawn
       v-if="toUpperCase(props.piece) === 'P'"
       class="pawn"
-      :draggable="isDraggable"
+      :draggable="true"
       @dragstart="onDragStart($event, props.piece, props.pos)"
       :color="isUpperCase(props.piece) ? 'white' : 'black'" />
   </div>

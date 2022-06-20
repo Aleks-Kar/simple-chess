@@ -12,7 +12,12 @@ export const useStore = defineStore('board', {
       indexActiveSquare: 64,
       side: 'white',
       squaresForMove: new Array<boolean>(64),
-      squaresForAttack: new Array<boolean>(64)
+      squaresForAttack: new Array<boolean>(64),
+
+      dx: 0,
+      dy: 0,
+      draggedItem: document.body.querySelector('.square')
+      // draggedItem: HTMLElement
     }
   },
 
