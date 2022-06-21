@@ -6,7 +6,10 @@ const props = defineProps<{
 
 <template>
   <div class="container">
-    <svg v-if="props.color === 'white'" viewBox="0 0 45 45">
+    <svg
+      v-if="props.color === 'white'"
+      viewBox="0 0 45 45"
+      xmlns="http://www.w3.org/2000/svg">
       <g
         style="
           fill: #ffffff;
@@ -27,7 +30,7 @@ const props = defineProps<{
         <circle cx="39" cy="12" r="2" />
       </g>
     </svg>
-    <svg v-else viewBox="0 0 45 45">
+    <svg v-else viewBox="0 0 45 45" xmlns="http://www.w3.org/2000/svg">
       <g
         style="
           fill: #000000;
@@ -57,6 +60,13 @@ const props = defineProps<{
           <path d="M 11.5,34.5 A 35,35 1 0 0 33.5,34.5" />
           <path d="M 10.5,37.5 A 35,35 1 0 0 34.5,37.5" />
         </g>
+        <!-- <rect
+          x="0.5"
+          y="0.5"
+          width="44"
+          height="44"
+          stroke="white"
+          fill="none" /> -->
       </g>
     </svg>
   </div>

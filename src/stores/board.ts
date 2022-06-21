@@ -17,8 +17,7 @@ export const useStore = defineStore('board', {
 
       cx: 0,
       cy: 0,
-      draggedItem: document.body
-      // draggedItem: document.body
+      draggedItem: document.body.querySelector('.board')
     }
   },
 

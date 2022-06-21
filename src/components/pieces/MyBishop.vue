@@ -6,7 +6,10 @@ const props = defineProps<{
 
 <template>
   <div class="container">
-    <svg v-if="props.color === 'white'" viewBox="0 0 45 45">
+    <svg
+      v-if="props.color === 'white'"
+      viewBox="0 0 45 45"
+      xmlns="http://www.w3.org/2000/svg">
       <g
         style="
           opacity: 1;
@@ -34,7 +37,7 @@ const props = defineProps<{
           style="fill: none; stroke: #000000; stroke-linejoin: miter" />
       </g>
     </svg>
-    <svg v-else viewBox="0 0 45 45">
+    <svg v-else viewBox="0 0 45 45" xmlns="http://www.w3.org/2000/svg">
       <g
         style="
           opacity: 1;

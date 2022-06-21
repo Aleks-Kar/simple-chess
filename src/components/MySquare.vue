@@ -132,10 +132,12 @@ body.drag .container > svg {
   width: 90px;
   height: 90px;
   pointer-events: none;
+  cursor: grab;
 }
 
 .square:active {
   z-index: 10;
+  cursor: grabbing;
 }
 .square_color_white {
   background-color: hsl(40, 63%, 82%);
