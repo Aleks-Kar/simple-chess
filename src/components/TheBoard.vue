@@ -15,27 +15,38 @@ function fn(): void {
   // console.warn(store.squaresForMove[42])
 }
 
-// function mouseDown(e: any): any {
-//   store.draggedItem = e.target
+// function mouseDown(e: any, id: any): any {
+//   console.warn(id)
 
-//   store.draggedItem.style.position = 'relative'
-//   store.draggedItem.style.zIndex = '100'
+//   // if (e.target === undefined && e.target === null) return
+//   // if (e.target.toString() === '[object HTMLDivElement]') return
+
+//   // store.draggedItem = e.target
+//   // store.draggedItem.style.position = 'relative'
+//   const svg: any = document.body.querySelector(`#${id} svg`)
+//   console.warn(svg)
+
+//   // if (svg === null) return
+
+//   svg.style.position = 'relative'
+//   store.draggedItem = svg
 
 //   store.cx = e.clientX - 45
 //   store.cy = e.clientY - 45
+
 //   // store.ox = e.offsetX - 45
 //   // store.ox = e.offsetY - 45
 // }
 
 // function mouseMove(e: any): any {
-//   if (store.draggedItem) {
-//     store.draggedItem.style.zIndex = '10'
-//     store.draggedItem.style.left = e.clientX - store.cx - 45
-//     store.draggedItem.style.top = e.clientY - store.cy - 45
-//   }
+//   if (!store.draggedItem) return
+//   store.draggedItem.style.left = `${e.clientX - store.cx - 45}px`
+//   store.draggedItem.style.top = `${e.clientY - store.cy - 45}px`
 // }
 
-// function mouseUp(e: any): any {
+// function mouseUp(e: any, index: any): any {
+//   store.pieces[index] = ''
+//   store.draggedItem = e.target
 //   store.draggedItem.style.position = 'static'
 //   store.cx = 0
 //   store.cy = 0
@@ -49,6 +60,7 @@ function fn(): void {
       <MySquare
         v-for="(square, x) in 8"
         :key="x + y * 8"
+        :id="`${store.getPiece(x, y)}${x}`"
         :piece="store.getPiece(x, y)"
         :pos="[x, y]"
         :is-active="store.isActive(x, y)"

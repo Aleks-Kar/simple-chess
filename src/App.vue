@@ -26,6 +26,6 @@ body {
   /* text-align: center; */
   color: hsl(210, 29%, 24%);
   background-color: rgb(105, 172, 141);
-  /* overflow: hidden; */
+  overflow: hidden;
 }
 </style>

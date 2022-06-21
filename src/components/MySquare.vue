@@ -44,11 +44,19 @@ function markActive(e: any): void {
 }
 
 function mouseDown(e: any): any {
-  if (e.target === undefined && e.target === null) return
+  // if (e.target === undefined && e.target === null) return
   // if (e.target.toString() === '[object HTMLDivElement]') return
 
-  store.draggedItem = e.target
-  store.draggedItem.style.position = 'relative'
+  // store.draggedItem = e.target
+  // store.draggedItem.style.position = 'relative'
+  const svg: any = document.body.querySelector(
+    `#${props.piece}${props.pos[0]} svg`
+  )
+
+  // if (svg === null) return
+
+  svg.style.position = 'relative'
+  store.draggedItem = svg
 
   store.cx = e.clientX - 45
   store.cy = e.clientY - 45
@@ -58,12 +66,13 @@ function mouseDown(e: any): any {
 }
 
 function mouseMove(e: any): any {
-  if (store.draggedItem === null) return
+  if (!store.draggedItem) return
   store.draggedItem.style.left = `${e.clientX - store.cx - 45}px`
   store.draggedItem.style.top = `${e.clientY - store.cy - 45}px`
 }
 
 function mouseUp(e: any): any {
+  store.pieces[props.pos[0] + props.pos[1] * 8] = ''
   store.draggedItem = e.target
   store.draggedItem.style.position = 'static'
   store.cx = 0
@@ -100,29 +109,15 @@ function mouseUp(e: any): any {
       :color="isUpperCase(props.piece) ? 'white' : 'black'" />
     <MyPawn
       v-if="toUpperCase(props.piece) === 'P'"
+      class="svg"
       :color="isUpperCase(props.piece) ? 'white' : 'black'" />
   </div>
 </template>
 
 <style>
-/* #pawn {
-  z-index: 1;
-  position: absolute;
-  pointer-events: stroke;
-  cursor: pointer;
-} */
-
 .move {
   background-color: green;
 }
-/* .container > svg {
-  cursor: grab;
-}
-
-body.drag .container > svg {
-  cursor: grabbing;
-  background-color: aqua;
-} */
 
 .square {
   position: relative;
@@ -131,14 +126,15 @@ body.drag .container > svg {
   align-items: center;
   width: 90px;
   height: 90px;
-  pointer-events: none;
   cursor: grab;
+  pointer-events: none;
 }
 
 .square:active {
-  z-index: 10;
   cursor: grabbing;
+  z-index: 10;
 }
+
 .square_color_white {
   background-color: hsl(40, 63%, 82%);
 }

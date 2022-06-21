@@ -60,13 +60,6 @@ const props = defineProps<{
           <path d="M 11.5,34.5 A 35,35 1 0 0 33.5,34.5" />
           <path d="M 10.5,37.5 A 35,35 1 0 0 34.5,37.5" />
         </g>
-        <!-- <rect
-          x="0.5"
-          y="0.5"
-          width="44"
-          height="44"
-          stroke="white"
-          fill="none" /> -->
       </g>
     </svg>
   </div>
