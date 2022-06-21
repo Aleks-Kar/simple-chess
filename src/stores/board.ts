@@ -1,4 +1,5 @@
-import { defineStore, storeToRefs } from 'pinia'
+import { prototype } from 'events'
+import { defineStore } from 'pinia'
 
 function fromPosToIndex(position: Array<number>): number {
   const [x, y] = position
@@ -8,16 +9,16 @@ function fromPosToIndex(position: Array<number>): number {
 export const useStore = defineStore('board', {
   state: () => {
     return {
-      pieces: new Array<string>(64),
+      pieces: Array<string>(64),
       indexActiveSquare: 64,
       side: 'white',
-      squaresForMove: new Array<boolean>(64),
-      squaresForAttack: new Array<boolean>(64),
+      squaresForMove: Array<boolean>(64),
+      squaresForAttack: Array<boolean>(64),
 
-      dx: 0,
-      dy: 0,
-      draggedItem: document.body.querySelector('.square')
-      // draggedItem: HTMLElement
+      cx: 0,
+      cy: 0,
+      draggedItem: document.body
+      // draggedItem: document.body
     }
   },
 

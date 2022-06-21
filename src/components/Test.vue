@@ -3,47 +3,47 @@ import { useStore } from '../stores/board'
 
 const store = useStore()
 
-function dragStart(event: any): void {
-  if (event.target) {
-    const trg: HTMLElement = event.target
-    store.draggedItem = event.target
-    store.dx = event.clientX - trg.getBoundingClientRect().x
-    store.dy = event.clientY - trg.getBoundingClientRect().y
-    trg.style.position = 'absolute'
-  }
+function dragStart(e: any): void {
+  // store.draggedItem = e.target
 }
 
-function drag(event: any): void {
-  store.draggedItem.style.left = event.clientX - store.dx
-  store.draggedItem.style.top = event.clientY - store.dy
-  // store.draggedItem.style.left = event.clientX - store.dx
-  // store.draggedItem.style.top = event.clientY - store.dy
+function update(event: any): void {
+  console.warn(event.pageX)
 }
 
-function dragEnd(event: DragEvent): void {
-  store.draggedItem.style.position = 'static'
-  store.draggedItem.style.left = 100
-  store.draggedItem.style.top = 100
-  // if (document.body.querySelector('.test')) {
-
-  // 	document.body.querySelector('.test').
-  // }
+function drag(e: any): void {
+  // store.draggedItem.style.left = `${e.screenX}px`
+  // e.preventDefault()
+  // e.dataTransfer.effectAllowed = 'move'
+  // e.dataTransfer.dropEffect = 'move'
+  const img: any = new Image()
+  img.src = '/src/assets/'
+  e.dataTransfer.setDragImage(new Image(), 0, 0)
+  // store.draggedItem.style.left = `${e.pageX}px`
+  // store.draggedItem.style.top = `${e.pageY}px`
+  // store.dx = e.pageX
+  // if (e.pageY !== 0) store.dy = e.pageY
 }
 
-function test(): void {
-  document.body.querySelector('#test')
+function mouseUp(e: any): void {
+  console.warn(e)
+
+  // store.draggedItem.style.left = `${store.dx}px`
+  // store.draggedItem.style.top = `${store.dy}px`
 }
+
+function test(): void {}
 </script>
 
 <template>
-  <button @click="test">test</button>
+  <!-- <button @click="test">test</button> -->
   <div
     class="test"
-    id="test"
     draggable="true"
-    @dragstart="dragStart($event)"
+    @mousedown="dragStart($event)"
     @drag="drag($event)"
-    @dragend="dragEnd($event)"></div>
+    @mousemove="mouseUp($event)"
+    @durationchange="mouseUp($event)"></div>
 </template>
 
 <style>
@@ -54,9 +54,13 @@ button {
 
 .test {
   position: absolute;
-  top: 100px;
-  width: 200px;
-  height: 200px;
+  width: 100px;
+  height: 100px;
   background-color: aquamarine;
+}
+
+.test:active {
+  /* pointer-events: none; */
+  cursor: pointer;
 }
 </style>

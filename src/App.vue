@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import TheBoard from './components/TheBoard.vue'
-
-// import Test from './components/Test.vue'
+import Test from './components/Test.vue'
 </script>
 
 <template>
   <TheBoard />
-  <Test />
+  <!-- <Test /> -->
 </template>
 
 <style>

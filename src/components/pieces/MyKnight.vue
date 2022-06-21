@@ -76,8 +76,8 @@ const props = defineProps<{
 
 <style scoped>
 .container {
-  position: fixed;
   width: 90px;
   height: 90px;
+  pointer-events: stroke;
 }
 </style>

@@ -37,129 +37,106 @@ const isMoveable = computed<boolean>(() => {
   return props.isMoveable && store.getPiece(props.pos[0], props.pos[1]) === ''
 })
 
-function markActive(pos: Array<number>): void {
-  if (
-    (props.piece.toLowerCase() === props.piece && store.side === 'white') ||
-    (props.piece.toUpperCase() === props.piece && store.side === 'black')
-  )
-    return
-
-  if (store.isActive(pos[0], pos[1])) {
-    store.squaresForMove.fill(false)
-  } else {
-    // setting all the moveable squares
-    store.setMoveableSquares(
-      getMoveableSquares(store.pieces, props.piece, pos[0], pos[1])
-    )
-  }
-  store.toggleActiveSquare(pos)
+// function markActive(pos: Array<number>): void {
+function markActive(e: any): void {
+  store.draggedItem = e.target
+  console.warn(e.target)
 }
 
-function onDragStart(
-  event: DragEvent,
-  piece: string,
-  pos: Array<number>
-): void {
-  // block movement of the white or black pieces
-  if (piece.toLowerCase() === piece && store.side === 'white') return
-  if (piece.toUpperCase() === piece && store.side === 'black') return
+function mouseDown(e: any): any {
+  if (e.target === undefined && e.target === null) return
+  // if (e.target.toString() === '[object HTMLDivElement]') return
 
-  if (piece === '') return // the square is empty
+  store.draggedItem = e.target
+  store.draggedItem.style.position = 'relative'
 
-  if (event.dataTransfer) {
-    event.dataTransfer.effectAllowed = 'move'
-    event.dataTransfer.dropEffect = 'move'
-    event.dataTransfer.setData('piece', piece)
-    store.toggleActiveSquare(pos)
-    store.setMoveableSquares(
-      getMoveableSquares(store.pieces, piece, pos[0], pos[1])
-    )
-  }
+  store.cx = e.clientX - 45
+  store.cy = e.clientY - 45
+
+  // store.ox = e.offsetX - 45
+  // store.ox = e.offsetY - 45
 }
 
-function onDrop(event: DragEvent, pos: Array<number>): void {
-  if (event.dataTransfer) {
-    if (!store.isMoveable(pos[0], pos[1])) {
-      // the square isn't moveable
-      store.clearActiveSquare()
-      store.squaresForMove = []
-      return
-    }
+function mouseMove(e: any): any {
+  if (store.draggedItem === null) return
+  store.draggedItem.style.left = `${e.clientX - store.cx - 45}px`
+  store.draggedItem.style.top = `${e.clientY - store.cy - 45}px`
+}
 
-    const piece: string = event.dataTransfer.getData('piece')
-    // if (piece === '') return // the square is empty
-    const targetIndex: number = pos[0] + pos[1] * 8 // index of the target square
-    console.warn('targetIndex', targetIndex)
-
-    store.setPiece(store.indexActiveSquare, '') // cleaning the init square
-    console.warn('indexActiveSquare', store.indexActiveSquare)
-
-    store.setPiece(targetIndex, piece) // setting piece in the target square
-    store.squaresForMove = [] // clear moveable squares
-    store.toggleSide()
-  }
-
-  store.squaresForMove = []
+function mouseUp(e: any): any {
+  store.draggedItem = e.target
+  store.draggedItem.style.position = 'static'
+  store.cx = 0
+  store.cy = 0
 }
 </script>
 
 <template>
-  <!-- <div>{{ props.pos[0] + props.pos[1] * 8 }}</div> -->
   <div
-    @click="markActive(props.pos)"
     class="square"
+    @mousedown="mouseDown($event)"
+    @mousemove="mouseMove($event)"
+    @mouseup="mouseUp($event)"
     :class="[
       { square_color_white: props.squareColor === 'white' },
       { square_color_black: props.squareColor === 'black' },
       { square_color_active: isActive },
       { square_color_moveable: isMoveable }
-    ]"
-    @drop="onDrop($event, props.pos)"
-    @dragenter.prevent
-    @dragover.prevent>
+    ]">
     <MyRook
       v-if="toUpperCase(props.piece) === 'R'"
-      draggable="true"
-      @dragstart="onDragStart($event, props.piece, props.pos)"
       :color="isUpperCase(props.piece) ? 'white' : 'black'" />
     <MyKnight
       v-if="toUpperCase(props.piece) === 'N'"
-      draggable="true"
-      @dragstart="onDragStart($event, props.piece, props.pos)"
       :color="isUpperCase(props.piece) ? 'white' : 'black'" />
     <MyBishop
       v-if="toUpperCase(props.piece) === 'B'"
-      draggable="true"
-      @dragstart="onDragStart($event, props.piece, props.pos)"
       :color="isUpperCase(props.piece) ? 'white' : 'black'" />
     <MyQueen
       v-if="toUpperCase(props.piece) === 'Q'"
-      draggable="true"
-      @dragstart="onDragStart($event, props.piece, props.pos)"
       :color="isUpperCase(props.piece) ? 'white' : 'black'" />
     <MyKing
       v-if="toUpperCase(props.piece) === 'K'"
-      draggable="true"
-      @dragstart="onDragStart($event, props.piece, props.pos)"
       :color="isUpperCase(props.piece) ? 'white' : 'black'" />
     <MyPawn
       v-if="toUpperCase(props.piece) === 'P'"
-      class="pawn"
-      :draggable="true"
-      @dragstart="onDragStart($event, props.piece, props.pos)"
       :color="isUpperCase(props.piece) ? 'white' : 'black'" />
   </div>
 </template>
 
 <style>
+/* #pawn {
+  z-index: 1;
+  position: absolute;
+  pointer-events: stroke;
+  cursor: pointer;
+} */
+
+.move {
+  background-color: green;
+}
+/* .container > svg {
+  cursor: grab;
+}
+
+body.drag .container > svg {
+  cursor: grabbing;
+  background-color: aqua;
+} */
+
 .square {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 90px;
   height: 90px;
+  pointer-events: none;
 }
 
+.square:active {
+  z-index: 10;
+}
 .square_color_white {
   background-color: hsl(40, 63%, 82%);
 }

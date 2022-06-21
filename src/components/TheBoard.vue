@@ -14,6 +14,32 @@ function fn(): void {
   // getMoveableSquares(store.pieces, store.getPiece(0, 6), 0, 6)
   // console.warn(store.squaresForMove[42])
 }
+
+// function mouseDown(e: any): any {
+//   store.draggedItem = e.target
+
+//   store.draggedItem.style.position = 'relative'
+//   store.draggedItem.style.zIndex = '100'
+
+//   store.cx = e.clientX - 45
+//   store.cy = e.clientY - 45
+//   // store.ox = e.offsetX - 45
+//   // store.ox = e.offsetY - 45
+// }
+
+// function mouseMove(e: any): any {
+//   if (store.draggedItem) {
+//     store.draggedItem.style.zIndex = '10'
+//     store.draggedItem.style.left = e.clientX - store.cx - 45
+//     store.draggedItem.style.top = e.clientY - store.cy - 45
+//   }
+// }
+
+// function mouseUp(e: any): any {
+//   store.draggedItem.style.position = 'static'
+//   store.cx = 0
+//   store.cy = 0
+// }
 </script>
 
 <template>
