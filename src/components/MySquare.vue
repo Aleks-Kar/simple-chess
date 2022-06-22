@@ -10,7 +10,7 @@ import MyPawn from '/src/components/pieces/MyPawn.vue'
 import { getMoveableSquares } from '../services/helpers'
 
 const props = defineProps<{
-  piece: string
+  identifier: number
   squareColor: 'white' | 'black'
   pos: Array<number>
   isActive: boolean
@@ -19,13 +19,15 @@ const props = defineProps<{
 
 const store = useStore()
 
-const toUpperCase = (char: string): string => char.toString().toUpperCase()
-const isUpperCase = (char: string): boolean => char === toUpperCase(char)
+const isWhite = (): boolean => props.identifier > 47
+const pieceUC = String(
+  store.pieces[props.pos[0] + props.pos[1] * 8]
+).toUpperCase()
 
 const isDraggable = computed<boolean>(() => {
   return (
-    (props.piece.toLowerCase() === props.piece && store.side === 'black') ||
-    (props.piece.toUpperCase() === props.piece && store.side === 'white')
+    (props.identifier < 16 && store.side === 'black') ||
+    (props.identifier > 47 && store.side === 'white')
   )
 })
 
@@ -43,21 +45,17 @@ function markActive(e: any): void {
   console.warn(e.target)
 }
 
-function mouseDown(e: any): any {
-  // if (e.target === undefined && e.target === null) return
-  // if (e.target.toString() === '[object HTMLDivElement]') return
+function mouseDown(e: MouseEvent): void {
+  console.warn(props.identifier)
 
-  // store.draggedItem = e.target
-  // store.draggedItem.style.position = 'relative'
   const svg: any = document.body.querySelector(
-    `#${props.piece}${props.pos[0]} svg`
+    `#${store.pieces[props.identifier]}${props.identifier} svg`
   )
-
-  // if (svg === null) return
+  store.draggedItem = svg
+  store.draggedIdentifier = props.identifier
+  // console.warn(store.draggedIdentifier)
 
   svg.style.position = 'relative'
-  store.draggedItem = svg
-
   store.cx = e.clientX - 45
   store.cy = e.clientY - 45
 
@@ -65,16 +63,9 @@ function mouseDown(e: any): any {
   // store.ox = e.offsetY - 45
 }
 
-function mouseMove(e: any): any {
-  if (!store.draggedItem) return
-  store.draggedItem.style.left = `${e.clientX - store.cx - 45}px`
-  store.draggedItem.style.top = `${e.clientY - store.cy - 45}px`
-}
-
-function mouseUp(e: any): any {
-  store.pieces[props.pos[0] + props.pos[1] * 8] = ''
-  store.draggedItem = e.target
-  store.draggedItem.style.position = 'static'
+function mouseUp(e: MouseEvent): void {
+  store.pieces[store.draggedIdentifier] = '' // delete the dragged piece
+  store.draggedItem = document.body.querySelector('.board')
   store.cx = 0
   store.cy = 0
 }
@@ -84,7 +75,6 @@ function mouseUp(e: any): any {
   <div
     class="square"
     @mousedown="mouseDown($event)"
-    @mousemove="mouseMove($event)"
     @mouseup="mouseUp($event)"
     :class="[
       { square_color_white: props.squareColor === 'white' },
@@ -92,25 +82,12 @@ function mouseUp(e: any): any {
       { square_color_active: isActive },
       { square_color_moveable: isMoveable }
     ]">
-    <MyRook
-      v-if="toUpperCase(props.piece) === 'R'"
-      :color="isUpperCase(props.piece) ? 'white' : 'black'" />
-    <MyKnight
-      v-if="toUpperCase(props.piece) === 'N'"
-      :color="isUpperCase(props.piece) ? 'white' : 'black'" />
-    <MyBishop
-      v-if="toUpperCase(props.piece) === 'B'"
-      :color="isUpperCase(props.piece) ? 'white' : 'black'" />
-    <MyQueen
-      v-if="toUpperCase(props.piece) === 'Q'"
-      :color="isUpperCase(props.piece) ? 'white' : 'black'" />
-    <MyKing
-      v-if="toUpperCase(props.piece) === 'K'"
-      :color="isUpperCase(props.piece) ? 'white' : 'black'" />
-    <MyPawn
-      v-if="toUpperCase(props.piece) === 'P'"
-      class="svg"
-      :color="isUpperCase(props.piece) ? 'white' : 'black'" />
+    <MyRook v-if="pieceUC === 'R'" :color="isWhite() ? 'white' : 'black'" />
+    <MyKnight v-if="pieceUC === 'N'" :color="isWhite() ? 'white' : 'black'" />
+    <MyBishop v-if="pieceUC === 'B'" :color="isWhite() ? 'white' : 'black'" />
+    <MyQueen v-if="pieceUC === 'Q'" :color="isWhite() ? 'white' : 'black'" />
+    <MyKing v-if="pieceUC === 'K'" :color="isWhite() ? 'white' : 'black'" />
+    <MyPawn v-if="pieceUC === 'P'" :color="isWhite() ? 'white' : 'black'" />
   </div>
 </template>
 

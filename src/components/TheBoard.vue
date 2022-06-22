@@ -11,57 +11,46 @@ onMounted(() => {
 })
 
 function fn(): void {
-  // getMoveableSquares(store.pieces, store.getPiece(0, 6), 0, 6)
-  // console.warn(store.squaresForMove[42])
+  store.$reset()
+  // store.pieces = []
+  store.init()
 }
 
-// function mouseDown(e: any, id: any): any {
-//   console.warn(id)
+function mouseMove(e: any): any {
+  if (!store.draggedItem) return
+  console.warn(e.clientX - store.cx - 45, e.clientY - store.cy - 45)
+  if (e.clientX - store.cx - 45 < -200) {
+    store.pieces[store.draggedIdentifier] = '' // delete the dragged piece
+    return
+  }
+  console.warn(store.draggedIdentifier)
 
-//   // if (e.target === undefined && e.target === null) return
-//   // if (e.target.toString() === '[object HTMLDivElement]') return
+  store.draggedItem.style.left = `${e.clientX - store.cx - 45}px`
+  store.draggedItem.style.top = `${e.clientY - store.cy - 45}px`
+}
 
-//   // store.draggedItem = e.target
-//   // store.draggedItem.style.position = 'relative'
-//   const svg: any = document.body.querySelector(`#${id} svg`)
-//   console.warn(svg)
+function mouseOut(): void {
+  // store.pieces[Number(props.identifier.slice(1))] = '' // delete the dragged piece
+  console.warn('out')
 
-//   // if (svg === null) return
+  // store.pieces[Number(store.draggedIdentifier.slice(1))] = '' // delete the dragged piece
+  // store.draggedItem = document.body.querySelector('.board')
+}
 
-//   svg.style.position = 'relative'
-//   store.draggedItem = svg
-
-//   store.cx = e.clientX - 45
-//   store.cy = e.clientY - 45
-
-//   // store.ox = e.offsetX - 45
-//   // store.ox = e.offsetY - 45
-// }
-
-// function mouseMove(e: any): any {
-//   if (!store.draggedItem) return
-//   store.draggedItem.style.left = `${e.clientX - store.cx - 45}px`
-//   store.draggedItem.style.top = `${e.clientY - store.cy - 45}px`
-// }
-
-// function mouseUp(e: any, index: any): any {
-//   store.pieces[index] = ''
-//   store.draggedItem = e.target
-//   store.draggedItem.style.position = 'static'
-//   store.cx = 0
-//   store.cy = 0
-// }
+function getId(x: number, y: number): string {
+  return store.getPiece(x, y) + String(x + y * 8)
+}
 </script>
 
 <template>
   <button @click="fn">проверка</button>
-  <div class="board">
+  <div class="board" @mousemove="mouseMove">
     <div v-for="(row, y) in 8" class="board__row">
       <MySquare
         v-for="(square, x) in 8"
-        :key="x + y * 8"
-        :id="`${store.getPiece(x, y)}${x}`"
-        :piece="store.getPiece(x, y)"
+        :key="getId(x, y)"
+        :id="getId(x, y)"
+        :identifier="x + y * 8"
         :pos="[x, y]"
         :is-active="store.isActive(x, y)"
         :is-moveable="store.isMoveable(x, y)"
