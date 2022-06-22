@@ -1,4 +1,3 @@
-import { prototype } from 'events'
 import { defineStore } from 'pinia'
 
 function fromPosToIndex(position: Array<number>): number {

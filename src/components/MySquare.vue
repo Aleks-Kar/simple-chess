@@ -46,36 +46,31 @@ function markActive(e: any): void {
 }
 
 function mouseDown(e: MouseEvent): void {
-  console.warn(props.identifier)
-
-  const svg: any = document.body.querySelector(
-    `#${store.pieces[props.identifier]}${props.identifier} svg`
+  const svgElement: SVGSVGElement | null = document.body.querySelector(
+    `#square${props.identifier} svg`
   )
-  store.draggedItem = svg
+
+  store.draggedItem = svgElement
   store.draggedIdentifier = props.identifier
-  // console.warn(store.draggedIdentifier)
 
-  svg.style.position = 'relative'
-  store.cx = e.clientX - 45
-  store.cy = e.clientY - 45
+  if (svgElement) svgElement.style.position = 'relative'
 
-  // store.ox = e.offsetX - 45
-  // store.ox = e.offsetY - 45
+  store.cx = e.clientX - (e.offsetX - 45)
+  store.cy = e.clientY - (e.offsetY - 45)
 }
 
-function mouseUp(e: MouseEvent): void {
-  store.pieces[store.draggedIdentifier] = '' // delete the dragged piece
-  store.draggedItem = document.body.querySelector('.board')
-  store.cx = 0
-  store.cy = 0
-}
+// function mouseUp(e: MouseEvent): void {
+//   store.pieces[store.draggedIdentifier] = '' // delete the dragged piece
+//   store.draggedItem = document.body.querySelector('.board')
+//   store.cx = 0
+//   store.cy = 0
+// }
 </script>
 
 <template>
   <div
     class="square"
     @mousedown="mouseDown($event)"
-    @mouseup="mouseUp($event)"
     :class="[
       { square_color_white: props.squareColor === 'white' },
       { square_color_black: props.squareColor === 'black' },
@@ -97,7 +92,7 @@ function mouseUp(e: MouseEvent): void {
 }
 
 .square {
-  position: relative;
+  position: sticky;
   display: flex;
   justify-content: center;
   align-items: center;
