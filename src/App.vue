@@ -1,11 +1,26 @@
 <script setup lang="ts">
 import TheBoard from './components/TheBoard.vue'
+import { getIdentifierFromPos } from './services/helpers'
 import { useStore } from './stores/board'
 
 const store = useStore()
 
 function mouseMove(e: MouseEvent): void {
   if (!store.draggedItem) return
+
+  const identifier = getIdentifierFromPos(
+    store.boardLeft,
+    store.boardTop,
+    e.clientX,
+    e.clientY
+  )
+
+  if (identifier === 0) {
+    store.targetSquare = 64
+  } else {
+    store.targetSquare = identifier
+  }
+
   store.draggedItem.style.left = `${e.clientX - store.cx}px`
   store.draggedItem.style.top = `${e.clientY - store.cy}px`
 }
@@ -19,11 +34,16 @@ function mouseLeave(): void {
   store.pieces[store.draggedIdentifier] = '' // delete the dragged piece
   store.draggedItem = document.body.querySelector('.board')
 }
+
+function mouseEnter(e: any): void {
+  // console.warn(e)
+}
 </script>
 
 <template>
   <div
     class="wrapper"
+    @mouseenter="mouseEnter($event)"
     @mousemove="mouseMove"
     @mouseup="mouseUp"
     @mouseleave="mouseLeave">

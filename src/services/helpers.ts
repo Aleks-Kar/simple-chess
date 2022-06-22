@@ -37,11 +37,34 @@ export function getMoveableSquares(
       if (x > 0 && y > 0) {
         const lfSquareIndex: number = x - 1 + (y - 1) * 8
         if (pieces[lfSquareIndex] === pieces[lfSquareIndex].toLowerCase()) {
-          
         }
       }
     } else {
     }
   }
   return moveableSquares
+}
+
+export function getIdentifierFromPos(
+  left: number,
+  top: number,
+  clientX: number,
+  clientY: number
+): number {
+  if (left === 0 || top === 0) return 0
+  if (
+    clientX < left ||
+    clientX > left + 720 ||
+    clientY < top ||
+    clientY > top + 720
+  ) {
+    return 0
+  }
+
+  let x = Math.ceil((clientX - left) / 90)
+  if (x === 0) return 0
+  let y = Math.ceil((clientY - top) / 90)
+  if (y === 0) return 0
+
+  return x - 1 + (y - 1) * 8
 }

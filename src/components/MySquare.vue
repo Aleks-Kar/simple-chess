@@ -19,7 +19,12 @@ const props = defineProps<{
 
 const store = useStore()
 
-const isWhite = (): boolean => props.identifier > 47
+// const isWhite = computed(() => props.identifier > 47)
+// const pieceUC = computed(() =>
+//   String(store.pieces[props.pos[0] + props.pos[1] * 8]).toUpperCase()
+// )
+
+const isWhite = props.identifier > 47
 const pieceUC = String(
   store.pieces[props.pos[0] + props.pos[1] * 8]
 ).toUpperCase()
@@ -39,6 +44,10 @@ const isMoveable = computed<boolean>(() => {
   return props.isMoveable && store.getPiece(props.pos[0], props.pos[1]) === ''
 })
 
+const isTarget = computed<boolean>(() => {
+  return props.identifier === store.targetSquare
+})
+
 // function markActive(pos: Array<number>): void {
 function markActive(e: any): void {
   store.draggedItem = e.target
@@ -46,6 +55,13 @@ function markActive(e: any): void {
 }
 
 function mouseDown(e: MouseEvent): void {
+  const boardPos: any = document.body
+    .querySelector('.board')
+    ?.getBoundingClientRect()
+  store.boardLeft = Math.round(boardPos.left)
+  store.boardTop = Math.round(boardPos.top)
+  // console.warn(store.boardLeft, store.boardTop)
+
   const svgElement: SVGSVGElement | null = document.body.querySelector(
     `#square${props.identifier} svg`
   )
@@ -65,31 +81,42 @@ function mouseDown(e: MouseEvent): void {
 //   store.cx = 0
 //   store.cy = 0
 // }
+function mouseEnter(e: any): void {
+  console.warn(props.identifier)
+
+  // store.targetSquare = props.identifier
+}
+
+function mouseUp(identifier: number): void {
+  // console.warn(identifier)
+}
 </script>
 
 <template>
   <div
     class="square"
     @mousedown="mouseDown($event)"
+    @mouseup="mouseUp(props.identifier)"
     :class="[
       { square_color_white: props.squareColor === 'white' },
       { square_color_black: props.squareColor === 'black' },
       { square_color_active: isActive },
-      { square_color_moveable: isMoveable }
+      { square_color_moveable: isMoveable },
+      { square_color_target: isTarget }
     ]">
-    <MyRook v-if="pieceUC === 'R'" :color="isWhite() ? 'white' : 'black'" />
-    <MyKnight v-if="pieceUC === 'N'" :color="isWhite() ? 'white' : 'black'" />
-    <MyBishop v-if="pieceUC === 'B'" :color="isWhite() ? 'white' : 'black'" />
-    <MyQueen v-if="pieceUC === 'Q'" :color="isWhite() ? 'white' : 'black'" />
-    <MyKing v-if="pieceUC === 'K'" :color="isWhite() ? 'white' : 'black'" />
-    <MyPawn v-if="pieceUC === 'P'" :color="isWhite() ? 'white' : 'black'" />
+    <MyRook v-if="pieceUC === 'R'" :color="isWhite ? 'white' : 'black'" />
+    <MyKnight v-if="pieceUC === 'N'" :color="isWhite ? 'white' : 'black'" />
+    <MyBishop v-if="pieceUC === 'B'" :color="isWhite ? 'white' : 'black'" />
+    <MyQueen v-if="pieceUC === 'Q'" :color="isWhite ? 'white' : 'black'" />
+    <MyKing v-if="pieceUC === 'K'" :color="isWhite ? 'white' : 'black'" />
+    <MyPawn v-if="pieceUC === 'P'" :color="isWhite ? 'white' : 'black'" />
   </div>
 </template>
 
 <style>
-.move {
+/* .move {
   background-color: green;
-}
+} */
 
 .square {
   position: sticky;
@@ -121,6 +148,10 @@ function mouseDown(e: MouseEvent): void {
 
 .square_color_moveable {
   background-color: aqua;
+}
+
+.square_color_target {
+  background-color: green;
 }
 
 /* .square_color_moveable::after {
