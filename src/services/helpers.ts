@@ -16,6 +16,7 @@ export function getMoveableSquares(
     } else {
       maxLength = y === 1 ? 3 : 2 // for black pawn
     }
+
     for (let i = 1; i < maxLength; i++) {
       let index: number = 0
       if (piece.toUpperCase() === piece) {
@@ -45,20 +46,20 @@ export function getMoveableSquares(
   return moveableSquares
 }
 
-export function getIdentifierFromPos(
+export function getHoverSquareIndex(
   left: number,
   top: number,
   clientX: number,
   clientY: number
 ): number {
-  if (left === 0 || top === 0) return 0
+  if (left === 0 || top === 0) return 64
   if (
     clientX < left ||
     clientX > left + 720 ||
     clientY < top ||
     clientY > top + 720
   ) {
-    return 0
+    return 64
   }
 
   let x = Math.ceil((clientX - left) / 90)

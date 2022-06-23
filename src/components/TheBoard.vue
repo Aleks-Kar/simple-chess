@@ -29,7 +29,7 @@ onMounted(() => {
         v-for="(square, x) in 8"
         :key="getKey(x, y)"
         :id="`square${x + y * 8}`"
-        :identifier="x + y * 8"
+        :square-index="x + y * 8"
         :pos="[x, y]"
         :is-active="store.isActive(x, y)"
         :is-moveable="store.isMoveable(x, y)"
@@ -49,7 +49,7 @@ button {
   flex-wrap: wrap;
   width: 720px;
   height: 720px;
-  background-color: red;
+  background-color: hsl(120, 50%, 60%);
 }
 
 .board__row {

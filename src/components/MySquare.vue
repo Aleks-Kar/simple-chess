@@ -10,7 +10,7 @@ import MyPawn from '/src/components/pieces/MyPawn.vue'
 import { getMoveableSquares } from '../services/helpers'
 
 const props = defineProps<{
-  identifier: number
+  squareIndex: number
   squareColor: 'white' | 'black'
   pos: Array<number>
   isActive: boolean
@@ -19,20 +19,23 @@ const props = defineProps<{
 
 const store = useStore()
 
-// const isWhite = computed(() => props.identifier > 47)
+// const isWhite = computed(() => props.squareIndex > 47)
 // const pieceUC = computed(() =>
 //   String(store.pieces[props.pos[0] + props.pos[1] * 8]).toUpperCase()
 // )
 
-const isWhite = props.identifier > 47
+const isWhite =
+  store.pieces[props.squareIndex] ===
+  String(store.pieces[props.squareIndex]).toUpperCase()
+
 const pieceUC = String(
   store.pieces[props.pos[0] + props.pos[1] * 8]
 ).toUpperCase()
 
 const isDraggable = computed<boolean>(() => {
   return (
-    (props.identifier < 16 && store.side === 'black') ||
-    (props.identifier > 47 && store.side === 'white')
+    (props.squareIndex < 16 && store.side === 'black') ||
+    (props.squareIndex > 47 && store.side === 'white')
   )
 })
 
@@ -45,7 +48,11 @@ const isMoveable = computed<boolean>(() => {
 })
 
 const isTarget = computed<boolean>(() => {
-  return props.identifier === store.targetSquare
+  return props.squareIndex === store.hoverSquareIndex
+})
+
+const isAttacked = computed<boolean>(() => {
+  return props.isMoveable && store.getPiece(props.pos[0], props.pos[1]) !== ''
 })
 
 // function markActive(pos: Array<number>): void {
@@ -55,19 +62,34 @@ function markActive(e: any): void {
 }
 
 function mouseDown(e: MouseEvent): void {
+  store.isDragged = true
+  store.dragIndex = props.squareIndex
+
+  // activate the square
+  store.indexActiveSquare = props.squareIndex
+
+  // showing moveable squares
+  store.setMoveableSquares(
+    getMoveableSquares(
+      store.pieces,
+      store.pieces[props.squareIndex],
+      props.pos[0],
+      props.pos[1]
+    )
+  )
+
+  // preparing for the dragging
   const boardPos: any = document.body
     .querySelector('.board')
     ?.getBoundingClientRect()
   store.boardLeft = Math.round(boardPos.left)
   store.boardTop = Math.round(boardPos.top)
-  // console.warn(store.boardLeft, store.boardTop)
 
   const svgElement: SVGSVGElement | null = document.body.querySelector(
-    `#square${props.identifier} svg`
+    `#square${props.squareIndex} svg`
   )
 
   store.draggedItem = svgElement
-  store.draggedIdentifier = props.identifier
 
   if (svgElement) svgElement.style.position = 'relative'
 
@@ -76,19 +98,19 @@ function mouseDown(e: MouseEvent): void {
 }
 
 // function mouseUp(e: MouseEvent): void {
-//   store.pieces[store.draggedIdentifier] = '' // delete the dragged piece
+//   store.pieces[store.draggedsquareIndex] = '' // delete the dragged piece
 //   store.draggedItem = document.body.querySelector('.board')
 //   store.cx = 0
 //   store.cy = 0
 // }
 function mouseEnter(e: any): void {
-  console.warn(props.identifier)
+  console.warn(props.squareIndex)
 
-  // store.targetSquare = props.identifier
+  // store.targetSquare = props.squareIndex
 }
 
-function mouseUp(identifier: number): void {
-  // console.warn(identifier)
+function mouseUp(squareIndex: number): void {
+  // console.warn(squareIndex)
 }
 </script>
 
@@ -96,13 +118,14 @@ function mouseUp(identifier: number): void {
   <div
     class="square"
     @mousedown="mouseDown($event)"
-    @mouseup="mouseUp(props.identifier)"
+    @mouseup="mouseUp(props.squareIndex)"
     :class="[
       { square_color_white: props.squareColor === 'white' },
       { square_color_black: props.squareColor === 'black' },
       { square_color_active: isActive },
-      { square_color_moveable: isMoveable },
-      { square_color_target: isTarget }
+      { square_color_moveable: isMoveable && !isTarget },
+      { square_color_target: isTarget },
+      { square_color_attacked: isAttacked }
     ]">
     <MyRook v-if="pieceUC === 'R'" :color="isWhite ? 'white' : 'black'" />
     <MyKnight v-if="pieceUC === 'N'" :color="isWhite ? 'white' : 'black'" />
@@ -119,18 +142,17 @@ function mouseUp(identifier: number): void {
 } */
 
 .square {
-  position: sticky;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 90px;
   height: 90px;
-  cursor: grab;
+  cursor: pointer;
   pointer-events: none;
 }
 
 .square:active {
-  cursor: grabbing;
   z-index: 10;
 }
 
@@ -143,24 +165,26 @@ function mouseUp(identifier: number): void {
 }
 
 .square_color_active {
-  background-color: hsl(120, 40%, 60%);
+  background-color: hsl(120, 50%, 60%);
 }
 
-.square_color_moveable {
-  background-color: aqua;
-}
-
-.square_color_target {
+/* .square_color_moveable {
   background-color: green;
-}
+} */
 
-/* .square_color_moveable::after {
+.square_color_moveable::after {
   content: '';
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: hsl(120, 40%, 60%);
-} */
+  background-color: hsl(120, 50%, 60%);
+}
+
+.square_color_target {
+  width: 80px;
+  height: 80px;
+  border: 5px hsl(120, 50%, 60%) solid;
+}
 
 .square_color_attacked {
   border: 0 solid transparent;

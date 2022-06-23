@@ -1,38 +1,62 @@
 <script setup lang="ts">
 import TheBoard from './components/TheBoard.vue'
-import { getIdentifierFromPos } from './services/helpers'
+import { getHoverSquareIndex } from './services/helpers'
 import { useStore } from './stores/board'
 
 const store = useStore()
 
 function mouseMove(e: MouseEvent): void {
-  if (!store.draggedItem) return
+  if (!store.draggedItem || !store.isDragged) return
 
-  const identifier = getIdentifierFromPos(
+  store.hoverSquareIndex = getHoverSquareIndex(
     store.boardLeft,
     store.boardTop,
     e.clientX,
     e.clientY
   )
 
-  if (identifier === 0) {
-    store.targetSquare = 64
-  } else {
-    store.targetSquare = identifier
+  if (!store.isMoved) {
+    store.isMoved = true
+    store.draggedItem.style.cursor = 'grabbing'
   }
 
   store.draggedItem.style.left = `${e.clientX - store.cx}px`
   store.draggedItem.style.top = `${e.clientY - store.cy}px`
 }
-function mouseUp(): void {
-  store.pieces[store.draggedIdentifier] = '' // delete the dragged piece
-  store.draggedItem = document.body.querySelector('.board')
-}
-function mouseLeave(): void {
-  // console.warn('leave!')
 
-  store.pieces[store.draggedIdentifier] = '' // delete the dragged piece
+function mouseUp(): void {
+  store.isDragged = false
+
+  // if (store.hoverSquareIndex === 64) return
+  if (!store.isMoved) return
+  store.isMoved = false
+
+  if (store.hoverSquareIndex === store.dragIndex) {
+    store.draggedItem.style.left = 0
+    store.draggedItem.style.top = 0
+  } else {
+    store.pieces[store.hoverSquareIndex] = store.pieces[store.dragIndex]
+    store.pieces[store.dragIndex] = '' // delete the dragged piece
+  }
+
+  //clearing
   store.draggedItem = document.body.querySelector('.board')
+  store.squaresForMove.fill(false)
+  store.boardLeft = 0
+  store.boardTop = 0
+  store.hoverSquareIndex = 64
+}
+
+function mouseLeave(): void {
+  console.warn('mouseLeave')
+  // const dragIndex: number = store.dragIndex
+  // store.pieces[store.dragIndex] = '' // delete the dragged piece
+  // store.pieces[store.hoverSquareIndex] = store.pieces[store.dragIndex]
+  store.draggedItem = document.body.querySelector('.board')
+  // store.squaresForMove.fill(false)
+  store.boardLeft = 0
+  store.boardTop = 0
+  store.hoverSquareIndex = 64
 }
 
 function mouseEnter(e: any): void {

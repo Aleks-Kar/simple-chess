@@ -9,16 +9,18 @@ export const useStore = defineStore('board', {
   state: () => {
     return {
       pieces: Array<string>(64),
-      indexActiveSquare: 64,
       side: 'white',
+      indexActiveSquare: 64,
       squaresForMove: Array<boolean>(64),
       squaresForAttack: Array<boolean>(64),
+      isDragged: false,
+      isMoved: false,
 
       cx: 0,
       cy: 0,
       draggedItem: document.body.querySelector('.board'),
-      draggedIdentifier: 64,
-      targetSquare: 64,
+      dragIndex: 64,
+      hoverSquareIndex: 64,
       boardLeft: 0,
       boardTop: 0
     }
