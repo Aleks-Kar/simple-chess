@@ -34,6 +34,7 @@ function mouseUp(): void {
   if (store.hoverSquareIndex === store.dragIndex) {
     store.draggedItem.style.left = 0
     store.draggedItem.style.top = 0
+    store.draggedItem.style.cursor = 'pointer'
   } else {
     store.pieces[store.hoverSquareIndex] = store.pieces[store.dragIndex]
     store.pieces[store.dragIndex] = '' // delete the dragged piece

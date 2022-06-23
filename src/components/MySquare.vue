@@ -47,6 +47,14 @@ const isMoveable = computed<boolean>(() => {
   return props.isMoveable && store.getPiece(props.pos[0], props.pos[1]) === ''
 })
 
+const isImmoveable = computed<boolean>(() => {
+  return (
+    !props.isMoveable &&
+    props.squareIndex === store.hoverSquareIndex &&
+    props.squareIndex !== store.dragIndex
+  )
+})
+
 const isTarget = computed<boolean>(() => {
   return props.squareIndex === store.hoverSquareIndex
 })
@@ -124,7 +132,8 @@ function mouseUp(squareIndex: number): void {
       { square_color_black: props.squareColor === 'black' },
       { square_color_active: isActive },
       { square_color_moveable: isMoveable && !isTarget },
-      { square_color_target: isTarget },
+      { square_color_immoveable: isImmoveable },
+      { square_color_target: isTarget && !isImmoveable },
       { square_color_attacked: isAttacked }
     ]">
     <MyRook v-if="pieceUC === 'R'" :color="isWhite ? 'white' : 'black'" />
@@ -178,6 +187,10 @@ function mouseUp(squareIndex: number): void {
   height: 20px;
   border-radius: 50%;
   background-color: hsl(120, 50%, 60%);
+}
+
+.square_color_immoveable {
+  background-color: hsl(0, 100%, 60%);
 }
 
 .square_color_target {
