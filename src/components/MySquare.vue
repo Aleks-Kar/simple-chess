@@ -40,11 +40,15 @@ const isDraggable = computed<boolean>(() => {
 })
 
 const isActive = computed<boolean>(() => {
-  return props.isActive && store.getPiece(props.pos[0], props.pos[1]) !== ''
+  return (
+    props.isActive && store.getPieceFromPos(props.pos[0], props.pos[1]) !== ''
+  )
 })
 
 const isMoveable = computed<boolean>(() => {
-  return props.isMoveable && store.getPiece(props.pos[0], props.pos[1]) === ''
+  return (
+    props.isMoveable && store.getPieceFromPos(props.pos[0], props.pos[1]) === ''
+  )
 })
 
 const isImmoveable = computed<boolean>(() => {
@@ -60,21 +64,22 @@ const isTarget = computed<boolean>(() => {
 })
 
 const isAttacked = computed<boolean>(() => {
-  return props.isMoveable && store.getPiece(props.pos[0], props.pos[1]) !== ''
+  return (
+    props.isMoveable && store.getPieceFromPos(props.pos[0], props.pos[1]) !== ''
+  )
 })
 
-// function markActive(pos: Array<number>): void {
-function markActive(e: any): void {
-  store.draggedItem = e.target
-  console.warn(e.target)
-}
-
 function mouseDown(e: MouseEvent): void {
-  store.isDragged = true
+  if (
+    store.indexActiveSquare !== 64 &&
+    props.squareIndex === store.indexActiveSquare
+  )
+    store.isReactivated = true
+  store.lmbIsPressed = true
   store.dragIndex = props.squareIndex
 
   // activate the square
-  store.indexActiveSquare = props.squareIndex
+  store.activateSquare(props.squareIndex)
 
   // showing moveable squares
   store.setMoveableSquares(
@@ -98,35 +103,18 @@ function mouseDown(e: MouseEvent): void {
   )
 
   store.draggedItem = svgElement
-
   if (svgElement) svgElement.style.position = 'relative'
 
   store.cx = e.clientX - (e.offsetX - 45)
   store.cy = e.clientY - (e.offsetY - 45)
-}
-
-// function mouseUp(e: MouseEvent): void {
-//   store.pieces[store.draggedsquareIndex] = '' // delete the dragged piece
-//   store.draggedItem = document.body.querySelector('.board')
-//   store.cx = 0
-//   store.cy = 0
-// }
-function mouseEnter(e: any): void {
-  console.warn(props.squareIndex)
-
-  // store.targetSquare = props.squareIndex
-}
-
-function mouseUp(squareIndex: number): void {
-  // console.warn(squareIndex)
 }
 </script>
 
 <template>
   <div
     class="square"
+    @click=""
     @mousedown="mouseDown($event)"
-    @mouseup="mouseUp(props.squareIndex)"
     :class="[
       { square_color_white: props.squareColor === 'white' },
       { square_color_black: props.squareColor === 'black' },

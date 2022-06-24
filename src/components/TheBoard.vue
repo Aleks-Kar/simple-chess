@@ -13,7 +13,7 @@ function fn(): void {
 }
 
 function getKey(x: number, y: number): string {
-  return store.getPiece(x, y) + String(x + y * 8)
+  return store.getPieceFromPos(x, y) + String(x + y * 8)
 }
 
 onMounted(() => {

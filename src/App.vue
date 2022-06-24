@@ -6,7 +6,7 @@ import { useStore } from './stores/board'
 const store = useStore()
 
 function mouseMove(e: MouseEvent): void {
-  if (!store.draggedItem || !store.isDragged) return
+  if (!store.draggedItem || !store.lmbIsPressed) return
 
   store.hoverSquareIndex = getHoverSquareIndex(
     store.boardLeft,
@@ -25,7 +25,16 @@ function mouseMove(e: MouseEvent): void {
 }
 
 function mouseUp(): void {
-  store.isDragged = false
+  store.lmbIsPressed = false
+
+  if (store.isReactivated && !store.isMoved) {
+    console.warn('up reactivated')
+
+    store.isReactivated = false
+    store.deactivateSquare()
+    store.squaresForMove.fill(false)
+    return
+  }
 
   // if (store.hoverSquareIndex === 64) return
   if (!store.isMoved) return
@@ -35,9 +44,10 @@ function mouseUp(): void {
     store.draggedItem.style.left = 0
     store.draggedItem.style.top = 0
     store.draggedItem.style.cursor = 'pointer'
+    store.indexActiveSquare = 64
   } else {
-    store.pieces[store.hoverSquareIndex] = store.pieces[store.dragIndex]
-    store.pieces[store.dragIndex] = '' // delete the dragged piece
+    store.setPieceOnHover(store.getDraggedPiece())
+    // store.delDraggedPiece()
   }
 
   //clearing
@@ -50,11 +60,13 @@ function mouseUp(): void {
 
 function mouseLeave(): void {
   console.warn('mouseLeave')
-  // const dragIndex: number = store.dragIndex
-  // store.pieces[store.dragIndex] = '' // delete the dragged piece
-  // store.pieces[store.hoverSquareIndex] = store.pieces[store.dragIndex]
+
+  const dragIndex = store.dragIndex
+  store.pieces[store.dragIndex] = '' // delete the dragged piece
+  store.pieces[60] = store.pieces[dragIndex]
+
   store.draggedItem = document.body.querySelector('.board')
-  // store.squaresForMove.fill(false)
+  store.squaresForMove.fill(false)
   store.boardLeft = 0
   store.boardTop = 0
   store.hoverSquareIndex = 64

@@ -12,8 +12,8 @@ export const useStore = defineStore('board', {
       side: 'white',
       indexActiveSquare: 64,
       squaresForMove: Array<boolean>(64),
-      squaresForAttack: Array<boolean>(64),
-      isDragged: false,
+      lmbIsPressed: false,
+      isReactivated: false,
       isMoved: false,
 
       cx: 0,
@@ -27,6 +27,7 @@ export const useStore = defineStore('board', {
   },
 
   actions: {
+    // setting up pieces
     init(): void {
       this.pieces.fill('')
       const blackStr: string = 'rnbqkbnrpppppppp'
@@ -35,30 +36,25 @@ export const useStore = defineStore('board', {
       for (let i = 63; i > 47; i--) this.pieces[i] = whiteStr[63 - i]
     },
 
-    toggleActiveSquare(position: Array<number>): void {
-      if (position.length !== 2)
-        throw new Error(
-          `unexpected array length (${position.length} instead of 2)`
-        )
-
-      const index = fromPosToIndex(position)
-      if (this.indexActiveSquare === index) {
-        this.indexActiveSquare = 64
-      } else {
-        this.indexActiveSquare = index
-      }
+    activateSquare(index: number): void {
+      this.indexActiveSquare = index
     },
 
-    clearActiveSquare(): void {
+    deactivateSquare(): void {
       this.indexActiveSquare = 64
     },
 
-    setPiece(index: number, char: string): void {
-      if (char.length > 1)
-        throw new Error(
-          `unexpected character amount (${char.length} instead of 1)`
-        )
-      this.pieces[index] = char
+    setPieceOnHover(piece: string): void {
+      if (this.hoverSquareIndex === 64) {
+      } else {
+        this.pieces[this.hoverSquareIndex] = piece
+        this.pieces[this.dragIndex] = ''
+      }
+    },
+
+    delDraggedPiece(): void {
+      if (this.hoverSquareIndex === 64) return
+      this.pieces[this.dragIndex] = ''
     },
 
     toggleSide(): void {
@@ -77,12 +73,18 @@ export const useStore = defineStore('board', {
   },
 
   getters: {
-    getPiece:
+    getPieceFromPos:
       state =>
       (x: number, y: number): string => {
         const index = fromPosToIndex([x, y])
         return String(state.pieces[index])
       },
+
+    getDraggedPiece: state => (): string => {
+      return String(state.pieces[state.dragIndex])
+    },
+
+    isAct: state => (): boolean => state.indexActiveSquare === 64,
 
     isActive:
       state =>
