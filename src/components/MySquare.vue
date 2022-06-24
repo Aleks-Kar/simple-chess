@@ -32,22 +32,25 @@ const pieceUC = String(
   store.pieces[props.pos[0] + props.pos[1] * 8]
 ).toUpperCase()
 
-const isDraggable = computed<boolean>(() => {
-  return (
-    (props.squareIndex < 16 && store.side === 'black') ||
-    (props.squareIndex > 47 && store.side === 'white')
-  )
-})
+// const isDraggable = computed<boolean>(() => {
+//   return (
+//     (props.squareIndex < 16 && store.side === 'black') ||
+//     (props.squareIndex > 47 && store.side === 'white')
+//   )
+// })
 
-const isActive = computed<boolean>(() => {
-  return (
-    props.isActive && store.getPieceFromPos(props.pos[0], props.pos[1]) !== ''
-  )
-})
+// const isActive = computed<boolean>(() => {
+//   return (
+//     // props.isActive && store.getPieceFromPos(props.pos[0], props.pos[1]) !== ''
+//     props.isActive
+//   )
+// })
 
 const isMoveable = computed<boolean>(() => {
   return (
-    props.isMoveable && store.getPieceFromPos(props.pos[0], props.pos[1]) === ''
+    props.isMoveable &&
+    store.getPieceFromPos(props.pos[0], props.pos[1]) === '' &&
+    props.squareIndex !== store.hoverSquareIndex
   )
 })
 
@@ -59,37 +62,46 @@ const isImmoveable = computed<boolean>(() => {
   )
 })
 
-const isTarget = computed<boolean>(() => {
+const isHover = computed<boolean>(() => {
   return props.squareIndex === store.hoverSquareIndex
 })
 
 const isAttacked = computed<boolean>(() => {
   return (
-    props.isMoveable && store.getPieceFromPos(props.pos[0], props.pos[1]) !== ''
+    props.isMoveable &&
+    store.getPieceFromPos(props.pos[0], props.pos[1]) !== '' &&
+    props.squareIndex !== store.hoverSquareIndex
   )
 })
 
 function mouseDown(e: MouseEvent): void {
   if (
-    store.indexActiveSquare !== 64 &&
-    props.squareIndex === store.indexActiveSquare
+    store.indexActiveSquares[0] !== 64 &&
+    props.squareIndex === store.indexActiveSquares[0]
   )
     store.isReactivated = true
+
   store.lmbIsPressed = true
   store.dragIndex = props.squareIndex
 
-  // activate the square
-  store.activateSquare(props.squareIndex)
+  if (!store.isReactivated) {
+    // activate the square
+    if (store.side === 'white') {
+      store.indexActiveSquares[0] = props.squareIndex
+    } else {
+      store.indexActiveSquares[2] = props.squareIndex
+    }
 
-  // showing moveable squares
-  store.setMoveableSquares(
-    getMoveableSquares(
-      store.pieces,
-      store.pieces[props.squareIndex],
-      props.pos[0],
-      props.pos[1]
+    // showing moveable squares
+    store.setMoveableSquares(
+      getMoveableSquares(
+        store.pieces,
+        store.pieces[props.squareIndex],
+        props.pos[0],
+        props.pos[1]
+      )
     )
-  )
+  }
 
   // preparing for the dragging
   const boardPos: any = document.body
@@ -118,10 +130,10 @@ function mouseDown(e: MouseEvent): void {
     :class="[
       { square_color_white: props.squareColor === 'white' },
       { square_color_black: props.squareColor === 'black' },
-      { square_color_active: isActive },
-      { square_color_moveable: isMoveable && !isTarget },
-      { square_color_immoveable: isImmoveable },
-      { square_color_target: isTarget && !isImmoveable },
+      { square_color_active: props.isActive && !isAttacked },
+      { square_color_moveable: isMoveable },
+      // { square_color_immoveable: isImmoveable },
+      { square_color_hover: isHover && !isImmoveable },
       { square_color_attacked: isAttacked }
     ]">
     <MyRook v-if="pieceUC === 'R'" :color="isWhite ? 'white' : 'black'" />
@@ -130,6 +142,7 @@ function mouseDown(e: MouseEvent): void {
     <MyQueen v-if="pieceUC === 'Q'" :color="isWhite ? 'white' : 'black'" />
     <MyKing v-if="pieceUC === 'K'" :color="isWhite ? 'white' : 'black'" />
     <MyPawn v-if="pieceUC === 'P'" :color="isWhite ? 'white' : 'black'" />
+    {{ props.pos[0] + props.pos[1] * 8 }}
   </div>
 </template>
 
@@ -163,10 +176,7 @@ function mouseDown(e: MouseEvent): void {
 }
 
 .square_color_active {
-  /* background-color: hsl(120, 50%, 60%); */
-  width: 90px;
-  height: 90px;
-  border: 5px solid hsl(300, 80%, 45%);
+  background-color: hsl(120, 45%, 60%);
 }
 
 /* .square_color_moveable {
@@ -178,21 +188,19 @@ function mouseDown(e: MouseEvent): void {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: hsl(120, 50%, 60%);
+  background-color: hsl(120, 45%, 60%);
 }
 
 .square_color_immoveable {
   background-color: hsl(0, 100%, 60%);
 }
 
-.square_color_target {
-  /* width: 90px;
-  height: 90px; */
-  border: 5px hsl(120, 50%, 60%) solid;
+.square_color_hover {
+  border: 5px solid hsl(120, 45%, 60%);
 }
 
 .square_color_attacked {
-  border: 0 solid transparent;
+  border: 5px solid transparent;
   border-radius: 50%;
 }
 </style>

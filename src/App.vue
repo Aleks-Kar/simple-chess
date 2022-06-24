@@ -29,7 +29,8 @@ function mouseUp(): void {
 
   if (store.isReactivated && !store.pieceHadBeenMoved) {
     store.isReactivated = false
-    store.deactivateSquare()
+    // store.deactivateSquare()
+    store.indexActiveSquares[0] = 64
     store.clearMoveableSquares()
     // store.squaresForMove.fill(false)
     return
@@ -38,23 +39,20 @@ function mouseUp(): void {
   }
 
   if (!store.pieceHadBeenMoved) return
-  store.pieceHadBeenMoved = false
-
   store.placePieceOnHover()
+  store.pieceHadBeenMoved = false
 }
 
 function mouseLeave(): void {
-  console.warn('mouseLeave')
-
-  const dragIndex = store.dragIndex
-  store.pieces[store.dragIndex] = '' // delete the dragged piece
-  store.pieces[60] = store.pieces[dragIndex]
-
-  store.draggedItem = document.body.querySelector('.board')
-  store.squaresForMove.fill(false)
-  store.boardLeft = 0
-  store.boardTop = 0
-  store.hoverSquareIndex = 64
+  // console.warn('mouseLeave')
+  // const dragIndex = store.dragIndex
+  // store.pieces[store.dragIndex] = '' // delete the dragged piece
+  // store.pieces[60] = store.pieces[dragIndex]
+  // store.draggedItem = document.body.querySelector('.board')
+  // store.squaresForMove.fill(false)
+  // store.boardLeft = 0
+  // store.boardTop = 0
+  // store.hoverSquareIndex = 64
 }
 
 function mouseEnter(e: any): void {

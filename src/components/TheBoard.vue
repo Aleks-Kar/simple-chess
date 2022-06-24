@@ -23,6 +23,7 @@ onMounted(() => {
 
 <template>
   <button @click="fn">проверка</button>
+  <div class="info">{{ store.side }}</div>
   <div class="board">
     <div v-for="(row, y) in 8" class="board__row">
       <MySquare
@@ -39,6 +40,16 @@ onMounted(() => {
 </template>
 
 <style>
+.info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: antiquewhite;
+
+  width: 100px;
+  height: 100px;
+}
+
 button {
   width: 100px;
   height: 100px;
@@ -49,7 +60,7 @@ button {
   flex-wrap: wrap;
   width: 800px;
   height: 800px;
-  background-color: hsl(120, 50%, 60%);
+  background-color: hsl(300, 50%, 50%);
 }
 
 .board__row {
