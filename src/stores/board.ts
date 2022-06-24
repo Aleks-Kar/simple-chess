@@ -14,7 +14,7 @@ export const useStore = defineStore('board', {
       squaresForMove: Array<boolean>(64),
       lmbIsPressed: false,
       isReactivated: false,
-      isMoved: false,
+      pieceHadBeenMoved: false,
 
       cx: 0,
       cy: 0,
@@ -52,6 +52,28 @@ export const useStore = defineStore('board', {
       }
     },
 
+    placePieceOnHover(): void {
+      if (this.hoverSquareIndex === 64) {
+      } else if (this.hoverSquareIndex === this.dragIndex) {
+        this.draggedItem.style.left = 0
+        this.draggedItem.style.top = 0
+        this.draggedItem.style.cursor = 'pointer'
+        this.indexActiveSquare = 64
+      } else {
+        // this.setPieceOnHover(this.getDraggedPiece())
+        this.pieces[this.hoverSquareIndex] = String(this.pieces[this.dragIndex])
+        this.pieces[this.dragIndex] = ''
+        // this.delDraggedPiece()
+      }
+
+      //clearing
+      this.draggedItem = document.body.querySelector('.board')
+      this.squaresForMove.fill(false)
+      this.boardLeft = 0
+      this.boardTop = 0
+      this.hoverSquareIndex = 64
+    },
+
     delDraggedPiece(): void {
       if (this.hoverSquareIndex === 64) return
       this.pieces[this.dragIndex] = ''
@@ -69,6 +91,10 @@ export const useStore = defineStore('board', {
           this.squaresForMove[i] = false
         }
       }
+    },
+
+    clearMoveableSquares(): void {
+      this.squaresForMove.fill(false)
     }
   },
 

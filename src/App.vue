@@ -15,8 +15,8 @@ function mouseMove(e: MouseEvent): void {
     e.clientY
   )
 
-  if (!store.isMoved) {
-    store.isMoved = true
+  if (!store.pieceHadBeenMoved) {
+    store.pieceHadBeenMoved = true
     store.draggedItem.style.cursor = 'grabbing'
   }
 
@@ -27,35 +27,20 @@ function mouseMove(e: MouseEvent): void {
 function mouseUp(): void {
   store.lmbIsPressed = false
 
-  if (store.isReactivated && !store.isMoved) {
-    console.warn('up reactivated')
-
+  if (store.isReactivated && !store.pieceHadBeenMoved) {
     store.isReactivated = false
     store.deactivateSquare()
-    store.squaresForMove.fill(false)
+    store.clearMoveableSquares()
+    // store.squaresForMove.fill(false)
     return
+  } else if (store.isReactivated) {
+    store.isReactivated = false
   }
 
-  // if (store.hoverSquareIndex === 64) return
-  if (!store.isMoved) return
-  store.isMoved = false
+  if (!store.pieceHadBeenMoved) return
+  store.pieceHadBeenMoved = false
 
-  if (store.hoverSquareIndex === store.dragIndex) {
-    store.draggedItem.style.left = 0
-    store.draggedItem.style.top = 0
-    store.draggedItem.style.cursor = 'pointer'
-    store.indexActiveSquare = 64
-  } else {
-    store.setPieceOnHover(store.getDraggedPiece())
-    // store.delDraggedPiece()
-  }
-
-  //clearing
-  store.draggedItem = document.body.querySelector('.board')
-  store.squaresForMove.fill(false)
-  store.boardLeft = 0
-  store.boardTop = 0
-  store.hoverSquareIndex = 64
+  store.placePieceOnHover()
 }
 
 function mouseLeave(): void {

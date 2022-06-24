@@ -145,6 +145,7 @@ function mouseDown(e: MouseEvent): void {
   align-items: center;
   width: 90px;
   height: 90px;
+  border: 5px solid transparent;
   cursor: pointer;
   pointer-events: none;
 }
@@ -162,7 +163,10 @@ function mouseDown(e: MouseEvent): void {
 }
 
 .square_color_active {
-  background-color: hsl(120, 50%, 60%);
+  /* background-color: hsl(120, 50%, 60%); */
+  width: 90px;
+  height: 90px;
+  border: 5px solid hsl(300, 80%, 45%);
 }
 
 /* .square_color_moveable {
@@ -182,8 +186,8 @@ function mouseDown(e: MouseEvent): void {
 }
 
 .square_color_target {
-  width: 80px;
-  height: 80px;
+  /* width: 90px;
+  height: 90px; */
   border: 5px hsl(120, 50%, 60%) solid;
 }
 

@@ -55,17 +55,17 @@ export function getHoverSquareIndex(
   if (left === 0 || top === 0) return 64
   if (
     clientX < left ||
-    clientX > left + 720 ||
+    clientX > left + 800 ||
     clientY < top ||
-    clientY > top + 720
+    clientY > top + 800
   ) {
     return 64
   }
 
-  let x = Math.ceil((clientX - left) / 90)
-  if (x === 0) return 0
-  let y = Math.ceil((clientY - top) / 90)
-  if (y === 0) return 0
+  let x = Math.ceil((clientX - left) / 100)
+  if (x === 0) return 64
+  let y = Math.ceil((clientY - top) / 100)
+  if (y === 0) return 64
 
   return x - 1 + (y - 1) * 8
 }
