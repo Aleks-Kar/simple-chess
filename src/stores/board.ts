@@ -9,7 +9,7 @@ export const useStore = defineStore('board', {
   state: () => {
     return {
       pieces: Array<string>(64),
-      side: 'white',
+      turn: 'white',
       indexActiveSquares: Array<number>(4),
       squaresForMove: Array<boolean>(64),
       lmbIsPressed: false,
@@ -68,7 +68,7 @@ export const useStore = defineStore('board', {
         this.pieces[this.hoverSquareIndex] = String(this.pieces[this.dragIndex])
         this.pieces[this.dragIndex] = ''
 
-        if (this.side === 'white') {
+        if (this.turn === 'white') {
           this.indexActiveSquares[1] = this.hoverSquareIndex
         } else {
           this.indexActiveSquares[3] = this.hoverSquareIndex
@@ -76,24 +76,24 @@ export const useStore = defineStore('board', {
         // this.delDraggedPiece()
       }
 
-      if (this.side === 'white' && !this.pieceHadBeenMoved) {
+      if (this.turn === 'white' && !this.pieceHadBeenMoved) {
         console.warn(3)
 
-        // this.side = 'black'
+        // this.turn = 'black'
         this.indexActiveSquares[2] = 64
         this.indexActiveSquares[3] = 64
-      } else if (this.side === 'black' && !this.pieceHadBeenMoved) {
+      } else if (this.turn === 'black' && !this.pieceHadBeenMoved) {
         console.warn(4)
 
-        // this.side = 'white'
+        // this.turn = 'white'
         this.indexActiveSquares[0] = 64
         this.indexActiveSquares[1] = 64
       }
 
-      if (this.side === 'white') {
-        this.side = 'black'
+      if (this.turn === 'white') {
+        this.turn = 'black'
       } else {
-        this.side = 'white'
+        this.turn = 'white'
       }
 
       //clearing
@@ -110,7 +110,7 @@ export const useStore = defineStore('board', {
     },
 
     toggleSide(): void {
-      this.side = this.side === 'white' ? 'black' : 'white'
+      this.turn = this.turn === 'white' ? 'black' : 'white'
     },
 
     setMoveableSquares(moveableSquares: Array<boolean>): void {
@@ -169,6 +169,14 @@ export const useStore = defineStore('board', {
     //   const index = state.active.indexOf(true)
     //   return index
     // },
+
+    isWhiteSquare:
+      state =>
+      (index: number): boolean => {
+        const y = Math.trunc(index / 8)
+        const x = index - y * 8
+        return (x + y) % 2 === 0
+      },
 
     isMoveable:
       state =>

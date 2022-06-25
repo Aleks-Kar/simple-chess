@@ -10,18 +10,11 @@ import MyPawn from '/src/components/pieces/MyPawn.vue'
 import { getMoveableSquares } from '../services/helpers'
 
 const props = defineProps<{
-  squareBackground: string
   squareIndex: number
-  pos: Array<number>
   isMoveable: boolean
 }>()
 
 const store = useStore()
-
-// const isWhite = computed(() => props.squareIndex > 47)
-// const pieceUC = computed(() =>
-//   String(store.pieces[props.pos[0] + props.pos[1] * 8]).toUpperCase()
-// )
 
 const isWhitePiece =
   store.pieces[props.squareIndex] ===
@@ -76,7 +69,7 @@ function mouseDown(e: MouseEvent): void {
 
   if (!store.isReactivated) {
     // activate the square
-    if (store.side === 'white') {
+    if (store.turn === 'white') {
       store.indexActiveSquares[0] = props.squareIndex
     } else {
       store.indexActiveSquares[2] = props.squareIndex
@@ -118,8 +111,8 @@ function mouseDown(e: MouseEvent): void {
     class="square"
     @mousedown="mouseDown($event)"
     :class="[
-      { 'square_background-color_white': props.squareBackground === 'white' },
-      { 'square_background-color_black': props.squareBackground === 'black' },
+      { square_background_white: store.isWhiteSquare(props.squareIndex) },
+      { square_background_black: !store.isWhiteSquare(props.squareIndex) },
       { square_active_white: store.isWhiteActive(props.squareIndex) },
       { square_active_black: store.isBlackActive(props.squareIndex) },
       { square_moveable: isMoveable },
@@ -137,7 +130,7 @@ function mouseDown(e: MouseEvent): void {
     <MyQueen v-if="pieceUC === 'Q'" :color="isWhitePiece ? 'white' : 'black'" />
     <MyKing v-if="pieceUC === 'K'" :color="isWhitePiece ? 'white' : 'black'" />
     <MyPawn v-if="pieceUC === 'P'" :color="isWhitePiece ? 'white' : 'black'" />
-    {{ props.pos[0] + props.pos[1] * 8 }}
+    {{ props.squareIndex }}
   </div>
 </template>
 
@@ -162,20 +155,22 @@ function mouseDown(e: MouseEvent): void {
   z-index: 10;
 }
 
-.square_background-color_white {
+.square_background_white {
   background-color: hsl(40, 63%, 82%);
 }
 
-.square_background-color_black {
+.square_background_black {
   background-color: hsl(29, 34%, 55%);
 }
 
 .square_active_white {
-  background-color: hsl(120, 45%, 60%);
+  /* background-color: hsl(120, 45%, 60%); */
+  border: 5px solid hsl(120, 45%, 60%);
 }
 
 .square_active_black {
-  background-color: hsl(0, 45%, 60%);
+  /* background-color: hsl(0, 45%, 60%); */
+  border: 5px solid hsl(0, 45%, 60%);
 }
 
 /* .square_moveable {
