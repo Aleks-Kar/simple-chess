@@ -13,7 +13,7 @@ function fn(): void {
 }
 
 function getKey(x: number, y: number): string {
-  return store.getPieceFromPos(x, y) + String(x + y * 8)
+  return store.getPiece(x + y * 8) + String(x + y * 8)
 }
 
 onMounted(() => {
@@ -32,9 +32,8 @@ onMounted(() => {
         :id="`square${x + y * 8}`"
         :square-index="x + y * 8"
         :pos="[x, y]"
-        :is-active="store.isActive(x, y)"
         :is-moveable="store.isMoveable(x, y)"
-        :square-color="(row + square) % 2 === 0 ? 'white' : 'black'" />
+        :square-background="(row + square) % 2 === 0 ? 'white' : 'black'" />
     </div>
   </div>
 </template>

@@ -5,11 +5,14 @@ function isWhite(piece: string): boolean {
 export function getMoveableSquares(
   pieces: Array<string>,
   piece: string,
-  x: number,
-  y: number
+  index: number
 ): Array<boolean> {
   const moveableSquares = new Array<boolean>(64)
   moveableSquares.fill(false)
+
+  // getting coordinates
+  const y = Math.trunc(index / 8)
+  const x = index - y * 8
 
   if (piece.toUpperCase() === 'P') {
     // PAWN, movement forward
@@ -81,9 +84,6 @@ export function getMoveableSquares(
       }
     }
 
-
-
-
     // ROOK, movement to the left
     for (let i = x - 1; i >= 0; i--) {
       if (pieces[i + y * 8] === '') {
@@ -107,8 +107,6 @@ export function getMoveableSquares(
         break
       }
     }
-
-
 
     // ROOK, movement to the down
     for (let i = y + 1; i <= 7; i++) {

@@ -54,6 +54,7 @@ export const useStore = defineStore('board', {
 
     placePieceOnHover(): void {
       if (this.hoverSquareIndex === 64) {
+        // ...
       } else if (this.hoverSquareIndex === this.dragIndex) {
         this.draggedItem.style.left = 0
         this.draggedItem.style.top = 0
@@ -76,13 +77,23 @@ export const useStore = defineStore('board', {
       }
 
       if (this.side === 'white' && !this.pieceHadBeenMoved) {
-        this.side = 'black'
+        console.warn(3)
+
+        // this.side = 'black'
         this.indexActiveSquares[2] = 64
         this.indexActiveSquares[3] = 64
       } else if (this.side === 'black' && !this.pieceHadBeenMoved) {
-        this.side = 'white'
+        console.warn(4)
+
+        // this.side = 'white'
         this.indexActiveSquares[0] = 64
         this.indexActiveSquares[1] = 64
+      }
+
+      if (this.side === 'white') {
+        this.side = 'black'
+      } else {
+        this.side = 'white'
       }
 
       //clearing
@@ -118,10 +129,9 @@ export const useStore = defineStore('board', {
   },
 
   getters: {
-    getPieceFromPos:
+    getPiece:
       state =>
-      (x: number, y: number): string => {
-        const index = fromPosToIndex([x, y])
+      (index: number): string => {
         return String(state.pieces[index])
       },
 
@@ -129,11 +139,30 @@ export const useStore = defineStore('board', {
       return String(state.pieces[state.dragIndex])
     },
 
-    isActive:
+    isWhiteActive:
       state =>
-      (x: number, y: number): boolean => {
-        const index = fromPosToIndex([x, y])
-        return state.indexActiveSquares.includes(index)
+      (index: number): boolean => {
+        if (
+          state.indexActiveSquares[0] === index ||
+          state.indexActiveSquares[1] === index
+        ) {
+          return true
+        } else {
+          return false
+        }
+      },
+
+    isBlackActive:
+      state =>
+      (index: number): boolean => {
+        if (
+          state.indexActiveSquares[2] === index ||
+          state.indexActiveSquares[3] === index
+        ) {
+          return true
+        } else {
+          return false
+        }
       },
 
     // getActiveIndex: state => (): number => {
