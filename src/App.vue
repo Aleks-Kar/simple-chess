@@ -30,7 +30,7 @@ function mouseUp(): void {
   if (store.isReactivated && !store.pieceHadBeenMoved) {
     store.isReactivated = false
     // store.deactivateSquare()
-    store.indexActiveSquares[0] = 64
+    store.indexActiveSquare = 64
     store.clearMoveableSquares()
     // store.squaresForMove.fill(false)
     return
@@ -38,9 +38,19 @@ function mouseUp(): void {
     store.isReactivated = false
   }
 
+  // marking last moves
+  if (
+    store.indexActiveSquare !== store.hoverSquareIndex &&
+    store.hoverSquareIndex !== 64
+  ) {
+    store.lastMoves[0] = store.indexActiveSquare
+    store.lastMoves[1] = store.hoverSquareIndex
+  }
+
   if (!store.pieceHadBeenMoved) return
   store.placePieceOnHover()
   store.pieceHadBeenMoved = false
+  store.indexActiveSquare = 64
 }
 
 function mouseLeave(): void {

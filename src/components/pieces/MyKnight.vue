@@ -1,7 +1,18 @@
 <script setup lang="ts">
+import { computed } from '@vue/reactivity'
+
 const props = defineProps<{
   color: 'white' | 'black'
+  attacked: boolean
 }>()
+
+const dropShadow = computed<string>(() => {
+  if (props.attacked) {
+    return 'drop-shadow(0 0 1px hsl(300, 75%, 55%)) drop-shadow(0 0 3px hsl(300, 75%, 50%)) drop-shadow(0 0 5px hsl(300, 75%, 50%))'
+  } else {
+    return 'none'
+  }
+})
 </script>
 
 <template>
@@ -82,5 +93,6 @@ const props = defineProps<{
   width: 90px;
   height: 90px;
   pointer-events: stroke;
+  filter: v-bind(dropShadow);
 }
 </style>

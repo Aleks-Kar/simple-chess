@@ -56,7 +56,7 @@ button {
   flex-wrap: wrap;
   width: 800px;
   height: 800px;
-  background-color: hsl(300, 50%, 50%);
+  background-color: hsl(30, 100%, 50%);
 }
 
 .board__row {

@@ -3,12 +3,12 @@ import { computed } from '@vue/reactivity'
 
 const props = defineProps<{
   color: 'white' | 'black'
-  attacked: false
+  attacked: boolean
 }>()
 
 const dropShadow = computed<string>(() => {
   if (props.attacked) {
-    return 'drop-shadow(0 0 15px hsl(120, 100%, 45%))'
+    return 'drop-shadow(0 0 1px hsl(300, 75%, 55%)) drop-shadow(0 0 3px hsl(300, 75%, 50%)) drop-shadow(0 0 5px hsl(300, 75%, 50%))'
   } else {
     return 'none'
   }

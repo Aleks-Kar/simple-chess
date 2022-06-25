@@ -10,7 +10,8 @@ export const useStore = defineStore('board', {
     return {
       pieces: Array<string>(64),
       turn: 'white',
-      indexActiveSquares: Array<number>(4),
+      indexActiveSquare: 64,
+      lastMoves: Array<number>(2),
       squaresForMove: Array<boolean>(64),
       lmbIsPressed: false,
       isReactivated: false,
@@ -30,8 +31,9 @@ export const useStore = defineStore('board', {
     // setting up pieces
     init(): void {
       this.pieces.fill('')
+      this.squaresForMove.fill(false)
       const blackStr: string = 'rnbqkbnrpppppppp'
-      const whiteStr: string = 'RNBQKBNRPPPPPPPP'
+      const whiteStr: string = 'RNBKQBNRPPPPPPPP'
       for (let i = 0; i < 16; i++) this.pieces[i] = blackStr[i]
       for (let i = 63; i > 47; i--) this.pieces[i] = whiteStr[63 - i]
     },
@@ -68,11 +70,11 @@ export const useStore = defineStore('board', {
         this.pieces[this.hoverSquareIndex] = String(this.pieces[this.dragIndex])
         this.pieces[this.dragIndex] = ''
 
-        if (this.turn === 'white') {
-          this.indexActiveSquares[1] = this.hoverSquareIndex
-        } else {
-          this.indexActiveSquares[3] = this.hoverSquareIndex
-        }
+        // if (this.turn === 'white') {
+        //   this.indexActiveSquares[1] = this.hoverSquareIndex
+        // } else {
+        //   this.indexActiveSquares[3] = this.hoverSquareIndex
+        // }
         // this.delDraggedPiece()
       }
 
@@ -80,14 +82,14 @@ export const useStore = defineStore('board', {
         console.warn(3)
 
         // this.turn = 'black'
-        this.indexActiveSquares[2] = 64
-        this.indexActiveSquares[3] = 64
+        // this.indexActiveSquares[2] = 64
+        // this.indexActiveSquares[3] = 64
       } else if (this.turn === 'black' && !this.pieceHadBeenMoved) {
         console.warn(4)
 
         // this.turn = 'white'
-        this.indexActiveSquares[0] = 64
-        this.indexActiveSquares[1] = 64
+        // this.indexActiveSquares[0] = 64
+        // this.indexActiveSquares[1] = 64
       }
 
       if (this.turn === 'white') {
@@ -149,31 +151,31 @@ export const useStore = defineStore('board', {
         }
       },
 
-    isWhiteActive:
-      state =>
-      (index: number): boolean => {
-        if (
-          state.indexActiveSquares[0] === index ||
-          state.indexActiveSquares[1] === index
-        ) {
-          return true
-        } else {
-          return false
-        }
-      },
+    // isWhiteActive:
+    //   state =>
+    //   (index: number): boolean => {
+    //     if (
+    //       state.indexActiveSquares[0] === index ||
+    //       state.indexActiveSquares[1] === index
+    //     ) {
+    //       return true
+    //     } else {
+    //       return false
+    //     }
+    //   },
 
-    isBlackActive:
-      state =>
-      (index: number): boolean => {
-        if (
-          state.indexActiveSquares[2] === index ||
-          state.indexActiveSquares[3] === index
-        ) {
-          return true
-        } else {
-          return false
-        }
-      },
+    // isBlackActive:
+    //   state =>
+    //   (index: number): boolean => {
+    //     if (
+    //       state.indexActiveSquares[2] === index ||
+    //       state.indexActiveSquares[3] === index
+    //     ) {
+    //       return true
+    //     } else {
+    //       return false
+    //     }
+    //   },
 
     // getActiveIndex: state => (): number => {
     //   const index = state.active.indexOf(true)
