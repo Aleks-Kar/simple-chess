@@ -10,17 +10,23 @@ import MyPawn from '/src/components/pieces/MyPawn.vue'
 import { getMoveableSquares } from '../services/helpers'
 
 const props = defineProps<{
-  squareIndex: number
-  isMoveable: boolean
+  index: number
 }>()
 
 const store = useStore()
 
-const isWhitePiece =
-  store.pieces[props.squareIndex] ===
-  String(store.pieces[props.squareIndex]).toUpperCase()
+const colorOfTurn = computed<string>(() => {
+  if (store.turn === 'white') {
+    return 'hsl(300, 50%, 55%)'
+  } else {
+    return 'hsl(240, 60%, 55%)'
+  }
+})
 
-const pieceUC = String(store.pieces[props.squareIndex]).toUpperCase()
+const isWhitePiece =
+  store.pieces[props.index] === String(store.pieces[props.index]).toUpperCase()
+
+const pieceUC = String(store.pieces[props.index]).toUpperCase()
 
 // const isDraggable = computed<boolean>(() => {
 //   return (
@@ -31,59 +37,55 @@ const pieceUC = String(store.pieces[props.squareIndex]).toUpperCase()
 
 const isMoveable = computed<boolean>(() => {
   return (
-    props.isMoveable &&
-    store.getPiece(props.squareIndex) === '' &&
-    props.squareIndex !== store.hoverSquareIndex
+    store.squaresForMove[props.index] &&
+    store.getPiece(props.index) === '' &&
+    props.index !== store.hoverSquareIndex
   )
 })
 
 const isImmoveable = computed<boolean>(() => {
   return (
-    !props.isMoveable &&
-    props.squareIndex === store.hoverSquareIndex &&
-    props.squareIndex !== store.dragIndex
+    !store.squaresForMove[props.index] &&
+    props.index === store.hoverSquareIndex &&
+    props.index !== store.dragIndex
   )
 })
 
 const isHover = computed<boolean>(() => {
-  return props.squareIndex === store.hoverSquareIndex
+  return props.index === store.hoverSquareIndex
 })
 
 const isAttacked = computed<boolean>(() => {
   return (
-    props.isMoveable &&
-    store.getPiece(props.squareIndex) !== '' &&
-    props.squareIndex !== store.hoverSquareIndex
+    store.squaresForMove[props.index] &&
+    store.getPiece(props.index) !== '' &&
+    props.index !== store.hoverSquareIndex
   )
 })
 
 function mouseDown(e: MouseEvent): void {
   if (
     store.indexActiveSquares[0] !== 64 &&
-    props.squareIndex === store.indexActiveSquares[0]
+    props.index === store.indexActiveSquares[0]
   )
     store.isReactivated = true
 
   store.lmbIsPressed = true
-  store.dragIndex = props.squareIndex
+  store.dragIndex = props.index
 
   if (!store.isReactivated) {
     // activate the square
     if (store.turn === 'white') {
-      store.indexActiveSquares[0] = props.squareIndex
+      store.indexActiveSquares[0] = props.index
     } else {
-      store.indexActiveSquares[2] = props.squareIndex
+      store.indexActiveSquares[2] = props.index
     }
 
     console.warn(store.indexActiveSquares)
 
     // showing moveable squares
     store.setMoveableSquares(
-      getMoveableSquares(
-        store.pieces,
-        store.pieces[props.squareIndex],
-        props.squareIndex
-      )
+      getMoveableSquares(store.pieces, store.pieces[props.index], props.index)
     )
   }
 
@@ -95,7 +97,7 @@ function mouseDown(e: MouseEvent): void {
   store.boardTop = Math.round(boardPos.top)
 
   const svgElement: SVGSVGElement | null = document.body.querySelector(
-    `#square${props.squareIndex} svg`
+    `#square${props.index} svg`
   )
 
   store.draggedItem = svgElement
@@ -111,26 +113,29 @@ function mouseDown(e: MouseEvent): void {
     class="square"
     @mousedown="mouseDown($event)"
     :class="[
-      { square_background_white: store.isWhiteSquare(props.squareIndex) },
-      { square_background_black: !store.isWhiteSquare(props.squareIndex) },
-      { square_active_white: store.isWhiteActive(props.squareIndex) },
-      { square_active_black: store.isBlackActive(props.squareIndex) },
+      { square_background_white: store.isWhiteSquare(props.index) },
+      { square_background_black: !store.isWhiteSquare(props.index) },
+      { square_active_white: store.isWhiteActive(props.index) },
+      { square_active_black: store.isBlackActive(props.index) },
       { square_moveable: isMoveable },
       // { square_immoveable: isImmoveable },
       { square_hover: isHover && !isImmoveable },
       { square_attacked: isAttacked }
     ]">
-    <MyRook v-if="pieceUC === 'R'" :color="isWhitePiece ? 'white' : 'black'" />
+    <MyRook v-if="pieceUC === 'R'" :color="store.getPieceColor(props.index)" />
     <MyKnight
       v-if="pieceUC === 'N'"
-      :color="isWhitePiece ? 'white' : 'black'" />
+      :color="store.getPieceColor(props.index)" />
     <MyBishop
       v-if="pieceUC === 'B'"
-      :color="isWhitePiece ? 'white' : 'black'" />
+      :color="store.getPieceColor(props.index)" />
     <MyQueen v-if="pieceUC === 'Q'" :color="isWhitePiece ? 'white' : 'black'" />
     <MyKing v-if="pieceUC === 'K'" :color="isWhitePiece ? 'white' : 'black'" />
-    <MyPawn v-if="pieceUC === 'P'" :color="isWhitePiece ? 'white' : 'black'" />
-    {{ props.squareIndex }}
+    <MyPawn
+      v-if="pieceUC === 'P'"
+      :color="store.getPieceColor(props.index)"
+      :attacked="false" />
+    <!-- {{ props.index }} -->
   </div>
 </template>
 
@@ -165,12 +170,12 @@ function mouseDown(e: MouseEvent): void {
 
 .square_active_white {
   /* background-color: hsl(120, 45%, 60%); */
-  border: 5px solid hsl(120, 45%, 60%);
+  border: 5px solid hsl(300, 50%, 55%);
 }
 
 .square_active_black {
   /* background-color: hsl(0, 45%, 60%); */
-  border: 5px solid hsl(0, 45%, 60%);
+  border: 5px solid hsl(240, 60%, 55%);
 }
 
 /* .square_moveable {
@@ -182,7 +187,8 @@ function mouseDown(e: MouseEvent): void {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: hsl(120, 45%, 60%);
+  /* background-color: hsl(120, 50%, 55%); */
+  background-color: v-bind(colorOfTurn);
 }
 
 .square_color_immoveable {
@@ -190,7 +196,7 @@ function mouseDown(e: MouseEvent): void {
 }
 
 .square_hover {
-  border: 5px solid hsl(120, 45%, 60%);
+  border: 5px solid v-bind(colorOfTurn);
 }
 
 .square_attacked {

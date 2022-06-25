@@ -25,13 +25,12 @@ onMounted(() => {
   <button @click="fn">проверка</button>
   <div class="info">{{ store.turn }}</div>
   <div class="board">
-    <div v-for="(row, y) in 8" class="board__row">
+    <div v-for="(_, y) in 8" class="board__row">
       <MySquare
-        v-for="(square, x) in 8"
+        v-for="(_, x) in 8"
         :key="getKey(x, y)"
         :id="`square${x + y * 8}`"
-        :square-index="x + y * 8"
-        :is-moveable="store.isMoveable(x, y)" />
+        :index="x + y * 8" />
     </div>
   </div>
 </template>

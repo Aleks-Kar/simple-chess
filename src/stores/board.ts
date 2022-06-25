@@ -139,6 +139,16 @@ export const useStore = defineStore('board', {
       return String(state.pieces[state.dragIndex])
     },
 
+    getPieceColor:
+      state =>
+      (index: number): string => {
+        if (state.pieces[index] === state.pieces[index].toUpperCase()) {
+          return 'white'
+        } else {
+          return 'black'
+        }
+      },
+
     isWhiteActive:
       state =>
       (index: number): boolean => {
@@ -176,13 +186,13 @@ export const useStore = defineStore('board', {
         const y = Math.trunc(index / 8)
         const x = index - y * 8
         return (x + y) % 2 === 0
-      },
-
-    isMoveable:
-      state =>
-      (x: number, y: number): boolean => {
-        const index = fromPosToIndex([x, y])
-        return Boolean(state.squaresForMove[index])
       }
+
+    // isMoveable:
+    //   state =>
+    //   (x: number, y: number): boolean => {
+    //     const index = fromPosToIndex([x, y])
+    //     return Boolean(state.squaresForMove[index])
+    //   }
   }
 })
