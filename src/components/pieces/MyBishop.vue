@@ -6,11 +6,27 @@ const props = defineProps<{
   attacked: boolean
 }>()
 
-const dropShadow = computed<string>(() => {
+const whiteFill = computed<string>(() => {
   if (props.attacked) {
-    return 'drop-shadow(0 0 1px hsl(300, 75%, 55%)) drop-shadow(0 0 3px hsl(300, 75%, 50%)) drop-shadow(0 0 5px hsl(300, 75%, 50%))'
+    return '#ff0000'
   } else {
-    return 'none'
+    return '#ffffff'
+  }
+})
+
+const blackFill = computed<string>(() => {
+  if (props.attacked) {
+    return '#ff0000'
+  } else {
+    return '#000000'
+  }
+})
+
+const blackStroke = computed<string>(() => {
+  if (props.attacked) {
+    return '#000000'
+  } else {
+    return '#ffffff'
   }
 })
 </script>
@@ -36,7 +52,7 @@ const dropShadow = computed<string>(() => {
           stroke-opacity: 1;
         "
         transform="translate(0,0.6)">
-        <g style="fill: #ffffff; stroke: #000000; stroke-linecap: butt">
+        <g class="svg_fill_white" style="stroke: #000000; stroke-linecap: butt">
           <path
             d="M 9,36 C 12.39,35.03 19.11,36.43 22.5,34 C 25.89,36.43 32.61,35.03 36,36 C 36,36 37.65,36.54 39,38 C 38.32,38.97 37.35,38.99 36,38.5 C 32.61,37.53 25.89,38.96 22.5,37.5 C 19.11,38.96 12.39,37.53 9,38.5 C 7.65,38.99 6.68,38.97 6,38 C 7.35,36.54 9,36 9,36 z" />
           <path
@@ -64,7 +80,7 @@ const dropShadow = computed<string>(() => {
           stroke-opacity: 1;
         "
         transform="translate(0,0.6)">
-        <g style="fill: #000000; stroke: #000000; stroke-linecap: butt">
+        <g class="svg_fill_black" style="stroke: #000000; stroke-linecap: butt">
           <path
             d="M 9,36 C 12.39,35.03 19.11,36.43 22.5,34 C 25.89,36.43 32.61,35.03 36,36 C 36,36 37.65,36.54 39,38 C 38.32,38.97 37.35,38.99 36,38.5 C 32.61,37.53 25.89,38.96 22.5,37.5 C 19.11,38.96 12.39,37.53 9,38.5 C 7.65,38.99 6.68,38.97 6,38 C 7.35,36.54 9,36 9,36 z" />
           <path
@@ -72,8 +88,9 @@ const dropShadow = computed<string>(() => {
           <path d="M 25 8 A 2.5 2.5 0 1 1  20,8 A 2.5 2.5 0 1 1  25 8 z" />
         </g>
         <path
+          class="svg_stroke_black"
           d="M 17.5,26 L 27.5,26 M 15,30 L 30,30 M 22.5,15.5 L 22.5,20.5 M 20,18 L 25,18"
-          style="fill: none; stroke: #ffffff; stroke-linejoin: miter" />
+          style="fill: none; stroke-linejoin: miter" />
       </g>
     </svg>
   </div>
@@ -84,6 +101,17 @@ const dropShadow = computed<string>(() => {
   width: 90px;
   height: 90px;
   pointer-events: stroke;
-  filter: v-bind(dropShadow);
+}
+
+.svg_fill_white {
+  fill: v-bind(whiteFill);
+}
+
+.svg_fill_black {
+  fill: v-bind(blackFill);
+}
+
+.svg_stroke_black {
+  stroke: v-bind(blackStroke);
 }
 </style>

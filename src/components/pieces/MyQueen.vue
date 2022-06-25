@@ -81,6 +81,5 @@ const dropShadow = computed<string>(() => {
   width: 90px;
   height: 90px;
   pointer-events: stroke;
-  filter: v-bind(dropShadow);
 }
 </style>

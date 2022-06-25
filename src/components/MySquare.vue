@@ -181,7 +181,7 @@ function mouseDown(e: MouseEvent): void {
 
 .square_active {
   /* border: 5px solid hsl(180, 70%, 55%); */
-  border: 5px solid hsl(300, 75%, 55%);
+  border: 5px solid hsl(120, 75%, 55%);
 }
 
 .square_last-moves_for-white {
@@ -202,7 +202,7 @@ function mouseDown(e: MouseEvent): void {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: hsl(300, 75%, 55%);
+  background-color: hsl(120, 75%, 35%);
 }
 
 .square_color_immoveable {
