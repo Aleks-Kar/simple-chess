@@ -62,40 +62,18 @@ export const useStore = defineStore('board', {
         this.draggedItem.style.top = 0
         this.draggedItem.style.cursor = 'pointer'
         // this.indexActiveSquare = 64
-        console.warn('1')
+        // console.warn('1')
       } else {
-        console.warn('2')
+        // console.warn('2')
 
-        // this.setPieceOnHover(this.getDraggedPiece())
         this.pieces[this.hoverSquareIndex] = String(this.pieces[this.dragIndex])
         this.pieces[this.dragIndex] = ''
 
-        // if (this.turn === 'white') {
-        //   this.indexActiveSquares[1] = this.hoverSquareIndex
-        // } else {
-        //   this.indexActiveSquares[3] = this.hoverSquareIndex
-        // }
-        // this.delDraggedPiece()
-      }
-
-      if (this.turn === 'white' && !this.pieceHadBeenMoved) {
-        console.warn(3)
-
-        // this.turn = 'black'
-        // this.indexActiveSquares[2] = 64
-        // this.indexActiveSquares[3] = 64
-      } else if (this.turn === 'black' && !this.pieceHadBeenMoved) {
-        console.warn(4)
-
-        // this.turn = 'white'
-        // this.indexActiveSquares[0] = 64
-        // this.indexActiveSquares[1] = 64
-      }
-
-      if (this.turn === 'white') {
-        this.turn = 'black'
-      } else {
-        this.turn = 'white'
+        if (this.turn === 'white') {
+          this.turn = 'black'
+        } else {
+          this.turn = 'white'
+        }
       }
 
       //clearing

@@ -8,7 +8,7 @@ const props = defineProps<{
 
 const whiteFill = computed<string>(() => {
   if (props.attacked) {
-    return '#ff0000'
+    return '#1fad1f'
   } else {
     return '#ffffff'
   }
@@ -16,7 +16,7 @@ const whiteFill = computed<string>(() => {
 
 const blackFill = computed<string>(() => {
   if (props.attacked) {
-    return '#ff0000'
+    return '#1fad1f'
   } else {
     return '#000000'
   }

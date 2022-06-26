@@ -14,6 +14,124 @@ export function getMoveableSquares(
   const y = Math.trunc(index / 8)
   const x = index - y * 8
 
+  // FUNCTIONS FOR CALCULATING THE MOVEMENT OF THE ROOK, BISHOP AND QUEEN
+  function orthoUp() {
+    for (let i = y - 1; i >= 0; i--) {
+      if (y < 1) break
+      if (pieces[x + i * 8] === '') {
+        moveableSquares[x + i * 8] = true
+      } else if (isWhite(piece) !== isWhite(pieces[x + i * 8])) {
+        moveableSquares[x + i * 8] = true
+        break
+      } else {
+        break
+      }
+    }
+  }
+
+  function orthoRight() {
+    for (let i = x + 1; i <= 7; i++) {
+      if (x > 6) break
+      if (pieces[i + y * 8] === '') {
+        moveableSquares[i + y * 8] = true
+      } else if (isWhite(piece) !== isWhite(pieces[i + y * 8])) {
+        moveableSquares[i + y * 8] = true
+        break
+      } else {
+        break
+      }
+    }
+  }
+
+  function orthoDown() {
+    for (let i = y + 1; i <= 7; i++) {
+      if (y > 6) break
+      if (pieces[x + i * 8] === '') {
+        moveableSquares[x + i * 8] = true
+      } else if (isWhite(piece) !== isWhite(pieces[x + i * 8])) {
+        moveableSquares[x + i * 8] = true
+        break
+      } else {
+        break
+      }
+    }
+  }
+
+  function orthoLeft() {
+    for (let i = x - 1; i >= 0; i--) {
+      if (x < 1) break
+      if (pieces[i + y * 8] === '') {
+        moveableSquares[i + y * 8] = true
+      } else if (isWhite(piece) !== isWhite(pieces[i + y * 8])) {
+        moveableSquares[i + y * 8] = true
+        break
+      } else {
+        break
+      }
+    }
+  }
+
+  // FUNCTIONS FOR CALCULATING THE MOVEMENT OF THE BISHOP AND QUEEN
+  function angularUpperRight() {
+    const length = 7 - x < y ? 7 - x : y
+    for (let i = 1; i <= length; i++) {
+      const index = x + y * 8 - 7 * i
+      if (pieces[index] === '') {
+        moveableSquares[index] = true
+      } else if (isWhite(piece) !== isWhite(pieces[index])) {
+        moveableSquares[index] = true
+        break
+      } else {
+        break
+      }
+    }
+  }
+
+  function angularLowerRight() {
+    const length = x === y ? 7 - x : 7 - Math.max(x, y)
+    for (let i = 1; i <= length; i++) {
+      const index = x + i + (y + i) * 8
+      if (pieces[index] === '') {
+        moveableSquares[index] = true
+      } else if (isWhite(piece) !== isWhite(pieces[index])) {
+        moveableSquares[index] = true
+        break
+      } else {
+        break
+      }
+    }
+  }
+
+  function angularLowerLeft() {
+    const length = 7 - y < x ? 7 - y : x
+    for (let i = 1; i <= length; i++) {
+      const index = x + y * 8 + 7 * i
+      if (pieces[index] === '') {
+        moveableSquares[index] = true
+      } else if (isWhite(piece) !== isWhite(pieces[index])) {
+        moveableSquares[index] = true
+        break
+      } else {
+        break
+      }
+    }
+  }
+
+  function angularUpperLeft() {
+    const length = x === y ? x : Math.min(x, y)
+    for (let i = 1; i <= length; i++) {
+      const index = x - i + (y - i) * 8
+      if (pieces[index] === '') {
+        moveableSquares[index] = true
+      } else if (isWhite(piece) !== isWhite(pieces[index])) {
+        moveableSquares[index] = true
+        break
+      } else {
+        break
+      }
+    }
+  }
+
   if (piece.toUpperCase() === 'P') {
     // PAWN, movement forward
     // checking if pawn in an initial position
@@ -26,6 +144,7 @@ export function getMoveableSquares(
     }
 
     for (let i = 1; i < maxLength; i++) {
+      if (y < 1 || y > 6) break
       let index: number = 0
       if (isWhite(piece)) {
         index = x + (y - i) * 8 // for the white pawn
@@ -73,52 +192,25 @@ export function getMoveableSquares(
     // ...
   } else if (piece.toUpperCase() === 'R') {
     // ROOK, movement to the up
-    for (let i = y - 1; i >= 0; i--) {
-      if (pieces[x + i * 8] === '') {
-        moveableSquares[x + i * 8] = true
-      } else if (isWhite(piece) !== isWhite(pieces[x + i * 8])) {
-        moveableSquares[x + i * 8] = true
-        break
-      } else {
-        break
-      }
-    }
-
-    // ROOK, movement to the left
-    for (let i = x - 1; i >= 0; i--) {
-      if (pieces[i + y * 8] === '') {
-        moveableSquares[i + y * 8] = true
-      } else if (isWhite(piece) !== isWhite(pieces[i + y * 8])) {
-        moveableSquares[i + y * 8] = true
-        break
-      } else {
-        break
-      }
-    }
+    orthoUp()
 
     // ROOK, movement to the right
-    for (let i = x + 1; i <= 7; i++) {
-      if (pieces[i + y * 8] === '') {
-        moveableSquares[i + y * 8] = true
-      } else if (isWhite(piece) !== isWhite(pieces[i + y * 8])) {
-        moveableSquares[i + y * 8] = true
-        break
-      } else {
-        break
-      }
-    }
+    orthoRight()
 
     // ROOK, movement to the down
-    for (let i = y + 1; i <= 7; i++) {
-      if (pieces[x + i * 8] === '') {
-        moveableSquares[x + i * 8] = true
-      } else if (isWhite(piece) !== isWhite(pieces[x + i * 8])) {
-        moveableSquares[x + i * 8] = true
-        break
-      } else {
-        break
-      }
-    }
+    orthoDown()
+
+    // ROOK, movement to the left
+    orthoLeft()
+  } else if (piece.toUpperCase() === 'B') {
+    // BISHOP, movement to the upper right corner
+    angularUpperRight()
+    // BISHOP, movement to the lower right corner
+    angularLowerRight()
+    // BISHOP, movement to the lower left corner
+    angularLowerLeft()
+    // BISHOP, movement to the upper left corner
+    angularUpperLeft()
   }
 
   return moveableSquares

@@ -15,14 +15,6 @@ const props = defineProps<{
 
 const store = useStore()
 
-const colorOfTurn = computed<string>(() => {
-  if (store.turn === 'white') {
-    return 'hsl(300, 50%, 55%)'
-  } else {
-    return 'hsl(240, 60%, 55%)'
-  }
-})
-
 const piece = String(store.pieces[props.index]).toUpperCase()
 
 // const isDraggable = computed<boolean>(() => {
@@ -180,22 +172,16 @@ function mouseDown(e: MouseEvent): void {
 }
 
 .square_active {
-  /* border: 5px solid hsl(180, 70%, 55%); */
   border: 5px solid hsl(120, 70%, 40%);
 }
 
 .square_last-moves_for-white {
-  /* border: 5px solid hsl(240, 75%, 55%); */
-  background-color: hsl(63, 53%, 63%);
+  background-color: hsl(65, 50%, 60%);
 }
 
 .square_last-moves_for-black {
-  /* border: 5px solid hsl(240, 75%, 55%); */
-  background-color: hsl(56, 48%, 45%);
+  background-color: hsl(55, 50%, 40%);
 }
-/* .square_moveable {
-  background-color: green;
-} */
 
 .square_moveable::after {
   content: '';
