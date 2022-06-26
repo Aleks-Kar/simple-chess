@@ -9,6 +9,8 @@ export const useStore = defineStore('board', {
   state: () => {
     return {
       pieces: Array<string>(64),
+      underWhiteAttack: Array<boolean>(64),
+      underBlackAttack: Array<boolean>(64),
       turn: 'white',
       indexActiveSquare: 64,
       lastMoves: Array<number>(2),
@@ -31,6 +33,8 @@ export const useStore = defineStore('board', {
     // setting up pieces
     init(): void {
       this.pieces.fill('')
+      this.underWhiteAttack.fill(false)
+      this.underBlackAttack.fill(false)
       this.squaresForMove.fill(false)
       const blackStr: string = 'rnbqkbnrpppppppp'
       const whiteStr: string = 'RNBKQBNRPPPPPPPP'
