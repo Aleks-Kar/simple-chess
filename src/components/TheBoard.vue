@@ -2,8 +2,7 @@
 import { onMounted } from 'vue'
 import { useStore } from '../stores/board'
 import MySquare from './MySquare.vue'
-import { getMoveableSquares } from '../services/helpers'
-import { callExpression } from '@babel/types'
+// import { getMoveableSquares } from '../services/helpers'
 
 const store = useStore()
 

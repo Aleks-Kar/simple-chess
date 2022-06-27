@@ -1,18 +1,10 @@
 <script setup lang="ts">
-import { computed, reactive } from '@vue/reactivity'
+import { computed } from '@vue/reactivity'
 import { useStore } from '../stores/board'
-import MyRook from '/src/components/pieces/MyRook.vue'
-import MyKnight from '/src/components/pieces/MyKnight.vue'
-import MyBishop from '/src/components/pieces/MyBishop.vue'
-import MyQueen from '/src/components/pieces/MyQueen.vue'
-import MyKing from '/src/components/pieces/MyKing.vue'
-import MyPawn from '/src/components/pieces/MyPawn.vue'
+import MyPiece from '/src/components/MyPiece.vue'
 import { getAttackedSquares, getPawnMoves } from '../services/helpers'
 
-const props = defineProps<{
-  index: number
-}>()
-
+const props = defineProps<{ index: number }>()
 const store = useStore()
 
 const piece = String(store.pieces[props.index]).toUpperCase()
@@ -141,36 +133,13 @@ function mouseDown(e: MouseEvent): void {
       { square_hover: isHover && !isImmoveable }
       // { square_attacked: isAttacked }
     ]">
-    <MyBishop
-      v-if="piece === 'B'"
+    <MyPiece
+      v-if="store.getPiece(props.index)"
+      :piece="piece"
+      :set="store.set"
       :color="store.getPieceColor(props.index)"
       :attacked="attacked"
       :defended="defended" />
-    <MyKing
-      v-if="piece === 'K'"
-      :color="store.getPieceColor(props.index)"
-      :attacked="attacked" />
-    <MyKnight
-      v-if="piece === 'N'"
-      :color="store.getPieceColor(props.index)"
-      :attacked="attacked"
-      :defended="defended" />
-    <MyPawn
-      v-if="piece === 'P'"
-      :color="store.getPieceColor(props.index)"
-      :attacked="attacked"
-      :defended="defended" />
-    <MyQueen
-      v-if="piece === 'Q'"
-      :color="store.getPieceColor(props.index)"
-      :attacked="attacked"
-      :defended="defended" />
-    <MyRook
-      v-if="piece === 'R'"
-      :color="store.getPieceColor(props.index)"
-      :attacked="attacked"
-      :defended="defended" />
-    <!-- {{ props.index }} -->
   </div>
 </template>
 

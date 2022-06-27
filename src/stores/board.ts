@@ -9,6 +9,7 @@ export const useStore = defineStore('board', {
   state: () => {
     return {
       pieces: Array<string>(64),
+      set: 'dubrovny',
       underWhiteAttack: Array<boolean>(64),
       underBlackAttack: Array<boolean>(64),
       turn: 'white',
