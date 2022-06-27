@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import TheBoard from './components/TheBoard.vue'
-import { getHoverSquareIndex } from './services/helpers'
+import { getAttackedSquares, getHoverSquareIndex } from './services/helpers'
 import { useStore } from './stores/board'
 
 const store = useStore()
 
+// THE MOUSE MOVE EVENT
 function mouseMove(e: MouseEvent): void {
   if (!store.draggedItem || !store.lmbIsPressed) return
 
@@ -24,6 +25,7 @@ function mouseMove(e: MouseEvent): void {
   store.draggedItem.style.top = `${e.clientY - store.cy}px`
 }
 
+// THE MOUSE UP EVENT
 function mouseUp(): void {
   store.lmbIsPressed = false
 
@@ -48,13 +50,32 @@ function mouseUp(): void {
   }
 
   if (!store.pieceHadBeenMoved) return
+
+  // setting attacked squares
+  if (store.turn === 'white') {
+    store.setWhiteAttackedSquares(
+      getAttackedSquares(
+        store.pieces,
+        store.pieces[store.dragIndex],
+        store.hoverSquareIndex
+      )
+    )
+  } else if (store.turn === 'black') {
+    store.setBlackAttackedSquares(
+      getAttackedSquares(
+        store.pieces,
+        store.pieces[store.dragIndex],
+        store.hoverSquareIndex
+      )
+    )
+  }
+
   store.placePieceOnHover()
   store.pieceHadBeenMoved = false
   store.indexActiveSquare = 64
 }
 
 function mouseLeave(): void {
-  // console.warn('mouseLeave')
   // const dragIndex = store.dragIndex
   // store.pieces[store.dragIndex] = '' // delete the dragged piece
   // store.pieces[60] = store.pieces[dragIndex]

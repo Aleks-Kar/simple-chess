@@ -4,29 +4,22 @@ import { computed } from '@vue/reactivity'
 const props = defineProps<{
   color: 'white' | 'black'
   attacked: boolean
+  defended: boolean
 }>()
 
-const whiteFill = computed<string>(() => {
+const urlSvgAttack = computed<string>(() => {
   if (props.attacked) {
-    return '#1fad1f'
+    return 'url("/src/assets/swords.svg")'
   } else {
-    return '#ffffff'
+    return 'none'
   }
 })
 
-const blackFill = computed<string>(() => {
-  if (props.attacked) {
-    return '#1fad1f'
+const urlSvgDefend = computed<string>(() => {
+  if (props.defended) {
+    return 'url("/src/assets/shield.svg")'
   } else {
-    return '#000000'
-  }
-})
-
-const blackStroke = computed<string>(() => {
-  if (props.attacked) {
-    return '#000000'
-  } else {
-    return '#ffffff'
+    return 'none'
   }
 })
 </script>
@@ -35,8 +28,12 @@ const blackStroke = computed<string>(() => {
   <div class="container">
     <svg
       v-if="props.color === 'white'"
-      viewBox="0 0 45 45"
-      xmlns="http://www.w3.org/2000/svg">
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      width="90"
+      height="90"
+      viewBox="0 0 45 45">
       <g
         style="
           opacity: 1;
@@ -52,7 +49,7 @@ const blackStroke = computed<string>(() => {
           stroke-opacity: 1;
         "
         transform="translate(0,0.6)">
-        <g class="svg_fill_white" style="stroke: #000000; stroke-linecap: butt">
+        <g style="fill: #ffffff; stroke: #000000; stroke-linecap: butt">
           <path
             d="M 9,36 C 12.39,35.03 19.11,36.43 22.5,34 C 25.89,36.43 32.61,35.03 36,36 C 36,36 37.65,36.54 39,38 C 38.32,38.97 37.35,38.99 36,38.5 C 32.61,37.53 25.89,38.96 22.5,37.5 C 19.11,38.96 12.39,37.53 9,38.5 C 7.65,38.99 6.68,38.97 6,38 C 7.35,36.54 9,36 9,36 z" />
           <path
@@ -64,7 +61,14 @@ const blackStroke = computed<string>(() => {
           style="fill: none; stroke: #000000; stroke-linejoin: miter" />
       </g>
     </svg>
-    <svg v-else viewBox="0 0 45 45" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      v-else
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      width="90"
+      height="90"
+      viewBox="0 0 45 45">
       <g
         style="
           opacity: 1;
@@ -80,7 +84,7 @@ const blackStroke = computed<string>(() => {
           stroke-opacity: 1;
         "
         transform="translate(0,0.6)">
-        <g class="svg_fill_black" style="stroke: #000000; stroke-linecap: butt">
+        <g style="fill: #000000; stroke: #000000; stroke-linecap: butt">
           <path
             d="M 9,36 C 12.39,35.03 19.11,36.43 22.5,34 C 25.89,36.43 32.61,35.03 36,36 C 36,36 37.65,36.54 39,38 C 38.32,38.97 37.35,38.99 36,38.5 C 32.61,37.53 25.89,38.96 22.5,37.5 C 19.11,38.96 12.39,37.53 9,38.5 C 7.65,38.99 6.68,38.97 6,38 C 7.35,36.54 9,36 9,36 z" />
           <path
@@ -88,9 +92,8 @@ const blackStroke = computed<string>(() => {
           <path d="M 25 8 A 2.5 2.5 0 1 1  20,8 A 2.5 2.5 0 1 1  25 8 z" />
         </g>
         <path
-          class="svg_stroke_black"
           d="M 17.5,26 L 27.5,26 M 15,30 L 30,30 M 22.5,15.5 L 22.5,20.5 M 20,18 L 25,18"
-          style="fill: none; stroke-linejoin: miter" />
+          style="fill: none; stroke: #ffffff; stroke-linejoin: miter" />
       </g>
     </svg>
   </div>
@@ -103,15 +106,25 @@ const blackStroke = computed<string>(() => {
   pointer-events: stroke;
 }
 
-.svg_fill_white {
-  fill: v-bind(whiteFill);
+.container::before {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  top: -3px;
+  left: -3px;
+  content: '';
+  background-size: cover;
+  background-image: v-bind(urlSvgAttack);
 }
 
-.svg_fill_black {
-  fill: v-bind(blackFill);
-}
-
-.svg_stroke_black {
-  stroke: v-bind(blackStroke);
+.container::after {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  top: -5px;
+  right: -5px;
+  content: '';
+  background-size: cover;
+  background-image: v-bind(urlSvgDefend);
 }
 </style>

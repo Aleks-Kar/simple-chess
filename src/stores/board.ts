@@ -98,11 +98,29 @@ export const useStore = defineStore('board', {
     },
 
     setMoveableSquares(moveableSquares: Array<boolean>): void {
+      this.squaresForMove = [...moveableSquares]
+    },
+
+    setWhiteAttackedSquares(attackedSquares: Array<boolean>): void {
       for (let i = 0; i < 64; i++) {
-        if (moveableSquares) {
-          this.squaresForMove[i] = moveableSquares[i]
-        } else {
-          this.squaresForMove[i] = false
+        if (attackedSquares[i]) {
+          if (this.underWhiteAttack[i]) {
+            continue
+          } else {
+            this.underWhiteAttack[i] = attackedSquares[i]
+          }
+        }
+      }
+    },
+
+    setBlackAttackedSquares(attackedSquares: Array<boolean>): void {
+      for (let i = 0; i < 64; i++) {
+        if (attackedSquares[i]) {
+          if (this.underBlackAttack[i]) {
+            continue
+          } else {
+            this.underBlackAttack[i] = attackedSquares[i]
+          }
         }
       }
     },
@@ -116,7 +134,8 @@ export const useStore = defineStore('board', {
     getPiece:
       state =>
       (index: number): string => {
-        return String(state.pieces[index])
+        // return String(state.pieces[index])
+        return state.pieces[index]
       },
 
     getDraggedPiece: state => (): string => {

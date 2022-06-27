@@ -35,8 +35,12 @@ const blackStroke = computed<string>(() => {
   <div class="container">
     <svg
       v-if="props.color === 'white'"
-      viewBox="0 0 45 45"
-      xmlns="http://www.w3.org/2000/svg">
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      width="90"
+      height="90"
+      viewBox="0 0 45 45">
       <g
         style="
           fill: none;
@@ -78,7 +82,14 @@ const blackStroke = computed<string>(() => {
           style="fill: none; stroke: #000000" />
       </g>
     </svg>
-    <svg v-else viewBox="0 0 45 45" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      v-else
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      width="90"
+      height="90"
+      viewBox="0 0 45 45">
       <g
         style="
           fill: none;

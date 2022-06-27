@@ -7,7 +7,7 @@ import MyBishop from '/src/components/pieces/MyBishop.vue'
 import MyQueen from '/src/components/pieces/MyQueen.vue'
 import MyKing from '/src/components/pieces/MyKing.vue'
 import MyPawn from '/src/components/pieces/MyPawn.vue'
-import { getMoveableSquares } from '../services/helpers'
+import { getAttackedSquares, getPawnMoves } from '../services/helpers'
 
 const props = defineProps<{
   index: number
@@ -45,9 +45,32 @@ const isHover = computed<boolean>(() => {
 })
 
 const isAttacked = computed<boolean>(() => {
-  return store.squaresForMove[props.index] && store.getPiece(props.index) !== ''
+  return (
+    store.squaresForMove[props.index] &&
+    store.getPiece(props.index) !== '' &&
+    store.getPieceColor(props.index) !== store.turn
+  )
 })
 
+const defended = computed<boolean>(() => {
+  return (
+    (store.underWhiteAttack[props.index] &&
+      store.getPieceColor(props.index) === 'white') ||
+    (store.underBlackAttack[props.index] &&
+      store.getPieceColor(props.index) === 'black')
+  )
+})
+
+const attacked = computed<boolean>(() => {
+  return (
+    (store.underWhiteAttack[props.index] &&
+      store.getPieceColor(props.index) === 'black') ||
+    (store.underBlackAttack[props.index] &&
+      store.getPieceColor(props.index) === 'white')
+  )
+})
+
+// THE MOUSE DOWN EVENT
 function mouseDown(e: MouseEvent): void {
   if (store.indexActiveSquare !== 64 && props.index === store.indexActiveSquare)
     store.isReactivated = true
@@ -56,20 +79,24 @@ function mouseDown(e: MouseEvent): void {
   store.dragIndex = props.index
 
   if (!store.isReactivated) {
-    // activate the square
     store.indexActiveSquare = props.index
-    // if (store.turn === 'white') {
-    //   store.indexActiveSquares[0] = props.index
-    // } else {
-    //   store.indexActiveSquares[2] = props.index
-    // }
-
-    // console.warn(store.indexActiveSquares)
 
     // showing moveable squares
-    store.setMoveableSquares(
-      getMoveableSquares(store.pieces, store.pieces[props.index], props.index)
-    )
+    if (store.getPiece(props.index).toUpperCase() === 'P') {
+      // calculating exclusive moves for a pawn
+      store.setMoveableSquares(
+        getPawnMoves(store.pieces, store.getPiece(props.index), props.index)
+      )
+    } else {
+      // calculating of moves for other pieces
+      store.setMoveableSquares(
+        getAttackedSquares(
+          store.pieces,
+          store.getPiece(props.index),
+          props.index
+        )
+      )
+    }
   }
 
   // preparing for the dragging
@@ -114,30 +141,36 @@ function mouseDown(e: MouseEvent): void {
       { square_hover: isHover && !isImmoveable }
       // { square_attacked: isAttacked }
     ]">
-    <MyRook
-      v-if="piece === 'R'"
-      :color="store.getPieceColor(props.index)"
-      :attacked="isAttacked" />
-    <MyKnight
-      v-if="piece === 'N'"
-      :color="store.getPieceColor(props.index)"
-      :attacked="isAttacked" />
     <MyBishop
       v-if="piece === 'B'"
       :color="store.getPieceColor(props.index)"
-      :attacked="isAttacked" />
-    <MyQueen
-      v-if="piece === 'Q'"
-      :color="store.getPieceColor(props.index)"
-      :attacked="isAttacked" />
+      :attacked="attacked"
+      :defended="defended" />
     <MyKing
       v-if="piece === 'K'"
       :color="store.getPieceColor(props.index)"
-      :attacked="isAttacked" />
+      :attacked="attacked"
+      :defended="defended" />
+    <MyKnight
+      v-if="piece === 'N'"
+      :color="store.getPieceColor(props.index)"
+      :attacked="attacked"
+      :defended="defended" />
     <MyPawn
       v-if="piece === 'P'"
       :color="store.getPieceColor(props.index)"
-      :attacked="isAttacked" />
+      :attacked="attacked"
+      :defended="defended" />
+    <MyQueen
+      v-if="piece === 'Q'"
+      :color="store.getPieceColor(props.index)"
+      :attacked="attacked"
+      :defended="defended" />
+    <MyRook
+      v-if="piece === 'R'"
+      :color="store.getPieceColor(props.index)"
+      :attacked="attacked"
+      :defended="defended" />
     <!-- {{ props.index }} -->
   </div>
 </template>
@@ -202,5 +235,12 @@ function mouseDown(e: MouseEvent): void {
 .square_attacked {
   border: 5px solid transparent;
   border-radius: 50%;
+}
+
+.square_attacked_white {
+  background-color: hsl(0, 0%, 100%);
+}
+.square_attacked_black {
+  background-color: hsl(0, 0%, 20%);
 }
 </style>

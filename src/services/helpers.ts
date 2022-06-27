@@ -2,7 +2,47 @@ function isWhite(piece: string): boolean {
   return piece === piece.toUpperCase()
 }
 
-export function getMoveableSquares(
+export function getPawnMoves(
+  pieces: Array<string>,
+  piece: string,
+  index: number
+) {
+  const moveableSquares = new Array<boolean>(64)
+  moveableSquares.fill(false)
+
+  // getting coordinates
+  const y = Math.trunc(index / 8)
+  const x = index - y * 8
+
+  // PAWN, movement forward
+  // checking if pawn in an initial position
+  let maxLength: number = 0
+  if (isWhite(piece)) {
+    maxLength = y === 6 ? 3 : 2 // for the white pawn
+  } else {
+    maxLength = y === 1 ? 3 : 2 // for the black pawn
+  }
+
+  for (let i = 1; i < maxLength; i++) {
+    if (y < 1 || y > 6) break
+    let index: number = 0
+    if (isWhite(piece)) {
+      index = x + (y - i) * 8 // for the white pawn
+    } else {
+      index = x + (y + i) * 8 // for the black pawn
+    }
+
+    if (pieces[index] === '') {
+      moveableSquares[index] = true
+    } else {
+      break
+    }
+  }
+
+  return moveableSquares
+}
+
+export function getAttackedSquares(
   pieces: Array<string>,
   piece: string,
   index: number
@@ -16,57 +56,57 @@ export function getMoveableSquares(
 
   // FUNCTIONS FOR CALCULATING THE MOVEMENT OF THE ROOK, BISHOP AND QUEEN
   function orthoUp() {
-    for (let i = y - 1; i >= 0; i--) {
-      if (y < 1) break
-      if (pieces[x + i * 8] === '') {
-        moveableSquares[x + i * 8] = true
-      } else if (isWhite(piece) !== isWhite(pieces[x + i * 8])) {
-        moveableSquares[x + i * 8] = true
-        break
-      } else {
-        break
+    if (y > 0) {
+      for (let i = y - 1; i >= 0; i--) {
+        const index = x + i * 8
+        if (pieces[index] === '') {
+          moveableSquares[index] = true
+        } else {
+          moveableSquares[index] = true
+          break
+        }
       }
     }
   }
 
   function orthoRight() {
-    for (let i = x + 1; i <= 7; i++) {
-      if (x > 6) break
-      if (pieces[i + y * 8] === '') {
-        moveableSquares[i + y * 8] = true
-      } else if (isWhite(piece) !== isWhite(pieces[i + y * 8])) {
-        moveableSquares[i + y * 8] = true
-        break
-      } else {
-        break
+    if (x < 7) {
+      for (let i = x + 1; i <= 7; i++) {
+        const index = i + y * 8
+        if (pieces[index] === '') {
+          moveableSquares[index] = true
+        } else {
+          moveableSquares[index] = true
+          break
+        }
       }
     }
   }
 
   function orthoDown() {
-    for (let i = y + 1; i <= 7; i++) {
-      if (y > 6) break
-      if (pieces[x + i * 8] === '') {
-        moveableSquares[x + i * 8] = true
-      } else if (isWhite(piece) !== isWhite(pieces[x + i * 8])) {
-        moveableSquares[x + i * 8] = true
-        break
-      } else {
-        break
+    if (y < 7) {
+      for (let i = y + 1; i <= 7; i++) {
+        const index = x + i * 8
+        if (pieces[index] === '') {
+          moveableSquares[index] = true
+        } else {
+          moveableSquares[index] = true
+          break
+        }
       }
     }
   }
 
   function orthoLeft() {
-    for (let i = x - 1; i >= 0; i--) {
-      if (x < 1) break
-      if (pieces[i + y * 8] === '') {
-        moveableSquares[i + y * 8] = true
-      } else if (isWhite(piece) !== isWhite(pieces[i + y * 8])) {
-        moveableSquares[i + y * 8] = true
-        break
-      } else {
-        break
+    if (x > 0) {
+      for (let i = x - 1; i >= 0; i--) {
+        const index = i + y * 8
+        if (pieces[index] === '') {
+          moveableSquares[index] = true
+        } else {
+          moveableSquares[index] = true
+          break
+        }
       }
     }
   }
@@ -78,10 +118,8 @@ export function getMoveableSquares(
       const index = x + y * 8 - 7 * i
       if (pieces[index] === '') {
         moveableSquares[index] = true
-      } else if (isWhite(piece) !== isWhite(pieces[index])) {
-        moveableSquares[index] = true
-        break
       } else {
+        moveableSquares[index] = true
         break
       }
     }
@@ -93,10 +131,8 @@ export function getMoveableSquares(
       const index = x + i + (y + i) * 8
       if (pieces[index] === '') {
         moveableSquares[index] = true
-      } else if (isWhite(piece) !== isWhite(pieces[index])) {
-        moveableSquares[index] = true
-        break
       } else {
+        moveableSquares[index] = true
         break
       }
     }
@@ -108,10 +144,8 @@ export function getMoveableSquares(
       const index = x + y * 8 + 7 * i
       if (pieces[index] === '') {
         moveableSquares[index] = true
-      } else if (isWhite(piece) !== isWhite(pieces[index])) {
-        moveableSquares[index] = true
-        break
       } else {
+        moveableSquares[index] = true
         break
       }
     }
@@ -123,10 +157,8 @@ export function getMoveableSquares(
       const index = x - i + (y - i) * 8
       if (pieces[index] === '') {
         moveableSquares[index] = true
-      } else if (isWhite(piece) !== isWhite(pieces[index])) {
-        moveableSquares[index] = true
-        break
       } else {
+        moveableSquares[index] = true
         break
       }
     }
@@ -143,158 +175,43 @@ export function getMoveableSquares(
     angularUpperLeft()
   } else if (piece.toUpperCase() === 'K') {
     // KING movement
-    if (y > 0) {
-      const index = x + (y - 1) * 8 // top
-      if (pieces[index] === '' || isWhite(piece) !== isWhite(pieces[index])) {
-        moveableSquares[index] = true
-      }
-    }
-    if (x < 7 && y > 0) {
-      const index = x + 1 + (y - 1) * 8 // upper right
-      if (pieces[index] === '' || isWhite(piece) !== isWhite(pieces[index])) {
-        moveableSquares[index] = true
-      }
-    }
-    if (x < 7) {
-      const index = x + 1 + y * 8 // right
-      if (pieces[index] === '' || isWhite(piece) !== isWhite(pieces[index])) {
-        moveableSquares[index] = true
-      }
-    }
-    if (x < 7 && y < 7) {
-      const index = x + 1 + (y + 1) * 8 // lower right
-      if (pieces[index] === '' || isWhite(piece) !== isWhite(pieces[index])) {
-        moveableSquares[index] = true
-      }
-    }
-    if (y < 7) {
-      const index = x + (y + 1) * 8 // bottom
-      if (pieces[index] === '' || isWhite(piece) !== isWhite(pieces[index])) {
-        moveableSquares[index] = true
-      }
-    }
-    if (x > 0 && y < 7) {
-      const index = x - 1 + (y + 1) * 8 // lower left
-      if (pieces[index] === '' || isWhite(piece) !== isWhite(pieces[index])) {
-        moveableSquares[index] = true
-      }
-    }
-    if (x > 0) {
-      const index = x - 1 + y * 8 // left
-      if (pieces[index] === '' || isWhite(piece) !== isWhite(pieces[index])) {
-        moveableSquares[index] = true
-      }
-    }
-    if (x > 0 && y > 0) {
-      const index = x - 1 + (y - 1) * 8 // upper left
-      if (pieces[index] === '' || isWhite(piece) !== isWhite(pieces[index])) {
-        console.warn('!')
-        moveableSquares[index] = true
-      }
-    }
+    if (y > 0) moveableSquares[x + (y - 1) * 8] = true // top
+    if (x < 7 && y > 0) moveableSquares[x + 1 + (y - 1) * 8] = true // upper right
+    if (x < 7) moveableSquares[x + 1 + y * 8] = true // right
+    if (x < 7 && y < 7) moveableSquares[x + 1 + (y + 1) * 8] = true // lower right
+    if (y < 7) moveableSquares[x + (y + 1) * 8] = true // bottom
+    if (x > 0 && y < 7) moveableSquares[x - 1 + (y + 1) * 8] = true // lower left
+    if (x > 0) moveableSquares[x - 1 + y * 8] = true // left
+    if (x > 0 && y > 0) moveableSquares[x - 1 + (y - 1) * 8] = true // upper left
   } else if (piece.toUpperCase() === 'N') {
     // KNIGHT movement
-    if (x > 0 && y > 1) {
-      const index = x - 1 + (y - 2) * 8 // top left
-      if (pieces[index] === '' || isWhite(piece) !== isWhite(pieces[index])) {
-        moveableSquares[index] = true
-      }
-    }
-    if (x < 7 && y > 1) {
-      const index = x + 1 + (y - 2) * 8 // top right
-      if (pieces[index] === '' || isWhite(piece) !== isWhite(pieces[index])) {
-        moveableSquares[index] = true
-      }
-    }
-    if (x < 6 && y > 0) {
-      const index = x + 2 + (y - 1) * 8 // right top
-      if (pieces[index] === '' || isWhite(piece) !== isWhite(pieces[index])) {
-        moveableSquares[index] = true
-      }
-    }
-    if (x < 6 && y < 7) {
-      const index = x + 2 + (y + 1) * 8 // right bottom
-      if (pieces[index] === '' || isWhite(piece) !== isWhite(pieces[index])) {
-        moveableSquares[index] = true
-      }
-    }
-    if (x < 7 && y < 6) {
-      const index = x + 1 + (y + 2) * 8 // bottom right
-      if (pieces[index] === '' || isWhite(piece) !== isWhite(pieces[index])) {
-        moveableSquares[index] = true
-      }
-    }
-    if (x > 0 && y < 6) {
-      const index = x - 1 + (y + 2) * 8 // bottom left
-      if (pieces[index] === '' || isWhite(piece) !== isWhite(pieces[index])) {
-        moveableSquares[index] = true
-      }
-    }
-    if (x > 1 && y < 7) {
-      const index = x - 2 + (y + 1) * 8 // left bottom
-      if (pieces[index] === '' || isWhite(piece) !== isWhite(pieces[index])) {
-        moveableSquares[index] = true
-      }
-    }
-    if (x > 1 && y > 0) {
-      const index = x - 2 + (y - 1) * 8 // left top
-      if (pieces[index] === '' || isWhite(piece) !== isWhite(pieces[index])) {
-        moveableSquares[index] = true
-      }
-    }
+    if (x > 0 && y > 1) moveableSquares[x - 1 + (y - 2) * 8] = true // top left
+    if (x < 7 && y > 1) moveableSquares[x + 1 + (y - 2) * 8] = true // top right
+    if (x < 6 && y > 0) moveableSquares[x + 2 + (y - 1) * 8] = true // right top
+    if (x < 6 && y < 7) moveableSquares[x + 2 + (y + 1) * 8] = true // right bottom
+    if (x < 7 && y < 6) moveableSquares[x + 1 + (y + 2) * 8] = true // bottom right
+    if (x > 0 && y < 6) moveableSquares[x - 1 + (y + 2) * 8] = true // bottom left
+    if (x > 1 && y < 7) moveableSquares[x - 2 + (y + 1) * 8] = true // left bottom
+    if (x > 1 && y > 0) moveableSquares[x - 2 + (y - 1) * 8] = true // left top
   } else if (piece.toUpperCase() === 'P') {
-    // PAWN, movement forward
-    // checking if pawn in an initial position
-    let maxLength: number = 0
-    let index: number = 0
-    if (isWhite(piece)) {
-      maxLength = y === 6 ? 3 : 2 // for the white pawn
-    } else {
-      maxLength = y === 1 ? 3 : 2 // for the black pawn
-    }
-
-    for (let i = 1; i < maxLength; i++) {
-      if (y < 1 || y > 6) break
-      let index: number = 0
-      if (isWhite(piece)) {
-        index = x + (y - i) * 8 // for the white pawn
-      } else {
-        index = x + (y + i) * 8 // for the black pawn
-      }
-
-      if (pieces[index] === '') {
-        moveableSquares[index] = true
-      } else {
-        break
-      }
-    }
-
     // PAWN, attack movement
     if (piece.toUpperCase() === piece) {
       // the left square for the attack of the white pawn
       if (x > 0 && y > 0) {
-        const lSquareIndex: number = x - 1 + (y - 1) * 8
-        if (!isWhite(pieces[lSquareIndex]) && pieces[lSquareIndex] !== '')
-          moveableSquares[lSquareIndex] = true
+        moveableSquares[x - 1 + (y - 1) * 8] = true
       }
       // the right square for the attack of the white pawn
       if (x < 7 && y > 0) {
-        const rSquareIndex: number = x + 1 + (y - 1) * 8
-        if (!isWhite(pieces[rSquareIndex]) && pieces[rSquareIndex] !== '')
-          moveableSquares[rSquareIndex] = true
+        moveableSquares[x + 1 + (y - 1) * 8] = true
       }
     } else {
       // the left square for the attack of the black pawn
       if (x > 0 && y < 7) {
-        const lSquareIndex: number = x - 1 + (y + 1) * 8
-        if (isWhite(pieces[lSquareIndex]) && pieces[lSquareIndex] !== '')
-          moveableSquares[lSquareIndex] = true
+        moveableSquares[x - 1 + (y + 1) * 8] = true
       }
       // the right square for the attack of the black pawn
       if (x < 7 && y < 7) {
-        const rSquareIndex: number = x + 1 + (y + 1) * 8
-        if (isWhite(pieces[rSquareIndex]) && pieces[rSquareIndex] !== '')
-          moveableSquares[rSquareIndex] = true
+        moveableSquares[x + 1 + (y + 1) * 8] = true
       }
     }
 
