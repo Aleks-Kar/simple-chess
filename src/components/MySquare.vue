@@ -149,8 +149,7 @@ function mouseDown(e: MouseEvent): void {
     <MyKing
       v-if="piece === 'K'"
       :color="store.getPieceColor(props.index)"
-      :attacked="attacked"
-      :defended="defended" />
+      :attacked="attacked" />
     <MyKnight
       v-if="piece === 'N'"
       :color="store.getPieceColor(props.index)"
