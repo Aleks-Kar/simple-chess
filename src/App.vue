@@ -40,11 +40,17 @@ function mouseUp(): void {
     store.isReactivated = false
   }
 
-  // marking last moves
+  // if square is forbidden for move
+  // if (!store.squaresForMove[store.hoverSquareIndex]) {
+  //   store.placePieceOnHover()
+  //   return
+  // }
+
   if (
     store.indexActiveSquare !== store.hoverSquareIndex &&
     store.hoverSquareIndex !== 64
   ) {
+    // marking last moves
     store.lastMoves[0] = store.indexActiveSquare
     store.lastMoves[1] = store.hoverSquareIndex
   }

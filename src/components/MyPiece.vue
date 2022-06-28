@@ -18,7 +18,7 @@ const urlBlackPiece = computed<string>(() => {
 })
 
 const urlSvgAttack = computed<string>(() => {
-  if (props.attacked) {
+  if (props.attacked && props.piece.toUpperCase() !== 'K') {
     return 'url("/src/assets/swords.svg")'
   } else {
     return 'none'
@@ -26,7 +26,7 @@ const urlSvgAttack = computed<string>(() => {
 })
 
 const urlSvgDefend = computed<string>(() => {
-  if (props.defended) {
+  if (props.defended && props.piece.toUpperCase() !== 'K') {
     return 'url("/src/assets/shield.svg")'
   } else {
     return 'none'
@@ -35,23 +35,27 @@ const urlSvgDefend = computed<string>(() => {
 </script>
 
 <template>
-  <div class="container">
+  <div class="piece">
     <svg
       :class="[
-        { piece_white: props.color === 'white' },
-        { piece_black: props.color === 'black' }
+        { piece_color_white: props.color === 'white' },
+        { piece_color_black: props.color === 'black' },
+        {
+          'piece_king-under-attack':
+            props.attacked && props.piece.toUpperCase() === 'K'
+        }
       ]"></svg>
   </div>
 </template>
 
 <style scoped>
-.container {
+.piece {
   width: 90px;
   height: 90px;
   pointer-events: stroke;
 }
 
-.container::before {
+.piece::before {
   position: absolute;
   width: 18px;
   height: 18px;
@@ -62,7 +66,7 @@ const urlSvgDefend = computed<string>(() => {
   background-image: v-bind(urlSvgAttack);
 }
 
-.container::after {
+.piece::after {
   position: absolute;
   width: 24px;
   height: 24px;
@@ -73,17 +77,36 @@ const urlSvgDefend = computed<string>(() => {
   background-image: v-bind(urlSvgDefend);
 }
 
-.piece_white {
+.piece_color_white {
   width: 90px;
   height: 90px;
   background-size: cover;
   background-image: v-bind(urlWhitePiece);
 }
 
-.piece_black {
+.piece_color_black {
   width: 90px;
   height: 90px;
   background-size: cover;
   background-image: v-bind(urlBlackPiece);
+}
+
+@keyframes glow {
+  from {
+    color: red;
+    filter: drop-shadow(0 0 12px) drop-shadow(0 0 12px) drop-shadow(0 0 12px);
+  }
+
+  to {
+    color: red;
+    filter: drop-shadow(0 0 3px) drop-shadow(0 0 3px) drop-shadow(0 0 3px);
+  }
+}
+
+.piece_king-under-attack {
+  animation-duration: 5s;
+  animation-name: glow;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
 }
 </style>

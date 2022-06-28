@@ -7,7 +7,58 @@ import { getAttackedSquares, getPawnMoves } from '../services/helpers'
 const props = defineProps<{ index: number }>()
 const store = useStore()
 
-const piece = String(store.pieces[props.index]).toUpperCase()
+const piece = store.getPiece(props.index)
+const hasCursor = computed<boolean>(
+  () => store.turn === store.getPieceColor(props.index)
+)
+
+// THE MOUSE DOWN EVENT
+function mouseDown(e: MouseEvent): void {
+  if (store.turn !== store.getPieceColor(props.index)) return
+  if (store.indexActiveSquare !== 64 && props.index === store.indexActiveSquare)
+    store.isReactivated = true
+
+  store.lmbIsPressed = true
+  store.dragIndex = props.index
+
+  if (!store.isReactivated) {
+    store.indexActiveSquare = props.index
+
+    // showing moveable squares
+    if (store.getPiece(props.index).toUpperCase() === 'P') {
+      // calculating exclusive moves for a pawn
+      store.setMoveableSquares(
+        getPawnMoves(store.pieces, store.getPiece(props.index), props.index)
+      )
+    } else {
+      // calculating of moves for other pieces
+      store.setMoveableSquares(
+        getAttackedSquares(
+          store.pieces,
+          store.getPiece(props.index),
+          props.index
+        )
+      )
+    }
+  }
+
+  // preparing for the dragging
+  const boardPos: any = document.body
+    .querySelector('.board')
+    ?.getBoundingClientRect()
+  store.boardLeft = Math.round(boardPos.left)
+  store.boardTop = Math.round(boardPos.top)
+
+  const svgElement: SVGSVGElement | null = document.body.querySelector(
+    `#square${props.index} svg`
+  )
+
+  store.draggedItem = svgElement
+  if (svgElement) svgElement.style.position = 'relative'
+
+  store.cx = e.clientX - (e.offsetX - 45)
+  store.cy = e.clientY - (e.offsetY - 45)
+}
 
 // const isDraggable = computed<boolean>(() => {
 //   return (
@@ -61,53 +112,6 @@ const attacked = computed<boolean>(() => {
       store.getPieceColor(props.index) === 'white')
   )
 })
-
-// THE MOUSE DOWN EVENT
-function mouseDown(e: MouseEvent): void {
-  if (store.indexActiveSquare !== 64 && props.index === store.indexActiveSquare)
-    store.isReactivated = true
-
-  store.lmbIsPressed = true
-  store.dragIndex = props.index
-
-  if (!store.isReactivated) {
-    store.indexActiveSquare = props.index
-
-    // showing moveable squares
-    if (store.getPiece(props.index).toUpperCase() === 'P') {
-      // calculating exclusive moves for a pawn
-      store.setMoveableSquares(
-        getPawnMoves(store.pieces, store.getPiece(props.index), props.index)
-      )
-    } else {
-      // calculating of moves for other pieces
-      store.setMoveableSquares(
-        getAttackedSquares(
-          store.pieces,
-          store.getPiece(props.index),
-          props.index
-        )
-      )
-    }
-  }
-
-  // preparing for the dragging
-  const boardPos: any = document.body
-    .querySelector('.board')
-    ?.getBoundingClientRect()
-  store.boardLeft = Math.round(boardPos.left)
-  store.boardTop = Math.round(boardPos.top)
-
-  const svgElement: SVGSVGElement | null = document.body.querySelector(
-    `#square${props.index} svg`
-  )
-
-  store.draggedItem = svgElement
-  if (svgElement) svgElement.style.position = 'relative'
-
-  store.cx = e.clientX - (e.offsetX - 45)
-  store.cy = e.clientY - (e.offsetY - 45)
-}
 </script>
 
 <template>
@@ -129,9 +133,9 @@ function mouseDown(e: MouseEvent): void {
           !store.isWhiteSquare(props.index)
       },
       { square_moveable: isMoveable },
-      // { square_immoveable: isImmoveable },
-      { square_hover: isHover && !isImmoveable }
-      // { square_attacked: isAttacked }
+      { square_immoveable: isImmoveable },
+      { square_hover: isHover && !isImmoveable },
+      { square_cursor_pointer: hasCursor }
     ]">
     <MyPiece
       v-if="store.getPiece(props.index)"
@@ -144,10 +148,6 @@ function mouseDown(e: MouseEvent): void {
 </template>
 
 <style>
-/* .move {
-  background-color: green;
-} */
-
 .square {
   position: relative;
   display: flex;
@@ -156,12 +156,15 @@ function mouseDown(e: MouseEvent): void {
   width: 90px;
   height: 90px;
   border: 5px solid transparent;
-  cursor: pointer;
   pointer-events: none;
 }
 
 .square:active {
   z-index: 10;
+}
+
+.square_cursor_pointer {
+  cursor: pointer;
 }
 
 .square_background_white {
@@ -192,7 +195,7 @@ function mouseDown(e: MouseEvent): void {
   background-color: hsl(120, 70%, 40%);
 }
 
-.square_color_immoveable {
+.square_immoveable {
   background-color: hsl(0, 100%, 60%);
 }
 

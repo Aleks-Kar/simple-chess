@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 
 function fromPosToIndex(position: Array<number>): number {
   const [x, y] = position
@@ -60,16 +60,21 @@ export const useStore = defineStore('board', {
     },
 
     placePieceOnHover(): void {
-      if (this.hoverSquareIndex === 64) {
-        // ...
+      if (
+        this.hoverSquareIndex === 64 ||
+        !this.squaresForMove[this.dragIndex]
+      ) {
+        // this.draggedItem.style.left = 0
+        // this.draggedItem.style.top = 0
+        // this.draggedItem.style.cursor = 'pointer'
+        // console.warn('1')
       } else if (this.hoverSquareIndex === this.dragIndex) {
         this.draggedItem.style.left = 0
         this.draggedItem.style.top = 0
         this.draggedItem.style.cursor = 'pointer'
-        // this.indexActiveSquare = 64
-        // console.warn('1')
-      } else {
         // console.warn('2')
+      } else {
+        // console.warn('3')
 
         this.pieces[this.hoverSquareIndex] = String(this.pieces[this.dragIndex])
         this.pieces[this.dragIndex] = ''
@@ -146,7 +151,7 @@ export const useStore = defineStore('board', {
     getPieceColor:
       state =>
       (index: number): string => {
-        if (state.pieces[index] === state.pieces[index].toUpperCase()) {
+        if (state.pieces[index] === String(state.pieces[index]).toUpperCase()) {
           return 'white'
         } else {
           return 'black'
