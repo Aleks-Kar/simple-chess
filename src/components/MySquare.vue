@@ -99,16 +99,16 @@ const isHover = computed<boolean>(() => {
 const attacked = computed<boolean>(() => {
   const i = props.index
   return (
-    (store.underWhiteAttack[i].size > 0 && !store.isWhitePiece(i)) ||
-    (store.underBlackAttack[i].size > 0 && store.isWhitePiece(i))
+    (store.underWhiteAttack[i] > 0 && !store.isWhitePiece(i)) ||
+    (store.underBlackAttack[i] > 0 && store.isWhitePiece(i))
   )
 })
 
 const defended = computed<boolean>(() => {
   const i = props.index
   return (
-    (store.underWhiteAttack[i].size > 0 && store.isWhitePiece(i)) ||
-    (store.underBlackAttack[i].size > 0 && !store.isWhitePiece(i))
+    (store.underWhiteAttack[i] > 0 && store.isWhitePiece(i)) ||
+    (store.underBlackAttack[i] > 0 && !store.isWhitePiece(i))
   )
 })
 </script>

@@ -1,4 +1,6 @@
+import { throwStatement } from '@babel/types'
 import { defineStore, storeToRefs } from 'pinia'
+import { getAttackedSquares } from '../services/helpers'
 
 function fromPosToIndex(position: Array<number>): number {
   const [x, y] = position
@@ -10,8 +12,8 @@ export const useStore = defineStore('board', {
     return {
       pieces: Array<string>(64),
       set: 'dubrovny',
-      underWhiteAttack: Array<Set<number>>(64),
-      underBlackAttack: Array<Set<number>>(64),
+      underWhiteAttack: Array<number>(64),
+      underBlackAttack: Array<number>(64),
       turn: 'white',
       indexActiveSquare: 64,
       lastMoves: Array<number>(2),
@@ -35,22 +37,58 @@ export const useStore = defineStore('board', {
     init(): void {
       this.pieces.fill('')
 
-      for (let i = 0; i < 64; i++) this.underWhiteAttack[i] = new Set()
-      for (let i = 0; i < 64; i++) this.underBlackAttack[i] = new Set()
+      // for (let i = 0; i < 64; i++) this.underWhiteAttack[i] = new Set()
+      // for (let i = 0; i < 64; i++) this.underBlackAttack[i] = new Set()
 
-      // this.underWhiteAttack.fill(false)
-      // this.underBlackAttack.fill(false)
-      // for (const key in object) {
-      //   if (Object.prototype.hasOwnProperty.call(object, key)) {
-      //     const element = object[key];
+      this.underWhiteAttack.fill(0)
+      this.underBlackAttack.fill(0)
 
+      // for (let i = 0; i < 16; i++) {
+      //   if (this.turn === 'white') {
+      //     this.underWhiteAttack[i]++
+      //   } else {
+      //     this.underBlackAttack[i]++
       //   }
+
+      //   const attackedSq = getAttackedSquares(this.pieces, this.pieces[i], i)
+      //   console.warn(attackedSq)
       // }
+
       this.squaresForMove.fill(false)
       const blackStr: string = 'rnbqkbnrpppppppp'
       const whiteStr: string = 'RNBKQBNRPPPPPPPP'
       for (let i = 0; i < 16; i++) this.pieces[i] = blackStr[i]
       for (let i = 63; i > 47; i--) this.pieces[i] = whiteStr[63 - i]
+
+      // defended markers for the black pieces
+      for (let i = 0; i < 16; i++) {
+        const attackedSquares = getAttackedSquares(
+          this.pieces,
+          this.pieces[i],
+          i
+        )
+
+        for (let j = 0; j < 64; j++) {
+          if (attackedSquares[j]) {
+            this.underBlackAttack[j]++
+          }
+        }
+      }
+
+      // defended markers for the white pieces
+      for (let i = 48; i < 64; i++) {
+        const attackedSquares = getAttackedSquares(
+          this.pieces,
+          this.pieces[i],
+          i
+        )
+
+        for (let j = 0; j < 64; j++) {
+          if (attackedSquares[j]) {
+            this.underWhiteAttack[j]++
+          }
+        }
+      }
     },
 
     // activateSquare(index: number): void {
@@ -91,8 +129,23 @@ export const useStore = defineStore('board', {
       } else {
         // console.warn('3')
 
-        this.pieces[this.hoverSquareIndex] = String(this.pieces[this.dragIndex])
+        this.removeAttackedSquares(
+          getAttackedSquares(
+            this.pieces,
+            this.pieces[this.dragIndex],
+            this.dragIndex
+          )
+        )
+
+        const draggedPiece: string = this.pieces[this.dragIndex]
+
         this.pieces[this.dragIndex] = ''
+
+        this.addAttackedSquares(
+          getAttackedSquares(this.pieces, draggedPiece, this.hoverSquareIndex)
+        )
+
+        this.pieces[this.hoverSquareIndex] = draggedPiece
 
         if (this.turn === 'white') {
           this.turn = 'black'
@@ -122,14 +175,28 @@ export const useStore = defineStore('board', {
       this.squaresForMove = [...moveableSquares]
     },
 
-    setAttackedSquares(attackedSquares: Array<boolean>): void {
+    addAttackedSquares(attackedSquares: Array<boolean>): void {
       for (let i = 0; i < 64; i++) {
         if (attackedSquares[i]) {
           if (this.turn === 'white') {
-            this.underWhiteAttack[i].add(this.hoverSquareIndex)
+            this.underWhiteAttack[i]++
+            console.warn(i, this.underWhiteAttack[i])
           } else {
-            this.underBlackAttack[i].add(this.hoverSquareIndex)
+            this.underBlackAttack[i]++
           }
+        }
+      }
+    },
+
+    removeAttackedSquares(attackedSquares: Array<boolean>): void {
+      for (let i = 0; i < 64; i++) {
+        if (attackedSquares[i]) {
+          if (this.turn === 'white') {
+            if (this.underWhiteAttack[i] > 0) this.underWhiteAttack[i]--
+          } else {
+            if (this.underBlackAttack[i] > 0) this.underBlackAttack[i]--
+          }
+          // console.warn(this.underWhiteAttack[i], this.underBlackAttack[i], i)
         }
       }
     },

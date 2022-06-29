@@ -91,22 +91,8 @@ const urlSvgDefend = computed<string>(() => {
   background-image: v-bind(urlBlackPiece);
 }
 
-@keyframes glow {
-  from {
-    color: red;
-    /* filter: drop-shadow(0 0 12px) drop-shadow(0 0 12px) drop-shadow(0 0 12px); */
-  }
-
-  to {
-    color: red;
-    /* filter: drop-shadow(0 0 3px) drop-shadow(0 0 3px) drop-shadow(0 0 3px); */
-  }
-}
-
 .piece_king-under-attack {
-  animation-duration: 5s;
-  animation-name: glow;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
+  color: red;
+  filter: drop-shadow(0 0 10px) drop-shadow(0 0 10px) drop-shadow(0 0 10px);
 }
 </style>

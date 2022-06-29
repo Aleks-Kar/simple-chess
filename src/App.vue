@@ -44,6 +44,14 @@ function mouseUp(): void {
       store.indexActiveSquare !== store.hoverSquareIndex &&
       store.hoverSquareIndex !== 64
     ) {
+      // store.removeAttackedSquares(
+      //   getAttackedSquares(
+      //     store.pieces,
+      //     store.pieces[store.dragIndex],
+      //     store.dragIndex
+      //   )
+      // )
+
       // marking last moves
       store.lastMoves[0] = store.indexActiveSquare
       store.lastMoves[1] = store.hoverSquareIndex
@@ -51,13 +59,13 @@ function mouseUp(): void {
 
     if (!store.pieceHadBeenMoved) return
 
-    store.setAttackedSquares(
-      getAttackedSquares(
-        store.pieces,
-        store.pieces[store.dragIndex],
-        store.hoverSquareIndex
-      )
-    )
+    // store.addAttackedSquares(
+    //   getAttackedSquares(
+    //     store.pieces,
+    //     store.pieces[store.dragIndex],
+    //     store.hoverSquareIndex
+    //   )
+    // )
   }
 
   store.placePieceOnHover()
