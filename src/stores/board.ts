@@ -10,8 +10,8 @@ export const useStore = defineStore('board', {
     return {
       pieces: Array<string>(64),
       set: 'dubrovny',
-      underWhiteAttack: Array<boolean>(64),
-      underBlackAttack: Array<boolean>(64),
+      underWhiteAttack: Array<Set<number>>(64),
+      underBlackAttack: Array<Set<number>>(64),
       turn: 'white',
       indexActiveSquare: 64,
       lastMoves: Array<number>(2),
@@ -34,8 +34,18 @@ export const useStore = defineStore('board', {
     // setting up pieces
     init(): void {
       this.pieces.fill('')
-      this.underWhiteAttack.fill(false)
-      this.underBlackAttack.fill(false)
+
+      for (let i = 0; i < 64; i++) this.underWhiteAttack[i] = new Set()
+      for (let i = 0; i < 64; i++) this.underBlackAttack[i] = new Set()
+
+      // this.underWhiteAttack.fill(false)
+      // this.underBlackAttack.fill(false)
+      // for (const key in object) {
+      //   if (Object.prototype.hasOwnProperty.call(object, key)) {
+      //     const element = object[key];
+
+      //   }
+      // }
       this.squaresForMove.fill(false)
       const blackStr: string = 'rnbqkbnrpppppppp'
       const whiteStr: string = 'RNBKQBNRPPPPPPPP'
@@ -60,15 +70,20 @@ export const useStore = defineStore('board', {
     },
 
     placePieceOnHover(): void {
-      if (
-        this.hoverSquareIndex === 64 ||
-        !this.squaresForMove[this.dragIndex]
-      ) {
-        // this.draggedItem.style.left = 0
-        // this.draggedItem.style.top = 0
-        // this.draggedItem.style.cursor = 'pointer'
+      // getting coordinates
+      const y = Math.trunc(this.hoverSquareIndex / 8)
+      const x = this.hoverSquareIndex - y * 8
+
+      if (this.hoverSquareIndex === 64) {
+        // ...
         // console.warn('1')
-      } else if (this.hoverSquareIndex === this.dragIndex) {
+        // } else if (this.getPiece(this.dragIndex).toUpperCase() === 'P') {
+      } else if (
+        this.hoverSquareIndex === this.dragIndex ||
+        !this.squaresForMove[this.hoverSquareIndex] ||
+        (this.turn === this.getPieceColor(this.hoverSquareIndex) &&
+          this.getPiece(this.hoverSquareIndex) !== '')
+      ) {
         this.draggedItem.style.left = 0
         this.draggedItem.style.top = 0
         this.draggedItem.style.cursor = 'pointer'
@@ -107,25 +122,13 @@ export const useStore = defineStore('board', {
       this.squaresForMove = [...moveableSquares]
     },
 
-    setWhiteAttackedSquares(attackedSquares: Array<boolean>): void {
+    setAttackedSquares(attackedSquares: Array<boolean>): void {
       for (let i = 0; i < 64; i++) {
         if (attackedSquares[i]) {
-          if (this.underWhiteAttack[i]) {
-            continue
+          if (this.turn === 'white') {
+            this.underWhiteAttack[i].add(this.hoverSquareIndex)
           } else {
-            this.underWhiteAttack[i] = attackedSquares[i]
-          }
-        }
-      }
-    },
-
-    setBlackAttackedSquares(attackedSquares: Array<boolean>): void {
-      for (let i = 0; i < 64; i++) {
-        if (attackedSquares[i]) {
-          if (this.underBlackAttack[i]) {
-            continue
-          } else {
-            this.underBlackAttack[i] = attackedSquares[i]
+            this.underBlackAttack[i].add(this.hoverSquareIndex)
           }
         }
       }
@@ -195,6 +198,13 @@ export const useStore = defineStore('board', {
         const y = Math.trunc(index / 8)
         const x = index - y * 8
         return (x + y) % 2 === 0
+      },
+
+    isWhitePiece:
+      state =>
+      (index: number): boolean => {
+        const piece = state.pieces[index]
+        return piece === piece.toUpperCase()
       }
 
     // isMoveable:

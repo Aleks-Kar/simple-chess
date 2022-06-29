@@ -34,40 +34,24 @@ function mouseUp(): void {
     // store.deactivateSquare()
     store.indexActiveSquare = 64
     store.clearMoveableSquares()
-    // store.squaresForMove.fill(false)
     return
   } else if (store.isReactivated) {
     store.isReactivated = false
   }
 
-  // if square is forbidden for move
-  // if (!store.squaresForMove[store.hoverSquareIndex]) {
-  //   store.placePieceOnHover()
-  //   return
-  // }
+  if (store.squaresForMove[store.hoverSquareIndex]) {
+    if (
+      store.indexActiveSquare !== store.hoverSquareIndex &&
+      store.hoverSquareIndex !== 64
+    ) {
+      // marking last moves
+      store.lastMoves[0] = store.indexActiveSquare
+      store.lastMoves[1] = store.hoverSquareIndex
+    }
 
-  if (
-    store.indexActiveSquare !== store.hoverSquareIndex &&
-    store.hoverSquareIndex !== 64
-  ) {
-    // marking last moves
-    store.lastMoves[0] = store.indexActiveSquare
-    store.lastMoves[1] = store.hoverSquareIndex
-  }
+    if (!store.pieceHadBeenMoved) return
 
-  if (!store.pieceHadBeenMoved) return
-
-  // setting attacked squares
-  if (store.turn === 'white') {
-    store.setWhiteAttackedSquares(
-      getAttackedSquares(
-        store.pieces,
-        store.pieces[store.dragIndex],
-        store.hoverSquareIndex
-      )
-    )
-  } else if (store.turn === 'black') {
-    store.setBlackAttackedSquares(
+    store.setAttackedSquares(
       getAttackedSquares(
         store.pieces,
         store.pieces[store.dragIndex],

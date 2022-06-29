@@ -22,6 +22,15 @@ function getKey(x: number, y: number): string {
   return store.getPiece(x + y * 8) + String(x + y * 8)
 }
 
+function fn2() {
+  for (const key in store.pieces) {
+
+      const element = store.pieces[key]
+      console.warn(element)
+    // }
+  }
+}
+
 onMounted(() => {
   store.init()
 })
@@ -29,6 +38,7 @@ onMounted(() => {
 
 <template>
   <button @click="fn">смена фигур</button>
+  <button @click="fn2">вызов</button>
   <div class="info">
     {{ store.turn === 'black' ? 'ход чёрных' : 'ход белых' }}
   </div>

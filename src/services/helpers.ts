@@ -47,8 +47,8 @@ export function getAttackedSquares(
   piece: string,
   index: number
 ): Array<boolean> {
-  const moveableSquares = new Array<boolean>(64)
-  moveableSquares.fill(false)
+  const attackedSquares = new Array<boolean>(64)
+  attackedSquares.fill(false)
 
   // getting coordinates
   const y = Math.trunc(index / 8)
@@ -60,9 +60,9 @@ export function getAttackedSquares(
       for (let i = y - 1; i >= 0; i--) {
         const index = x + i * 8
         if (pieces[index] === '') {
-          moveableSquares[index] = true
+          attackedSquares[index] = true
         } else {
-          moveableSquares[index] = true
+          attackedSquares[index] = true
           break
         }
       }
@@ -74,9 +74,9 @@ export function getAttackedSquares(
       for (let i = x + 1; i <= 7; i++) {
         const index = i + y * 8
         if (pieces[index] === '') {
-          moveableSquares[index] = true
+          attackedSquares[index] = true
         } else {
-          moveableSquares[index] = true
+          attackedSquares[index] = true
           break
         }
       }
@@ -88,9 +88,9 @@ export function getAttackedSquares(
       for (let i = y + 1; i <= 7; i++) {
         const index = x + i * 8
         if (pieces[index] === '') {
-          moveableSquares[index] = true
+          attackedSquares[index] = true
         } else {
-          moveableSquares[index] = true
+          attackedSquares[index] = true
           break
         }
       }
@@ -102,9 +102,9 @@ export function getAttackedSquares(
       for (let i = x - 1; i >= 0; i--) {
         const index = i + y * 8
         if (pieces[index] === '') {
-          moveableSquares[index] = true
+          attackedSquares[index] = true
         } else {
-          moveableSquares[index] = true
+          attackedSquares[index] = true
           break
         }
       }
@@ -117,9 +117,9 @@ export function getAttackedSquares(
     for (let i = 1; i <= length; i++) {
       const index = x + y * 8 - 7 * i
       if (pieces[index] === '') {
-        moveableSquares[index] = true
+        attackedSquares[index] = true
       } else {
-        moveableSquares[index] = true
+        attackedSquares[index] = true
         break
       }
     }
@@ -130,9 +130,9 @@ export function getAttackedSquares(
     for (let i = 1; i <= length; i++) {
       const index = x + i + (y + i) * 8
       if (pieces[index] === '') {
-        moveableSquares[index] = true
+        attackedSquares[index] = true
       } else {
-        moveableSquares[index] = true
+        attackedSquares[index] = true
         break
       }
     }
@@ -143,9 +143,9 @@ export function getAttackedSquares(
     for (let i = 1; i <= length; i++) {
       const index = x + y * 8 + 7 * i
       if (pieces[index] === '') {
-        moveableSquares[index] = true
+        attackedSquares[index] = true
       } else {
-        moveableSquares[index] = true
+        attackedSquares[index] = true
         break
       }
     }
@@ -156,9 +156,9 @@ export function getAttackedSquares(
     for (let i = 1; i <= length; i++) {
       const index = x - i + (y - i) * 8
       if (pieces[index] === '') {
-        moveableSquares[index] = true
+        attackedSquares[index] = true
       } else {
-        moveableSquares[index] = true
+        attackedSquares[index] = true
         break
       }
     }
@@ -175,43 +175,43 @@ export function getAttackedSquares(
     angularUpperLeft()
   } else if (piece.toUpperCase() === 'K') {
     // KING movement
-    if (y > 0) moveableSquares[x + (y - 1) * 8] = true // top
-    if (x < 7 && y > 0) moveableSquares[x + 1 + (y - 1) * 8] = true // upper right
-    if (x < 7) moveableSquares[x + 1 + y * 8] = true // right
-    if (x < 7 && y < 7) moveableSquares[x + 1 + (y + 1) * 8] = true // lower right
-    if (y < 7) moveableSquares[x + (y + 1) * 8] = true // bottom
-    if (x > 0 && y < 7) moveableSquares[x - 1 + (y + 1) * 8] = true // lower left
-    if (x > 0) moveableSquares[x - 1 + y * 8] = true // left
-    if (x > 0 && y > 0) moveableSquares[x - 1 + (y - 1) * 8] = true // upper left
+    if (y > 0) attackedSquares[x + (y - 1) * 8] = true // top
+    if (x < 7 && y > 0) attackedSquares[x + 1 + (y - 1) * 8] = true // upper right
+    if (x < 7) attackedSquares[x + 1 + y * 8] = true // right
+    if (x < 7 && y < 7) attackedSquares[x + 1 + (y + 1) * 8] = true // lower right
+    if (y < 7) attackedSquares[x + (y + 1) * 8] = true // bottom
+    if (x > 0 && y < 7) attackedSquares[x - 1 + (y + 1) * 8] = true // lower left
+    if (x > 0) attackedSquares[x - 1 + y * 8] = true // left
+    if (x > 0 && y > 0) attackedSquares[x - 1 + (y - 1) * 8] = true // upper left
   } else if (piece.toUpperCase() === 'N') {
     // KNIGHT movement
-    if (x > 0 && y > 1) moveableSquares[x - 1 + (y - 2) * 8] = true // top left
-    if (x < 7 && y > 1) moveableSquares[x + 1 + (y - 2) * 8] = true // top right
-    if (x < 6 && y > 0) moveableSquares[x + 2 + (y - 1) * 8] = true // right top
-    if (x < 6 && y < 7) moveableSquares[x + 2 + (y + 1) * 8] = true // right bottom
-    if (x < 7 && y < 6) moveableSquares[x + 1 + (y + 2) * 8] = true // bottom right
-    if (x > 0 && y < 6) moveableSquares[x - 1 + (y + 2) * 8] = true // bottom left
-    if (x > 1 && y < 7) moveableSquares[x - 2 + (y + 1) * 8] = true // left bottom
-    if (x > 1 && y > 0) moveableSquares[x - 2 + (y - 1) * 8] = true // left top
+    if (x > 0 && y > 1) attackedSquares[x - 1 + (y - 2) * 8] = true // top left
+    if (x < 7 && y > 1) attackedSquares[x + 1 + (y - 2) * 8] = true // top right
+    if (x < 6 && y > 0) attackedSquares[x + 2 + (y - 1) * 8] = true // right top
+    if (x < 6 && y < 7) attackedSquares[x + 2 + (y + 1) * 8] = true // right bottom
+    if (x < 7 && y < 6) attackedSquares[x + 1 + (y + 2) * 8] = true // bottom right
+    if (x > 0 && y < 6) attackedSquares[x - 1 + (y + 2) * 8] = true // bottom left
+    if (x > 1 && y < 7) attackedSquares[x - 2 + (y + 1) * 8] = true // left bottom
+    if (x > 1 && y > 0) attackedSquares[x - 2 + (y - 1) * 8] = true // left top
   } else if (piece.toUpperCase() === 'P') {
     // PAWN, attack movement
     if (piece.toUpperCase() === piece) {
       // the left square for the attack of the white pawn
       if (x > 0 && y > 0) {
-        moveableSquares[x - 1 + (y - 1) * 8] = true
+        attackedSquares[x - 1 + (y - 1) * 8] = true
       }
       // the right square for the attack of the white pawn
       if (x < 7 && y > 0) {
-        moveableSquares[x + 1 + (y - 1) * 8] = true
+        attackedSquares[x + 1 + (y - 1) * 8] = true
       }
     } else {
       // the left square for the attack of the black pawn
       if (x > 0 && y < 7) {
-        moveableSquares[x - 1 + (y + 1) * 8] = true
+        attackedSquares[x - 1 + (y + 1) * 8] = true
       }
       // the right square for the attack of the black pawn
       if (x < 7 && y < 7) {
-        moveableSquares[x + 1 + (y + 1) * 8] = true
+        attackedSquares[x + 1 + (y + 1) * 8] = true
       }
     }
 
@@ -245,7 +245,7 @@ export function getAttackedSquares(
     orthoLeft()
   }
 
-  return moveableSquares
+  return attackedSquares
 }
 
 export function getHoverSquareIndex(

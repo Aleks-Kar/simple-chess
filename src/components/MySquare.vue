@@ -79,7 +79,8 @@ const isImmoveable = computed<boolean>(() => {
   return (
     !store.squaresForMove[props.index] &&
     props.index === store.hoverSquareIndex &&
-    props.index !== store.dragIndex
+    props.index !== store.dragIndex &&
+    store.getPieceColor(props.index) === store.turn
   )
 })
 
@@ -87,29 +88,27 @@ const isHover = computed<boolean>(() => {
   return props.index === store.hoverSquareIndex
 })
 
-const isAttacked = computed<boolean>(() => {
+// const isAttacked = computed<boolean>(() => {
+//   return (
+//     store.squaresForMove[props.index] &&
+//     store.getPiece(props.index) !== '' &&
+//     store.getPieceColor(props.index) !== store.turn
+//   )
+// })
+
+const attacked = computed<boolean>(() => {
+  const i = props.index
   return (
-    store.squaresForMove[props.index] &&
-    store.getPiece(props.index) !== '' &&
-    store.getPieceColor(props.index) !== store.turn
+    (store.underWhiteAttack[i].size > 0 && !store.isWhitePiece(i)) ||
+    (store.underBlackAttack[i].size > 0 && store.isWhitePiece(i))
   )
 })
 
 const defended = computed<boolean>(() => {
+  const i = props.index
   return (
-    (store.underWhiteAttack[props.index] &&
-      store.getPieceColor(props.index) === 'white') ||
-    (store.underBlackAttack[props.index] &&
-      store.getPieceColor(props.index) === 'black')
-  )
-})
-
-const attacked = computed<boolean>(() => {
-  return (
-    (store.underWhiteAttack[props.index] &&
-      store.getPieceColor(props.index) === 'black') ||
-    (store.underBlackAttack[props.index] &&
-      store.getPieceColor(props.index) === 'white')
+    (store.underWhiteAttack[i].size > 0 && store.isWhitePiece(i)) ||
+    (store.underBlackAttack[i].size > 0 && !store.isWhitePiece(i))
   )
 })
 </script>
@@ -133,10 +132,12 @@ const attacked = computed<boolean>(() => {
           !store.isWhiteSquare(props.index)
       },
       { square_moveable: isMoveable },
+      // { for_move: store.squaresForMove[props.index] },
       { square_immoveable: isImmoveable },
       { square_hover: isHover && !isImmoveable },
       { square_cursor_pointer: hasCursor }
     ]">
+    {{ props.index }}
     <MyPiece
       v-if="store.getPiece(props.index)"
       :piece="piece"
@@ -148,6 +149,10 @@ const attacked = computed<boolean>(() => {
 </template>
 
 <style>
+.for_move {
+  background-color: green;
+}
+
 .square {
   position: relative;
   display: flex;

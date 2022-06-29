@@ -94,12 +94,12 @@ const urlSvgDefend = computed<string>(() => {
 @keyframes glow {
   from {
     color: red;
-    filter: drop-shadow(0 0 12px) drop-shadow(0 0 12px) drop-shadow(0 0 12px);
+    /* filter: drop-shadow(0 0 12px) drop-shadow(0 0 12px) drop-shadow(0 0 12px); */
   }
 
   to {
     color: red;
-    filter: drop-shadow(0 0 3px) drop-shadow(0 0 3px) drop-shadow(0 0 3px);
+    /* filter: drop-shadow(0 0 3px) drop-shadow(0 0 3px) drop-shadow(0 0 3px); */
   }
 }
 
