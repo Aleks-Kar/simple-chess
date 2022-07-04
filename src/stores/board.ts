@@ -24,7 +24,8 @@ export const useStore = defineStore('board', {
 
       cx: 0,
       cy: 0,
-      draggedItem: document.body.querySelector('.board'),
+      // draggedItem: document.body.querySelector('.board'),
+      draggedItem: document.body.querySelector('.square'),
       dragIndex: 64,
       hoverSquareIndex: 64,
       boardLeft: 0,
@@ -112,16 +113,16 @@ export const useStore = defineStore('board', {
       const y = Math.trunc(this.hoverSquareIndex / 8)
       const x = this.hoverSquareIndex - y * 8
 
-      if (this.hoverSquareIndex === 64) {
-        // ...
-        // console.warn('1')
-        // } else if (this.getPiece(this.dragIndex).toUpperCase() === 'P') {
-      } else if (
+      if (
+        this.hoverSquareIndex === 64 ||
         this.hoverSquareIndex === this.dragIndex ||
         !this.squaresForMove[this.hoverSquareIndex] ||
         (this.turn === this.getPieceColor(this.hoverSquareIndex) &&
           this.getPiece(this.hoverSquareIndex) !== '')
       ) {
+        if (!this.draggedItem) return
+
+        // if (!this.getDraggedPiece) return
         this.draggedItem.style.left = 0
         this.draggedItem.style.top = 0
         this.draggedItem.style.cursor = 'pointer'
@@ -129,6 +130,7 @@ export const useStore = defineStore('board', {
       } else {
         // console.warn('3')
 
+        // clearing the attack of the moving piece
         this.removeAttackedSquares(
           getAttackedSquares(
             this.pieces,
@@ -138,13 +140,14 @@ export const useStore = defineStore('board', {
         )
 
         const draggedPiece: string = this.pieces[this.dragIndex]
-
         this.pieces[this.dragIndex] = ''
 
+        // calculation of the attack of the moving piece
         this.addAttackedSquares(
           getAttackedSquares(this.pieces, draggedPiece, this.hoverSquareIndex)
         )
 
+        // mounting the piece
         this.pieces[this.hoverSquareIndex] = draggedPiece
 
         if (this.turn === 'white') {
@@ -155,7 +158,8 @@ export const useStore = defineStore('board', {
       }
 
       //clearing
-      this.draggedItem = document.body.querySelector('.board')
+      this.draggedItem = null
+      // this.draggedItem = document.body.querySelector('.board')
       this.squaresForMove.fill(false)
       this.boardLeft = 0
       this.boardTop = 0
@@ -180,7 +184,7 @@ export const useStore = defineStore('board', {
         if (attackedSquares[i]) {
           if (this.turn === 'white') {
             this.underWhiteAttack[i]++
-            console.warn(i, this.underWhiteAttack[i])
+            // console.warn(i, this.underWhiteAttack[i])
           } else {
             this.underBlackAttack[i]++
           }

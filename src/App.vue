@@ -28,7 +28,7 @@ function mouseMove(e: MouseEvent): void {
 // THE MOUSE UP EVENT
 function mouseUp(): void {
   store.lmbIsPressed = false
-
+  if (!store.draggedItem) return
   if (store.isReactivated && !store.pieceHadBeenMoved) {
     store.isReactivated = false
     // store.deactivateSquare()
@@ -83,16 +83,11 @@ function mouseLeave(): void {
   // store.boardTop = 0
   // store.hoverSquareIndex = 64
 }
-
-function mouseEnter(e: any): void {
-  // console.warn(e)
-}
 </script>
 
 <template>
   <div
     class="wrapper"
-    @mouseenter="mouseEnter($event)"
     @mousemove="mouseMove"
     @mouseup="mouseUp"
     @mouseleave="mouseLeave">
