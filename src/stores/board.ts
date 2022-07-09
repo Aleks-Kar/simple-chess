@@ -14,8 +14,8 @@ export const useStore = defineStore('board', {
       underWhiteAttack: Array<number>(64),
       underBlackAttack: Array<number>(64),
       turn: 'white',
-      indexActiveSquare: 64,
-      lastMoves: Array<number>(2),
+      activeIndex: 64,
+      lastMove: Array<number>(2),
       squaresForMove: Array<boolean>(64),
       lmbIsPressed: false,
       isReactivated: false,
@@ -26,7 +26,7 @@ export const useStore = defineStore('board', {
       // draggedItem: document.body.querySelector('.board'),
       draggedItem: document.body.querySelector('.square'),
       dragIndex: 64,
-      hoverSquareIndex: 64,
+      hoverIndex: 64,
       boardLeft: 0,
       boardTop: 0
     }
@@ -92,34 +92,34 @@ export const useStore = defineStore('board', {
     },
 
     // activateSquare(index: number): void {
-    //   this.indexActiveSquare = index
+    //   this.activeIndex = index
     // },
 
     // deactivateSquare(): void {
-    //   this.indexActiveSquare = 64
+    //   this.activeIndex = 64
     // },
 
     setPieceOnHover(piece: string): void {
-      if (this.hoverSquareIndex === 64) {
+      if (this.hoverIndex === 64) {
       } else {
-        this.pieces[this.hoverSquareIndex] = piece
+        this.pieces[this.hoverIndex] = piece
         this.pieces[this.dragIndex] = ''
       }
     },
 
-    placePieceOnHover(): void {
+    placePiece(): void {
       // console.warn(this.dragIndex)
-      // console.warn(this.hoverSquareIndex)
+      // console.warn(this.hoverIndex)
 
-      const y = Math.trunc(this.hoverSquareIndex / 8)
-      const x = this.hoverSquareIndex - y * 8
+      const y = Math.trunc(this.hoverIndex / 8)
+      const x = this.hoverIndex - y * 8
 
       if (
-        this.hoverSquareIndex === 64 ||
-        this.hoverSquareIndex === this.dragIndex ||
-        !this.squaresForMove[this.hoverSquareIndex] ||
-        (this.turn === this.getPieceColor(this.hoverSquareIndex) &&
-          this.getPiece(this.hoverSquareIndex) !== '')
+        this.hoverIndex === 64 ||
+        this.hoverIndex === this.dragIndex ||
+        !this.squaresForMove[this.hoverIndex] ||
+        (this.turn === this.getPieceColor(this.hoverIndex) &&
+          this.getPiece(this.hoverIndex) !== '')
       ) {
         if (!this.draggedItem) return
         // returns the piece to its initial place
@@ -144,11 +144,11 @@ export const useStore = defineStore('board', {
 
         // calculates and sets of the attack squares of the moving piece
         this.addAttackedSquares(
-          getAttackedSquares(this.pieces, draggedPiece, this.hoverSquareIndex)
+          getAttackedSquares(this.pieces, draggedPiece, this.hoverIndex)
         )
 
         // mounts the piece
-        this.pieces[this.hoverSquareIndex] = draggedPiece
+        this.pieces[this.hoverIndex] = draggedPiece
 
         if (this.turn === 'white') {
           this.turn = 'black'
@@ -163,14 +163,14 @@ export const useStore = defineStore('board', {
       this.squaresForMove.fill(false)
       this.boardLeft = 0
       this.boardTop = 0
-      this.hoverSquareIndex = 64
+      this.hoverIndex = 64
 
       this.pieceHadBeenMoved = false
-      this.indexActiveSquare = 64
+      this.activeIndex = 64
     },
 
     delDraggedPiece(): void {
-      if (this.hoverSquareIndex === 64) return
+      if (this.hoverIndex === 64) return
       this.pieces[this.dragIndex] = ''
     },
 
@@ -239,8 +239,8 @@ export const useStore = defineStore('board', {
     //   state =>
     //   (index: number): boolean => {
     //     if (
-    //       state.indexActiveSquares[0] === index ||
-    //       state.indexActiveSquares[1] === index
+    //       state.activeIndexs[0] === index ||
+    //       state.activeIndexs[1] === index
     //     ) {
     //       return true
     //     } else {
@@ -252,8 +252,8 @@ export const useStore = defineStore('board', {
     //   state =>
     //   (index: number): boolean => {
     //     if (
-    //       state.indexActiveSquares[2] === index ||
-    //       state.indexActiveSquares[3] === index
+    //       state.activeIndexs[2] === index ||
+    //       state.activeIndexs[3] === index
     //     ) {
     //       return true
     //     } else {

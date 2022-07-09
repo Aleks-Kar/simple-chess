@@ -15,14 +15,14 @@ const hasCursor = computed<boolean>(
 // THE MOUSE DOWN EVENT
 function mouseDown(e: MouseEvent): void {
   if (store.turn !== store.getPieceColor(props.index)) return
-  if (store.indexActiveSquare !== 64 && props.index === store.indexActiveSquare)
+  if (store.activeIndex !== 64 && props.index === store.activeIndex)
     store.isReactivated = true
 
   store.lmbIsPressed = true
   store.dragIndex = props.index
 
   if (!store.isReactivated) {
-    store.indexActiveSquare = props.index
+    store.activeIndex = props.index
 
     // showing moveable squares
     if (store.getPiece(props.index).toUpperCase() === 'P') {
@@ -71,21 +71,21 @@ const isMoveable = computed<boolean>(() => {
   return (
     store.squaresForMove[props.index] &&
     store.getPiece(props.index) === '' &&
-    props.index !== store.hoverSquareIndex
+    props.index !== store.hoverIndex
   )
 })
 
 const isImmoveable = computed<boolean>(() => {
   return (
     !store.squaresForMove[props.index] &&
-    props.index === store.hoverSquareIndex &&
+    props.index === store.hoverIndex &&
     props.index !== store.dragIndex &&
     store.getPieceColor(props.index) === store.turn
   )
 })
 
 const isHover = computed<boolean>(() => {
-  return props.index === store.hoverSquareIndex
+  return props.index === store.hoverIndex
 })
 
 // const isAttacked = computed<boolean>(() => {
@@ -120,15 +120,15 @@ const defended = computed<boolean>(() => {
     :class="[
       { square_background_white: store.isWhiteSquare(props.index) },
       { square_background_black: !store.isWhiteSquare(props.index) },
-      { square_active: store.indexActiveSquare === props.index },
+      { square_active: store.activeIndex === props.index },
       {
         'square_last-moves_for-white':
-          store.lastMoves.includes(props.index) &&
+          store.lastMove.includes(props.index) &&
           store.isWhiteSquare(props.index)
       },
       {
         'square_last-moves_for-black':
-          store.lastMoves.includes(props.index) &&
+          store.lastMove.includes(props.index) &&
           !store.isWhiteSquare(props.index)
       },
       { square_moveable: isMoveable },

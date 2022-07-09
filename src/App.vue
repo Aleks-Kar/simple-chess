@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import TheBoard from './components/TheBoard.vue'
-import { getAttackedSquares, getHoverSquareIndex } from './services/helpers'
+import { getHoverIndex } from './services/helpers'
 import { useStore } from './stores/board'
 
 const store = useStore()
@@ -9,7 +9,7 @@ const store = useStore()
 function mouseMove(e: MouseEvent): void {
   if (!store.draggedItem || !store.lmbIsPressed) return
 
-  store.hoverSquareIndex = getHoverSquareIndex(
+  store.hoverIndex = getHoverIndex(
     store.boardLeft,
     store.boardTop,
     e.clientX,
@@ -33,33 +33,30 @@ function mouseUp(): void {
   if (store.isReactivated && !store.pieceHadBeenMoved) {
     store.isReactivated = false
     // store.deactivateSquare()
-    store.indexActiveSquare = 64
+    store.activeIndex = 64
     store.clearMoveableSquares()
     return
   } else if (store.isReactivated) {
     store.isReactivated = false
   }
 
-  if (store.squaresForMove[store.hoverSquareIndex]) {
-    if (
-      store.indexActiveSquare !== store.hoverSquareIndex &&
-      store.hoverSquareIndex !== 64
-    ) {
+  if (store.squaresForMove[store.hoverIndex]) {
+    if (store.activeIndex !== store.hoverIndex && store.hoverIndex !== 64) {
       // marking last moves
-      store.lastMoves[0] = store.indexActiveSquare
-      store.lastMoves[1] = store.hoverSquareIndex
+      store.lastMove[0] = store.activeIndex
+      store.lastMove[1] = store.hoverIndex
     }
 
     if (!store.pieceHadBeenMoved) return
   }
 
-  if (store.pieceHadBeenMoved) store.placePieceOnHover()
+  if (store.pieceHadBeenMoved) store.placePiece()
   // store.pieceHadBeenMoved = false
-  // store.indexActiveSquare = 64
+  // store.activeIndex = 64
 }
 
 function mouseLeave(): void {
-  if (store.dragIndex !== 64) store.placePieceOnHover()
+  if (store.dragIndex !== 64) store.placePiece()
 }
 </script>
 

@@ -248,7 +248,7 @@ export function getAttackedSquares(
   return attackedSquares
 }
 
-export function getHoverSquareIndex(
+export function getHoverIndex(
   left: number,
   top: number,
   clientX: number,
