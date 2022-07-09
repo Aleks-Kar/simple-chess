@@ -130,7 +130,7 @@ export const useStore = defineStore('board', {
       } else {
         console.warn('3')
         /* places the piece, recalculates and sets the attack squares */
-        // clears squares attacked by the mov piece
+        // clears squares attacked by the moving piece
         this.removeAttackedSquares(
           getAttackedSquares(
             this.pieces,
@@ -139,16 +139,97 @@ export const useStore = defineStore('board', {
           )
         )
 
+        /* finds out which pieces are attacking the active square
+        (unless it's a queen, bishop, or rook) */
+        const attackedByActiveSquare = getAttackedSquares(
+          this.pieces,
+          'Q',
+          this.dragIndex
+        )
+
+        const initialPiecesIndexes = []
+        for (let i = 0; i < attackedByActiveSquare.length; i++) {
+          if (attackedByActiveSquare[i]) {
+            if (
+              this.pieces[i] !== '' &&
+              'QBR'.includes(this.pieces[i].toUpperCase())
+            )
+              initialPiecesIndexes.push(i)
+          }
+        }
+        // removes the attack from the squares
+        for (let i = 0; i < initialPiecesIndexes.length; i++) {
+          this.removeAttackedSquares(
+            getAttackedSquares(
+              this.pieces,
+              this.pieces[initialPiecesIndexes[i]],
+              initialPiecesIndexes[i]
+            )
+          )
+        }
+
+        /* finds out which pieces are attacking the target square
+        (unless it's a queen, bishop, or rook) */
+        const attackedByTargetSquare = getAttackedSquares(
+          this.pieces,
+          'Q',
+          this.hoverIndex
+        )
+
+        const targetPiecesIndexes = []
+        for (let i = 0; i < attackedByTargetSquare.length; i++) {
+          if (attackedByTargetSquare[i]) {
+            if (
+              this.pieces[i] !== '' &&
+              'QBR'.includes(this.pieces[i].toUpperCase())
+            )
+              targetPiecesIndexes.push(i)
+          }
+        }
+        // removes the attack from the squares
+        for (let i = 0; i < targetPiecesIndexes.length; i++) {
+          this.removeAttackedSquares(
+            getAttackedSquares(
+              this.pieces,
+              this.pieces[targetPiecesIndexes[i]],
+              targetPiecesIndexes[i]
+            )
+          )
+        }
+
+        // move the piece
         const draggedPiece = this.pieces[this.dragIndex]
         this.pieces[this.dragIndex] = ''
+        this.pieces[this.hoverIndex] = draggedPiece
+
+        /* calculates and sets the attack squares for the
+        pieces attacking the initial square */
+        for (let i = 0; i < initialPiecesIndexes.length; i++) {
+          this.addAttackedSquares(
+            getAttackedSquares(
+              this.pieces,
+              this.pieces[initialPiecesIndexes[i]],
+              initialPiecesIndexes[i]
+            )
+          )
+        }
+
+        /* calculates and sets the attack squares for the
+        pieces attacking the target square */
+        for (let i = 0; i < targetPiecesIndexes.length; i++) {
+          this.addAttackedSquares(
+            getAttackedSquares(
+              this.pieces,
+              this.pieces[targetPiecesIndexes[i]],
+              targetPiecesIndexes[i]
+            )
+          )
+        }
 
         // calculates and sets of the attack squares of the moving piece
         this.addAttackedSquares(
           getAttackedSquares(this.pieces, draggedPiece, this.hoverIndex)
         )
-
-        // mounts the piece
-        this.pieces[this.hoverIndex] = draggedPiece
 
         if (this.turn === 'white') {
           this.turn = 'black'
