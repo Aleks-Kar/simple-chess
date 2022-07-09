@@ -1,5 +1,4 @@
-import { throwStatement } from '@babel/types'
-import { defineStore, storeToRefs } from 'pinia'
+import { defineStore } from 'pinia'
 import { getAttackedSquares } from '../services/helpers'
 
 function fromPosToIndex(position: Array<number>): number {
@@ -109,7 +108,9 @@ export const useStore = defineStore('board', {
     },
 
     placePieceOnHover(): void {
-      // getting coordinates
+      // console.warn(this.dragIndex)
+      // console.warn(this.hoverSquareIndex)
+
       const y = Math.trunc(this.hoverSquareIndex / 8)
       const x = this.hoverSquareIndex - y * 8
 
@@ -121,16 +122,15 @@ export const useStore = defineStore('board', {
           this.getPiece(this.hoverSquareIndex) !== '')
       ) {
         if (!this.draggedItem) return
-
-        // if (!this.getDraggedPiece) return
+        // returns the piece to its initial place
         this.draggedItem.style.left = 0
         this.draggedItem.style.top = 0
         this.draggedItem.style.cursor = 'pointer'
-        // console.warn('2')
+        console.warn('2')
       } else {
-        // console.warn('3')
-
-        // clearing the attack of the moving piece
+        console.warn('3')
+        /* places the piece, recalculates and sets the attack squares */
+        // clears squares attacked by the mov piece
         this.removeAttackedSquares(
           getAttackedSquares(
             this.pieces,
@@ -139,15 +139,15 @@ export const useStore = defineStore('board', {
           )
         )
 
-        const draggedPiece: string = this.pieces[this.dragIndex]
+        const draggedPiece = this.pieces[this.dragIndex]
         this.pieces[this.dragIndex] = ''
 
-        // calculation of the attack of the moving piece
+        // calculates and sets of the attack squares of the moving piece
         this.addAttackedSquares(
           getAttackedSquares(this.pieces, draggedPiece, this.hoverSquareIndex)
         )
 
-        // mounting the piece
+        // mounts the piece
         this.pieces[this.hoverSquareIndex] = draggedPiece
 
         if (this.turn === 'white') {
@@ -157,13 +157,16 @@ export const useStore = defineStore('board', {
         }
       }
 
-      //clearing
+      // clearing
+      this.dragIndex = 64
       this.draggedItem = null
-      // this.draggedItem = document.body.querySelector('.board')
       this.squaresForMove.fill(false)
       this.boardLeft = 0
       this.boardTop = 0
       this.hoverSquareIndex = 64
+
+      this.pieceHadBeenMoved = false
+      this.indexActiveSquare = 64
     },
 
     delDraggedPiece(): void {

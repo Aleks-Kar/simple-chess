@@ -137,7 +137,7 @@ const defended = computed<boolean>(() => {
       { square_hover: isHover && !isImmoveable },
       { square_cursor_pointer: hasCursor }
     ]">
-    <!-- {{ props.index }} -->
+    {{ props.index }}
     <MyPiece
       v-if="store.getPiece(props.index)"
       :piece="piece"

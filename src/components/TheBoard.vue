@@ -24,9 +24,8 @@ function getKey(x: number, y: number): string {
 
 function fn2() {
   for (const key in store.pieces) {
-
-      const element = store.pieces[key]
-      console.warn(element)
+    const element = store.pieces[key]
+    console.warn(element)
     // }
   }
 }

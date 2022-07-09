@@ -28,7 +28,8 @@ function mouseMove(e: MouseEvent): void {
 // THE MOUSE UP EVENT
 function mouseUp(): void {
   store.lmbIsPressed = false
-  if (!store.draggedItem) return
+  // if (!store.draggedItem) return
+
   if (store.isReactivated && !store.pieceHadBeenMoved) {
     store.isReactivated = false
     // store.deactivateSquare()
@@ -44,44 +45,21 @@ function mouseUp(): void {
       store.indexActiveSquare !== store.hoverSquareIndex &&
       store.hoverSquareIndex !== 64
     ) {
-      // store.removeAttackedSquares(
-      //   getAttackedSquares(
-      //     store.pieces,
-      //     store.pieces[store.dragIndex],
-      //     store.dragIndex
-      //   )
-      // )
-
       // marking last moves
       store.lastMoves[0] = store.indexActiveSquare
       store.lastMoves[1] = store.hoverSquareIndex
     }
 
     if (!store.pieceHadBeenMoved) return
-
-    // store.addAttackedSquares(
-    //   getAttackedSquares(
-    //     store.pieces,
-    //     store.pieces[store.dragIndex],
-    //     store.hoverSquareIndex
-    //   )
-    // )
   }
 
-  store.placePieceOnHover()
-  store.pieceHadBeenMoved = false
-  store.indexActiveSquare = 64
+  if (store.pieceHadBeenMoved) store.placePieceOnHover()
+  // store.pieceHadBeenMoved = false
+  // store.indexActiveSquare = 64
 }
 
 function mouseLeave(): void {
-  // const dragIndex = store.dragIndex
-  // store.pieces[store.dragIndex] = '' // delete the dragged piece
-  // store.pieces[60] = store.pieces[dragIndex]
-  // store.draggedItem = document.body.querySelector('.board')
-  // store.squaresForMove.fill(false)
-  // store.boardLeft = 0
-  // store.boardTop = 0
-  // store.hoverSquareIndex = 64
+  if (store.dragIndex !== 64) store.placePieceOnHover()
 }
 </script>
 
