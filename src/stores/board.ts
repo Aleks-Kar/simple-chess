@@ -54,7 +54,8 @@ export const useStore = defineStore('board', {
       //   console.warn(attackedSq)
       // }
 
-      this.squaresForMove.fill(false)
+      // this.squaresForMove.fill(false)
+      this.clearMoveableSquares()
       const blackStr: string = 'rnbqkbnrpppppppp'
       const whiteStr: string = 'RNBKQBNRPPPPPPPP'
       for (let i = 0; i < 16; i++) this.pieces[i] = blackStr[i]
@@ -139,6 +140,20 @@ export const useStore = defineStore('board', {
           ),
           this.turn
         )
+
+        // if target square not empty clears attacked by the taken piece
+        if (this.getPiece(this.hoverIndex).length !== 0) {
+          const turn = this.isWhitePiece(this.hoverIndex) ? 'white' : 'black'
+
+          this.removeAttackedSquares(
+            getAttackedSquares(
+              this.pieces,
+              this.pieces[this.dragIndex],
+              this.dragIndex
+            ),
+            turn
+          )
+        }
 
         /* finds out which pieces are attacking the active square
         (unless it's a queen, bishop, or rook) */
@@ -263,7 +278,7 @@ export const useStore = defineStore('board', {
       // clearing
       this.dragIndex = 64
       this.draggedItem = null
-      this.squaresForMove.fill(false)
+      this.clearMoveableSquares()
       this.boardLeft = 0
       this.boardTop = 0
       this.hoverIndex = 64

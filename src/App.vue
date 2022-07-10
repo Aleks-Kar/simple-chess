@@ -53,8 +53,6 @@ function mouseUp(): void {
   ) {
     store.lastMove[0] = dragIndex
     store.lastMove[1] = hoverIndex
-
-    // if (!store.pieceHadBeenMoved) return
   }
 
   if (pieceHadBeenMoved) store.placePiece()

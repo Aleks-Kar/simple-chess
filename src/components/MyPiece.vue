@@ -4,6 +4,7 @@ import { useStore } from '../stores/board'
 
 const props = defineProps<{
   piece: string
+  index: number
   set: string
   color: 'white' | 'black'
   attacked: boolean
@@ -24,6 +25,7 @@ const urlSvgAttack = computed<string>(() => {
   if (
     props.attacked &&
     props.color !== store.turn &&
+    store.squaresForMove[props.index] &&
     props.piece.toUpperCase() !== 'K'
   ) {
     return 'url("/src/assets/swords.svg")'
@@ -35,8 +37,9 @@ const urlSvgAttack = computed<string>(() => {
 const urlSvgDefend = computed<string>(() => {
   if (
     props.attacked &&
-    props.color !== store.turn &&
     props.defended &&
+    props.color !== store.turn &&
+    store.squaresForMove[props.index] &&
     props.piece.toUpperCase() !== 'K'
   ) {
     return 'url("/src/assets/shield.svg")'

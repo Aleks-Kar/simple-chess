@@ -132,7 +132,6 @@ const defended = computed<boolean>(() => {
           !store.isWhiteSquare(props.index)
       },
       { square_moveable: isMoveable },
-      // { for_move: store.squaresForMove[props.index] },
       { square_immoveable: isImmoveable },
       { square_hover: isHover && !isImmoveable },
       { square_cursor_pointer: hasCursor }
@@ -141,6 +140,7 @@ const defended = computed<boolean>(() => {
     <MyPiece
       v-if="store.getPiece(props.index)"
       :piece="piece"
+      :index="props.index"
       :set="store.set"
       :color="store.getPieceColor(props.index)"
       :attacked="attacked"
@@ -149,10 +149,6 @@ const defended = computed<boolean>(() => {
 </template>
 
 <style>
-.for_move {
-  background-color: green;
-}
-
 .square {
   position: relative;
   display: flex;
