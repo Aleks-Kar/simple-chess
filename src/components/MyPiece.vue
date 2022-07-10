@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from '@vue/reactivity'
+import { useStore } from '../stores/board'
 
 const props = defineProps<{
   piece: string
@@ -8,6 +9,8 @@ const props = defineProps<{
   attacked: boolean
   defended: boolean
 }>()
+
+const store = useStore()
 
 const urlWhitePiece = computed<string>(() => {
   return `url("/src/assets/pieces/${props.set}/w${props.piece}.svg")`
@@ -18,7 +21,11 @@ const urlBlackPiece = computed<string>(() => {
 })
 
 const urlSvgAttack = computed<string>(() => {
-  if (props.attacked && props.piece.toUpperCase() !== 'K') {
+  if (
+    props.attacked &&
+    props.color !== store.turn &&
+    props.piece.toUpperCase() !== 'K'
+  ) {
     return 'url("/src/assets/swords.svg")'
   } else {
     return 'none'
@@ -26,7 +33,12 @@ const urlSvgAttack = computed<string>(() => {
 })
 
 const urlSvgDefend = computed<string>(() => {
-  if (props.defended && props.piece.toUpperCase() !== 'K') {
+  if (
+    props.attacked &&
+    props.color !== store.turn &&
+    props.defended &&
+    props.piece.toUpperCase() !== 'K'
+  ) {
     return 'url("/src/assets/shield.svg")'
   } else {
     return 'none'
@@ -53,6 +65,7 @@ const urlSvgDefend = computed<string>(() => {
   width: 90px;
   height: 90px;
   pointer-events: stroke;
+  user-select: none;
 }
 
 .piece::before {

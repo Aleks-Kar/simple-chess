@@ -136,7 +136,8 @@ export const useStore = defineStore('board', {
             this.pieces,
             this.pieces[this.dragIndex],
             this.dragIndex
-          )
+          ),
+          this.turn
         )
 
         /* finds out which pieces are attacking the active square
@@ -159,12 +160,17 @@ export const useStore = defineStore('board', {
         }
         // removes the attack from the squares
         for (let i = 0; i < initialPiecesIndexes.length; i++) {
+          const turn = this.isWhitePiece(initialPiecesIndexes[i])
+            ? 'white'
+            : 'black'
+
           this.removeAttackedSquares(
             getAttackedSquares(
               this.pieces,
               this.pieces[initialPiecesIndexes[i]],
               initialPiecesIndexes[i]
-            )
+            ),
+            turn
           )
         }
 
@@ -188,12 +194,17 @@ export const useStore = defineStore('board', {
         }
         // removes the attack from the squares
         for (let i = 0; i < targetPiecesIndexes.length; i++) {
+          const turn = this.isWhitePiece(targetPiecesIndexes[i])
+            ? 'white'
+            : 'black'
+
           this.removeAttackedSquares(
             getAttackedSquares(
               this.pieces,
               this.pieces[targetPiecesIndexes[i]],
               targetPiecesIndexes[i]
-            )
+            ),
+            turn
           )
         }
 
@@ -205,30 +216,41 @@ export const useStore = defineStore('board', {
         /* calculates and sets the attack squares for the
         pieces attacking the initial square */
         for (let i = 0; i < initialPiecesIndexes.length; i++) {
+          const turn = this.isWhitePiece(initialPiecesIndexes[i])
+            ? 'white'
+            : 'black'
+
           this.addAttackedSquares(
             getAttackedSquares(
               this.pieces,
               this.pieces[initialPiecesIndexes[i]],
               initialPiecesIndexes[i]
-            )
+            ),
+            turn
           )
         }
 
         /* calculates and sets the attack squares for the
         pieces attacking the target square */
         for (let i = 0; i < targetPiecesIndexes.length; i++) {
+          const turn = this.isWhitePiece(targetPiecesIndexes[i])
+            ? 'white'
+            : 'black'
+
           this.addAttackedSquares(
             getAttackedSquares(
               this.pieces,
               this.pieces[targetPiecesIndexes[i]],
               targetPiecesIndexes[i]
-            )
+            ),
+            turn
           )
         }
 
         // calculates and sets of the attack squares of the moving piece
         this.addAttackedSquares(
-          getAttackedSquares(this.pieces, draggedPiece, this.hoverIndex)
+          getAttackedSquares(this.pieces, draggedPiece, this.hoverIndex),
+          this.turn
         )
 
         if (this.turn === 'white') {
@@ -263,10 +285,10 @@ export const useStore = defineStore('board', {
       this.squaresForMove = [...moveableSquares]
     },
 
-    addAttackedSquares(attackedSquares: Array<boolean>): void {
+    addAttackedSquares(attackedSquares: Array<boolean>, turn: string): void {
       for (let i = 0; i < 64; i++) {
         if (attackedSquares[i]) {
-          if (this.turn === 'white') {
+          if (turn === 'white') {
             this.underWhiteAttack[i]++
             // console.warn(i, this.underWhiteAttack[i])
           } else {
@@ -276,10 +298,10 @@ export const useStore = defineStore('board', {
       }
     },
 
-    removeAttackedSquares(attackedSquares: Array<boolean>): void {
+    removeAttackedSquares(attackedSquares: Array<boolean>, turn: string): void {
       for (let i = 0; i < 64; i++) {
         if (attackedSquares[i]) {
-          if (this.turn === 'white') {
+          if (turn === 'white') {
             if (this.underWhiteAttack[i] > 0) this.underWhiteAttack[i]--
           } else {
             if (this.underBlackAttack[i] > 0) this.underBlackAttack[i]--

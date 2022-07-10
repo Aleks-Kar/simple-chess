@@ -74,6 +74,7 @@ button {
   width: 800px;
   height: 800px;
   background-color: hsl(30, 100%, 50%);
+  user-select: none;
 }
 
 .board__row {

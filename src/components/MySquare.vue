@@ -162,6 +162,7 @@ const defended = computed<boolean>(() => {
   height: 90px;
   border: 5px solid transparent;
   pointer-events: none;
+  user-select: none;
 }
 
 .square:active {

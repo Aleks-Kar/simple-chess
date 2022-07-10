@@ -28,31 +28,36 @@ function mouseMove(e: MouseEvent): void {
 // THE MOUSE UP EVENT
 function mouseUp(): void {
   store.lmbIsPressed = false
+  const isReactivated = store.isReactivated
+  const pieceHadBeenMoved = store.pieceHadBeenMoved
+  const dragIndex = store.dragIndex
+  const hoverIndex = store.hoverIndex
+  const turn = store.turn
   // if (!store.draggedItem) return
 
-  if (store.isReactivated && !store.pieceHadBeenMoved) {
+  if (isReactivated && !pieceHadBeenMoved) {
     store.isReactivated = false
     // store.deactivateSquare()
     store.activeIndex = 64
     store.clearMoveableSquares()
     return
-  } else if (store.isReactivated) {
+  } else if (isReactivated) {
     store.isReactivated = false
   }
 
-  if (store.squaresForMove[store.hoverIndex]) {
-    if (store.activeIndex !== store.hoverIndex && store.hoverIndex !== 64) {
-      // marking last moves
-      store.lastMove[0] = store.activeIndex
-      store.lastMove[1] = store.hoverIndex
-    }
+  if (
+    store.squaresForMove[hoverIndex] &&
+    (store.getPiece(hoverIndex) === '' ||
+      (!store.isWhitePiece(hoverIndex) && turn === 'white') ||
+      (store.isWhitePiece(hoverIndex) && turn === 'black'))
+  ) {
+    store.lastMove[0] = dragIndex
+    store.lastMove[1] = hoverIndex
 
-    if (!store.pieceHadBeenMoved) return
+    // if (!store.pieceHadBeenMoved) return
   }
 
-  if (store.pieceHadBeenMoved) store.placePiece()
-  // store.pieceHadBeenMoved = false
-  // store.activeIndex = 64
+  if (pieceHadBeenMoved) store.placePiece()
 }
 
 function mouseLeave(): void {
