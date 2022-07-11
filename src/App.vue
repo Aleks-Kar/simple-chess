@@ -59,7 +59,7 @@ function mouseUp(): void {
 }
 
 function mouseLeave(): void {
-  if (store.dragIndex !== 64) store.placePiece()
+  if (store.pieceHadBeenMoved && store.dragIndex < 64) store.placePiece()
 }
 </script>
 

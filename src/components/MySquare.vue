@@ -69,23 +69,25 @@ function mouseDown(e: MouseEvent): void {
 
 const isMoveable = computed<boolean>(() => {
   return (
+    props.index !== store.hoverIndex &&
     store.squaresForMove[props.index] &&
-    store.getPiece(props.index) === '' &&
-    props.index !== store.hoverIndex
+    store.getPiece(props.index) === ''
   )
 })
 
 const isImmoveable = computed<boolean>(() => {
   return (
-    !store.squaresForMove[props.index] &&
     props.index === store.hoverIndex &&
-    props.index !== store.dragIndex &&
-    store.getPieceColor(props.index) === store.turn
+    !store.squaresForMove[props.index] &&
+    props.index !== store.dragIndex
   )
 })
 
 const isHover = computed<boolean>(() => {
-  return props.index === store.hoverIndex
+  return (
+    props.index === store.hoverIndex &&
+    store.getPieceColor(store.hoverIndex) !== store.turn
+  )
 })
 
 // const isAttacked = computed<boolean>(() => {
@@ -149,6 +151,10 @@ const defended = computed<boolean>(() => {
 </template>
 
 <style>
+:root {
+  --moveable-color: hsl(240, 70%, 50%);
+}
+
 .square {
   position: relative;
   display: flex;
@@ -178,7 +184,7 @@ const defended = computed<boolean>(() => {
 }
 
 .square_active {
-  border: 5px solid hsl(120, 70%, 40%);
+  border: 5px solid var(--moveable-color);
 }
 
 .square_last-moves_for-white {
@@ -194,7 +200,7 @@ const defended = computed<boolean>(() => {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: hsl(120, 70%, 40%);
+  background-color: var(--moveable-color);
 }
 
 .square_immoveable {
@@ -202,7 +208,7 @@ const defended = computed<boolean>(() => {
 }
 
 .square_hover {
-  border: 5px solid hsl(120, 70%, 40%);
+  border: 5px solid var(--moveable-color);
 }
 
 .square_attacked {
