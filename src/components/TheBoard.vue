@@ -6,17 +6,7 @@ import MySquare from './MySquare.vue'
 
 const store = useStore()
 
-function fn(): void {
-  // store.$reset()
-  // store.init()
-  const sets = ['cardinal', 'dubrovny', 'staunty', 'tatiana']
-  const setIndex = sets.indexOf(store.set)
-  if (setIndex === 3) {
-    store.set = sets[0]
-  } else {
-    store.set = sets[setIndex + 1]
-  }
-}
+
 
 function getKey(x: number, y: number): string {
   return store.getPiece(x + y * 8) + String(x + y * 8)
@@ -36,7 +26,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <button @click="fn">смена фигур</button>
   <button @click="fn2">вызов</button>
   <div class="info">
     {{ store.turn === 'black' ? 'ход чёрных' : 'ход белых' }}
@@ -53,6 +42,12 @@ onMounted(() => {
 </template>
 
 <style>
+.ex {
+  background-color: aqua;
+  width: 94px;
+  height: 94px;
+}
+
 .info {
   display: flex;
   justify-content: center;

@@ -134,7 +134,6 @@ const defended = computed<boolean>(() => {
       v-if="store.getPiece(props.index)"
       :piece="piece"
       :index="props.index"
-      :set="store.set"
       :color="store.getPieceColor(props.index)"
       :attacked="attacked"
       :defended="defended" />

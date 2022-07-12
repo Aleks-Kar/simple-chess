@@ -5,7 +5,6 @@ import { useStore } from '../stores/board'
 const props = defineProps<{
   piece: string
   index: number
-  set: string
   color: 'white' | 'black'
   attacked: boolean
   defended: boolean
@@ -14,11 +13,11 @@ const props = defineProps<{
 const store = useStore()
 
 const urlWhitePiece = computed<string>(() => {
-  return `url("/src/assets/pieces/${props.set}/w${props.piece}.svg")`
+  return `url("/src/assets/pieces/w${props.piece}.svg")`
 })
 
 const urlBlackPiece = computed<string>(() => {
-  return `url("/src/assets/pieces/${props.set}/b${props.piece}.svg")`
+  return `url("/src/assets/pieces/b${props.piece}.svg")`
 })
 
 const urlSvgAttack = computed<string>(() => {
