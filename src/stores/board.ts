@@ -126,7 +126,8 @@ export const useStore = defineStore('board', {
         // returns the piece to its initial place
         this.draggedItem.style.left = 0
         this.draggedItem.style.top = 0
-        this.draggedItem.style.cursor = 'pointer'
+        // this.draggedItem.style.cursor = 'pointer'
+        this.draggedItem.style.cursor = ''
         console.warn('2')
       } else {
         console.warn('3')
@@ -385,7 +386,7 @@ export const useStore = defineStore('board', {
     // },
 
     isWhiteSquare:
-      state =>
+      () =>
       (index: number): boolean => {
         const y = Math.trunc(index / 8)
         const x = index - y * 8

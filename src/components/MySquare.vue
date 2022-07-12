@@ -43,11 +43,12 @@ function mouseDown(e: MouseEvent): void {
   }
 
   // preparing for the dragging
-  const boardPos: any = document.body
+  const boardPos: DOMRect | undefined = document.body
     .querySelector('.board')
     ?.getBoundingClientRect()
-  store.boardLeft = Math.round(boardPos.left)
-  store.boardTop = Math.round(boardPos.top)
+
+  if (boardPos) store.boardLeft = Math.round(boardPos.left)
+  if (boardPos) store.boardTop = Math.round(boardPos.top)
 
   const svgElement: SVGSVGElement | null = document.body.querySelector(
     `#square${props.index} svg`
@@ -60,13 +61,6 @@ function mouseDown(e: MouseEvent): void {
   store.cy = e.clientY - (e.offsetY - 45)
 }
 
-// const isDraggable = computed<boolean>(() => {
-//   return (
-//     (props.squareIndex < 16 && store.side === 'black') ||
-//     (props.squareIndex > 47 && store.side === 'white')
-//   )
-// })
-
 const isMoveable = computed<boolean>(() => {
   return (
     props.index !== store.hoverIndex &&
@@ -77,8 +71,12 @@ const isMoveable = computed<boolean>(() => {
 
 const isImmoveable = computed<boolean>(() => {
   return (
+    (store.getPieceColor(props.index) === store.turn ||
+      !store.squaresForMove[props.index]) &&
     props.index === store.hoverIndex &&
-    !store.squaresForMove[props.index] &&
+    (store.getPiece(props.index) !== '' ||
+      (!store.squaresForMove[props.index] &&
+        props.index === store.hoverIndex)) &&
     props.index !== store.dragIndex
   )
 })
@@ -86,17 +84,10 @@ const isImmoveable = computed<boolean>(() => {
 const isHover = computed<boolean>(() => {
   return (
     props.index === store.hoverIndex &&
-    store.getPieceColor(store.hoverIndex) !== store.turn
+    (store.getPieceColor(store.hoverIndex) !== store.turn ||
+      store.getPiece(props.index) === '')
   )
 })
-
-// const isAttacked = computed<boolean>(() => {
-//   return (
-//     store.squaresForMove[props.index] &&
-//     store.getPiece(props.index) !== '' &&
-//     store.getPieceColor(props.index) !== store.turn
-//   )
-// })
 
 const attacked = computed<boolean>(() => {
   const i = props.index
