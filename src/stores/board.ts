@@ -130,8 +130,9 @@ export const useStore = defineStore('board', {
         console.warn('2')
       } else {
         console.warn('3')
-        /* squares attacking by the ACTIVE SQUARE gets -1
-        in the underWhiteAttack (or underBlackAttack) array */
+        /* the elements of the underWhiteAttack or underBlackAttack
+        array corresponding to the squares attacked by the ACTIVE SQUARE,
+        gets -1 to their value */
         this.removeAttackedSquares(
           getAttackedSquares(
             this.pieces,
