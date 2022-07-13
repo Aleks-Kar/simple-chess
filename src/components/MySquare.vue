@@ -104,6 +104,10 @@ const isDefended = computed<boolean>(() => {
     (store.underBlackAttack[i] > 0 && !store.isWhitePiece(i))
   )
 })
+
+const myTurn = computed<boolean>(() => {
+  return store.getPieceColor(props.index) === store.turn
+})
 </script>
 
 <template>
@@ -124,11 +128,15 @@ const isDefended = computed<boolean>(() => {
           store.lastMove.includes(props.index) &&
           !store.isWhiteSquare(props.index)
       },
+
       { square_moveable_safe: isMoveable },
       { square_moveable_unsafe: isMoveable && isAttacked },
+
       { square_immoveable: isImmoveable },
+
       { square_hover_safe: isHover && !isImmoveable && !isDefended },
       { square_hover_unsafe: isHover && !isImmoveable && isDefended },
+
       { square_cursor_pointer: hasCursor }
     ]">
     <!-- {{ props.index }} -->
@@ -190,16 +198,16 @@ const isDefended = computed<boolean>(() => {
 
 .square_moveable_safe::after {
   content: '';
-  width: 20px;
-  height: 20px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   background-color: var(--color_safe);
 }
 
 .square_moveable_unsafe::after {
   content: '';
-  width: 20px;
-  height: 20px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   background-color: var(--color_unsafe);
 }
@@ -216,7 +224,7 @@ const isDefended = computed<boolean>(() => {
   border: 5px solid var(--color_unsafe);
 }
 
-.square_attacked {
+/*.square_attacked {
   border: 5px solid transparent;
   border-radius: 50%;
 }
@@ -227,5 +235,5 @@ const isDefended = computed<boolean>(() => {
 
 .square_attacked_black {
   background-color: hsl(0, 0%, 20%);
-}
+}*/
 </style>
