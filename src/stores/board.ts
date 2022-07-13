@@ -111,8 +111,8 @@ export const useStore = defineStore('board', {
       // console.warn(this.dragIndex)
       // console.warn(this.hoverIndex)
 
-      const y = Math.trunc(this.hoverIndex / 8)
-      const x = this.hoverIndex - y * 8
+      // const y = Math.trunc(this.hoverIndex / 8)
+      // const x = this.hoverIndex - y * 8
 
       if (
         this.hoverIndex === 64 ||
@@ -130,8 +130,8 @@ export const useStore = defineStore('board', {
         console.warn('2')
       } else {
         console.warn('3')
-        /* places the piece, recalculates and sets the attack squares */
-        // clears squares attacked by the moving piece
+        /* squares attacking by the ACTIVE SQUARE gets -1
+        in the underWhiteAttack (or underBlackAttack) array */
         this.removeAttackedSquares(
           getAttackedSquares(
             this.pieces,
@@ -141,62 +141,69 @@ export const useStore = defineStore('board', {
           this.turn
         )
 
-        // if target square not empty clears attacked by the taken piece
+        /* if target square not empty, squares attacked by the TARGET SQUARE 
+        gets -1 in the underWhiteAttack (or underBlackAttack) array */
         if (this.getPiece(this.hoverIndex).length !== 0) {
           const turn = this.isWhitePiece(this.hoverIndex) ? 'white' : 'black'
 
           this.removeAttackedSquares(
             getAttackedSquares(
               this.pieces,
-              this.pieces[this.dragIndex],
-              this.dragIndex
+              this.pieces[this.hoverIndex],
+              this.hoverIndex
             ),
             turn
           )
         }
 
-        /* finds out which pieces are attacking the active square
-        (unless it's a queen, bishop, or rook) */
+        /* gets a boolean array whose values reflect
+        which pieces are attacking the ACTIVE SQUARE */
         const attackedByActiveSquare = getAttackedSquares(
           this.pieces,
           'Q',
           this.dragIndex
         )
 
-        const initialPiecesIndexes = []
+        /* gets array of indexes from the boolean array above
+        (if index correspond to a queen, bishop, or rook) */
+        const activePiecesIndexes = []
         for (let i = 0; i < attackedByActiveSquare.length; i++) {
           if (attackedByActiveSquare[i]) {
             if (
               this.pieces[i] !== '' &&
               'QBR'.includes(this.pieces[i].toUpperCase())
             )
-              initialPiecesIndexes.push(i)
+              activePiecesIndexes.push(i)
           }
         }
-        // removes the attack from the squares
-        for (let i = 0; i < initialPiecesIndexes.length; i++) {
-          const turn = this.isWhitePiece(initialPiecesIndexes[i])
+
+        /* squares attacked by pieces that correspond to the indexes of the
+        array above get -1 in the underWhiteAttack (or underBlackAttack) array */
+        for (let i = 0; i < activePiecesIndexes.length; i++) {
+          const turn = this.isWhitePiece(activePiecesIndexes[i])
             ? 'white'
             : 'black'
 
           this.removeAttackedSquares(
             getAttackedSquares(
               this.pieces,
-              this.pieces[initialPiecesIndexes[i]],
-              initialPiecesIndexes[i]
+              this.pieces[activePiecesIndexes[i]],
+              activePiecesIndexes[i]
             ),
             turn
           )
         }
 
-        /* finds out which pieces are attacking the target square
-        (unless it's a queen, bishop, or rook) */
+        /* gets a boolean array whose values reflect
+        which pieces are attacking the TARGET SQUARE */
         const attackedByTargetSquare = getAttackedSquares(
           this.pieces,
           'Q',
           this.hoverIndex
         )
 
+        /* gets array of indexes from the boolean array above
+        (if it's a queen, bishop, or rook) */
         const targetPiecesIndexes = []
         for (let i = 0; i < attackedByTargetSquare.length; i++) {
           if (attackedByTargetSquare[i]) {
@@ -207,7 +214,11 @@ export const useStore = defineStore('board', {
               targetPiecesIndexes.push(i)
           }
         }
-        // removes the attack from the squares
+        console.warn(targetPiecesIndexes)
+        console.warn('49:', this.underWhiteAttack[49])
+
+        /* squares attacked by pieces that correspond to the indexes of the
+        array above get -1 in the underWhiteAttack (or underBlackAttack) array */
         for (let i = 0; i < targetPiecesIndexes.length; i++) {
           const turn = this.isWhitePiece(targetPiecesIndexes[i])
             ? 'white'
@@ -223,23 +234,23 @@ export const useStore = defineStore('board', {
           )
         }
 
-        // move the piece
+        // saves the dragged piece and "moves" it
         const draggedPiece = this.pieces[this.dragIndex]
         this.pieces[this.dragIndex] = ''
         this.pieces[this.hoverIndex] = draggedPiece
 
         /* calculates and sets the attack squares for the
         pieces attacking the initial square */
-        for (let i = 0; i < initialPiecesIndexes.length; i++) {
-          const turn = this.isWhitePiece(initialPiecesIndexes[i])
+        for (let i = 0; i < activePiecesIndexes.length; i++) {
+          const turn = this.isWhitePiece(activePiecesIndexes[i])
             ? 'white'
             : 'black'
 
           this.addAttackedSquares(
             getAttackedSquares(
               this.pieces,
-              this.pieces[initialPiecesIndexes[i]],
-              initialPiecesIndexes[i]
+              this.pieces[activePiecesIndexes[i]],
+              activePiecesIndexes[i]
             ),
             turn
           )
@@ -263,6 +274,11 @@ export const useStore = defineStore('board', {
         }
 
         // calculates and sets of the attack squares of the moving piece
+        // console.warn(
+        //   getAttackedSquares(this.pieces, draggedPiece, this.hoverIndex),
+        //   this.turn
+        // )
+
         this.addAttackedSquares(
           getAttackedSquares(this.pieces, draggedPiece, this.hoverIndex),
           this.turn
@@ -305,7 +321,6 @@ export const useStore = defineStore('board', {
         if (attackedSquares[i]) {
           if (turn === 'white') {
             this.underWhiteAttack[i]++
-            // console.warn(i, this.underWhiteAttack[i])
           } else {
             this.underBlackAttack[i]++
           }
@@ -321,7 +336,6 @@ export const useStore = defineStore('board', {
           } else {
             if (this.underBlackAttack[i] > 0) this.underBlackAttack[i]--
           }
-          // console.warn(this.underWhiteAttack[i], this.underBlackAttack[i], i)
         }
       }
     },

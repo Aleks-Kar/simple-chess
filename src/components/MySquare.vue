@@ -222,16 +222,16 @@ const isDefended = computed<boolean>(() => {
 
 .square_moveable_safe::after {
   content: '';
-  width: 10px;
-  height: 90px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background-color: var(--color_safe);
 }
 
 .square_moveable_unsafe::after {
   content: '';
-  width: 90px;
-  height: 10px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background-color: var(--color_unsafe);
 }

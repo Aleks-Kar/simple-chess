@@ -5,7 +5,7 @@ import { useStore } from './stores/board'
 
 const store = useStore()
 
-// THE MOUSE MOVE EVENT
+/* THE MOUSE MOVE EVENT */
 function mouseMove(e: MouseEvent): void {
   if (!store.draggedItem || !store.lmbIsPressed) return
 
@@ -25,7 +25,7 @@ function mouseMove(e: MouseEvent): void {
   store.draggedItem.style.top = `${e.clientY - store.cy}px`
 }
 
-// THE MOUSE UP EVENT
+/* THE MOUSE UP EVENT */
 function mouseUp(): void {
   store.lmbIsPressed = false
   const isReactivated = store.isReactivated
