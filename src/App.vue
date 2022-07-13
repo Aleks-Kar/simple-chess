@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import TheBoard from './components/TheBoard.vue'
-import { getHoverIndex } from './services/helpers'
 import { useStore } from './stores/board'
+import { getHoverIndex } from './services/helpers'
+import TheBoard from './components/TheBoard.vue'
+import TheNotation from './components/TheNotation.vue'
 
 const store = useStore()
 
@@ -33,7 +34,6 @@ function mouseUp(): void {
   const dragIndex = store.dragIndex
   const hoverIndex = store.hoverIndex
   const turn = store.turn
-  // if (!store.draggedItem) return
 
   if (isReactivated && !pieceHadBeenMoved) {
     store.isReactivated = false
@@ -64,13 +64,11 @@ function mouseLeave(): void {
 </script>
 
 <template>
-  <div
-    class="wrapper"
-    @mousemove="mouseMove"
-    @mouseup="mouseUp"
-    @mouseleave="mouseLeave">
+  <div @mousemove="mouseMove" @mouseup="mouseUp" @mouseleave="mouseLeave">
     <TheBoard />
   </div>
+
+  <TheNotation />
 </template>
 
 <style>
@@ -89,8 +87,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* text-align: center; */
+  background-size: cover;
   color: hsl(210, 29%, 24%);
   overflow: hidden;
+  background-color: rgb(105, 172, 141);
 }
 
 .wrapper {
@@ -99,6 +99,5 @@ body {
   align-items: center;
   width: 100vw;
   height: 100vh;
-  background-color: rgb(105, 172, 141);
 }
 </style>

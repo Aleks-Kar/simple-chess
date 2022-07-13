@@ -62,7 +62,7 @@ const urlSvgDefend = computed<string>(() => {
   </div>
 </template>
 
-<style scoped>
+<style>
 .piece {
   width: 90px;
   height: 90px;
