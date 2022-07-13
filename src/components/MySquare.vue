@@ -198,7 +198,7 @@ const myTurn = computed<boolean>(() => {
 
 .square_moveable_safe::after {
   content: '';
-  width: 90px;
+  width: 10px;
   height: 90px;
   border-radius: 50%;
   background-color: var(--color_safe);
@@ -207,7 +207,7 @@ const myTurn = computed<boolean>(() => {
 .square_moveable_unsafe::after {
   content: '';
   width: 90px;
-  height: 90px;
+  height: 10px;
   border-radius: 50%;
   background-color: var(--color_unsafe);
 }
