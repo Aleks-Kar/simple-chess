@@ -12,7 +12,7 @@ const hasCursor = computed<boolean>(
   () => store.turn === store.getPieceColor(props.index)
 )
 
-// THE MOUSE DOWN EVENT
+/* THE MOUSE DOWN EVENT */
 function mouseDown(e: MouseEvent): void {
   if (store.turn !== store.getPieceColor(props.index)) return
   if (store.activeIndex !== 64 && props.index === store.activeIndex)
@@ -61,6 +61,23 @@ function mouseDown(e: MouseEvent): void {
   store.cy = e.clientY - (e.offsetY - 45)
 }
 
+/* UI VARIABLES */
+const isActiveSafe = computed<boolean>(() => {
+  return (
+    store.activeIndex === props.index &&
+    ((store.underWhiteAttack[props.index] === 0 && store.turn === 'black') ||
+      (store.underBlackAttack[props.index] === 0 && store.turn === 'white'))
+  )
+})
+
+const isActiveUnsafe = computed<boolean>(() => {
+  return (
+    store.activeIndex === props.index &&
+    ((store.underWhiteAttack[props.index] > 0 && store.turn === 'black') ||
+      (store.underBlackAttack[props.index] > 0 && store.turn === 'white'))
+  )
+})
+
 const isMoveable = computed<boolean>(() => {
   return (
     props.index !== store.hoverIndex &&
@@ -104,10 +121,6 @@ const isDefended = computed<boolean>(() => {
     (store.underBlackAttack[i] > 0 && !store.isWhitePiece(i))
   )
 })
-
-const myTurn = computed<boolean>(() => {
-  return store.getPieceColor(props.index) === store.turn
-})
 </script>
 
 <template>
@@ -117,7 +130,8 @@ const myTurn = computed<boolean>(() => {
     :class="[
       { square_background_white: store.isWhiteSquare(props.index) },
       { square_background_black: !store.isWhiteSquare(props.index) },
-      { square_active: store.activeIndex === props.index },
+      { square_active_safe: isActiveSafe },
+      { square_active_unsafe: isActiveUnsafe },
       {
         'square_last-moves_for-white':
           store.lastMove.includes(props.index) &&
@@ -128,18 +142,24 @@ const myTurn = computed<boolean>(() => {
           store.lastMove.includes(props.index) &&
           !store.isWhiteSquare(props.index)
       },
-
       { square_moveable_safe: isMoveable },
-      { square_moveable_unsafe: isMoveable && isAttacked },
-
+      {
+        square_moveable_unsafe:
+          isMoveable &&
+          ((isAttacked && store.turn === 'white') ||
+            (isDefended && store.turn === 'black'))
+      },
       { square_immoveable: isImmoveable },
-
-      { square_hover_safe: isHover && !isImmoveable && !isDefended },
-      { square_hover_unsafe: isHover && !isImmoveable && isDefended },
-
+      { square_hover_safe: isHover && !isImmoveable },
+      {
+        square_hover_unsafe:
+          isHover &&
+          !isImmoveable &&
+          ((isAttacked && store.turn === 'white') ||
+            (isDefended && store.turn === 'black'))
+      },
       { square_cursor_pointer: hasCursor }
     ]">
-    <!-- {{ props.index }} -->
     <MyPiece
       v-if="store.getPiece(props.index)"
       :piece="piece"
@@ -184,8 +204,12 @@ const myTurn = computed<boolean>(() => {
   background-color: hsl(29, 34%, 55%);
 }
 
-.square_active {
+.square_active_safe {
   border: 5px solid var(--color_safe);
+}
+
+.square_active_unsafe {
+  border: 5px solid var(--color_unsafe);
 }
 
 .square_last-moves_for-white {
@@ -223,17 +247,4 @@ const myTurn = computed<boolean>(() => {
 .square_hover_unsafe {
   border: 5px solid var(--color_unsafe);
 }
-
-/*.square_attacked {
-  border: 5px solid transparent;
-  border-radius: 50%;
-}
-
-.square_attacked_white {
-  background-color: hsl(0, 0%, 100%);
-}
-
-.square_attacked_black {
-  background-color: hsl(0, 0%, 20%);
-}*/
 </style>
