@@ -46,19 +46,22 @@ const urlSvgDefend = computed<string>(() => {
     return 'none'
   }
 })
+
+const isKingUnderAttack = computed<boolean>(() => {
+  return props.attacked && props.piece.toUpperCase() === 'K'
+})
 </script>
 
 <template>
   <div class="piece">
     <svg
-      :class="[
-        { piece_color_white: props.color === 'white' },
-        { piece_color_black: props.color === 'black' },
-        {
-          'piece_king-under-attack':
-            props.attacked && props.piece.toUpperCase() === 'K'
-        }
-      ]"></svg>
+      v-if="props.color === 'white'"
+      class="piece_color_white"
+      :class="{ 'piece_king-under-attack': isKingUnderAttack }"></svg>
+    <svg
+      v-else-if="props.color === 'black'"
+      class="piece_color_black"
+      :class="{ 'piece_king-under-attack': isKingUnderAttack }"></svg>
   </div>
 </template>
 
