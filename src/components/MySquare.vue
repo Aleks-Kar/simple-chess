@@ -89,7 +89,7 @@ const isHover = computed<boolean>(() => {
   )
 })
 
-const attacked = computed<boolean>(() => {
+const isAttacked = computed<boolean>(() => {
   const i = props.index
   return (
     (store.underWhiteAttack[i] > 0 && !store.isWhitePiece(i)) ||
@@ -97,7 +97,7 @@ const attacked = computed<boolean>(() => {
   )
 })
 
-const defended = computed<boolean>(() => {
+const isDefended = computed<boolean>(() => {
   const i = props.index
   return (
     (store.underWhiteAttack[i] > 0 && store.isWhitePiece(i)) ||
@@ -124,9 +124,11 @@ const defended = computed<boolean>(() => {
           store.lastMove.includes(props.index) &&
           !store.isWhiteSquare(props.index)
       },
-      { square_moveable: isMoveable },
+      { square_moveable_safe: isMoveable },
+      { square_moveable_unsafe: isMoveable && isAttacked },
       { square_immoveable: isImmoveable },
-      { square_hover: isHover && !isImmoveable },
+      { square_hover_safe: isHover && !isImmoveable && !isDefended },
+      { square_hover_unsafe: isHover && !isImmoveable && isDefended },
       { square_cursor_pointer: hasCursor }
     ]">
     <!-- {{ props.index }} -->
@@ -135,14 +137,15 @@ const defended = computed<boolean>(() => {
       :piece="piece"
       :index="props.index"
       :color="store.getPieceColor(props.index)"
-      :attacked="attacked"
-      :defended="defended" />
+      :attacked="isAttacked"
+      :defended="isDefended" />
   </div>
 </template>
 
 <style>
 :root {
-  --moveable-color: hsl(240, 70%, 50%);
+  --color_safe: hsl(240, 70%, 50%);
+  --color_unsafe: hsl(0, 100%, 60%);
 }
 
 .square {
@@ -174,7 +177,7 @@ const defended = computed<boolean>(() => {
 }
 
 .square_active {
-  border: 5px solid var(--moveable-color);
+  border: 5px solid var(--color_safe);
 }
 
 .square_last-moves_for-white {
@@ -185,20 +188,32 @@ const defended = computed<boolean>(() => {
   background-color: hsl(55, 50%, 40%);
 }
 
-.square_moveable::after {
+.square_moveable_safe::after {
   content: '';
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: var(--moveable-color);
+  background-color: var(--color_safe);
+}
+
+.square_moveable_unsafe::after {
+  content: '';
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--color_unsafe);
 }
 
 .square_immoveable {
-  background-color: hsl(0, 100%, 60%);
+  background-color: var(--color_unsafe);
 }
 
-.square_hover {
-  border: 5px solid var(--moveable-color);
+.square_hover_safe {
+  border: 5px solid var(--color_safe);
+}
+
+.square_hover_unsafe {
+  border: 5px solid var(--color_unsafe);
 }
 
 .square_attacked {
@@ -209,6 +224,7 @@ const defended = computed<boolean>(() => {
 .square_attacked_white {
   background-color: hsl(0, 0%, 100%);
 }
+
 .square_attacked_black {
   background-color: hsl(0, 0%, 20%);
 }
