@@ -135,7 +135,7 @@ export const useStore = defineStore('board', {
         this.removeAttackedSquares(
           getAttackedSquares(
             this.pieces,
-            this.pieces[this.dragIndex],
+            this.getPiece(this.dragIndex),
             this.dragIndex
           ),
           this.turn
@@ -149,7 +149,7 @@ export const useStore = defineStore('board', {
           this.removeAttackedSquares(
             getAttackedSquares(
               this.pieces,
-              this.pieces[this.hoverIndex],
+              this.getPiece(this.hoverIndex),
               this.hoverIndex
             ),
             turn
