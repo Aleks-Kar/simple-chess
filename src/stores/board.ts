@@ -86,18 +86,13 @@ export const useStore = defineStore('board', {
         this.draggedItem.style.left = 0
         this.draggedItem.style.top = 0
         this.draggedItem.style.cursor = ''
-        console.warn('2')
       } else {
-        console.warn('3')
-
         // saves the dragged piece and "moves" it
         this.pieces[this.hoverIndex] = this.pieces[this.dragIndex]
         this.pieces[this.dragIndex] = ''
 
-        const temp = performance.now()
         this.underWhiteAttack.fill(false)
         this.underBlackAttack.fill(false)
-        console.warn(performance.now() - temp)
 
         for (let i = 0; i < 64; i++) {
           const piece = this.getPiece(i)
