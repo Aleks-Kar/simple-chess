@@ -65,7 +65,10 @@ function mouseDown(e: MouseEvent): void {
 const isWhiteSquare = computed<boolean>(() => store.isWhiteSquare(props.index))
 const isLastMove = computed<boolean>(() => store.lastMove.includes(props.index))
 const isActive = computed<boolean>(() => props.index === store.activeIndex)
-const isHover = computed<boolean>(() => props.index === store.hoverIndex)
+
+const isHover = computed<boolean>(() => {
+  return props.index !== store.activeIndex && props.index === store.hoverIndex
+})
 
 const isAlly = computed<boolean>(() => {
   return (
@@ -116,6 +119,7 @@ const isDefended = computed<boolean>(() => {
       { square_active_unsafe: isActive && !isSafe },
       { square_moveable_safe: isMoveable && isSafe },
       { square_moveable_unsafe: isMoveable && !isSafe },
+      { square_immoveable: isHover && (!isMoveable || isAlly) },
       { square_hover_safe: isHover && isSafe && isMoveable && !isAlly },
       { square_hover_unsafe: isHover && !isSafe && isMoveable && !isAlly }
     ]">
