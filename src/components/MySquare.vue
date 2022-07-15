@@ -10,21 +10,17 @@ const store = useStore()
 const piece = store.getPiece(props.index)
 const index = props.index
 
-const hasCursor = computed<boolean>(
-  () => store.turn === store.getPieceColor(props.index)
-)
-
 /* THE MOUSE DOWN EVENT */
 function mouseDown(e: MouseEvent): void {
-  if (store.turn !== store.getPieceColor(props.index)) return
-  if (store.activeIndex !== 64 && props.index === store.activeIndex)
+  if (store.turn !== store.getPieceColor(index)) return
+  if (store.activeIndex !== 64 && index === store.activeIndex)
     store.isReactivated = true
 
   store.lmbIsPressed = true
-  store.dragIndex = props.index
+  store.dragIndex = index
 
   if (!store.isReactivated) {
-    store.activeIndex = props.index
+    store.activeIndex = index
 
     // showing moveable squares
     if (piece.toUpperCase() === 'P') {
@@ -48,13 +44,7 @@ function mouseDown(e: MouseEvent): void {
       store.setMoveableSquares(attackedSquares)
     } else {
       // calculating of moves for other pieces
-      store.setMoveableSquares(
-        getAttackedSquares(
-          store.pieces,
-          store.getPiece(props.index),
-          props.index
-        )
-      )
+      store.setMoveableSquares(getAttackedSquares(store.pieces, piece, index))
     }
   }
 
@@ -67,7 +57,7 @@ function mouseDown(e: MouseEvent): void {
   if (boardPos) store.boardTop = Math.round(boardPos.top)
 
   const svgElement: SVGSVGElement | null = document.body.querySelector(
-    `#square${props.index} svg`
+    `#square${index} svg`
   )
 
   store.draggedItem = svgElement
@@ -78,45 +68,43 @@ function mouseDown(e: MouseEvent): void {
 }
 
 /* UI VARIABLES */
-const isWhiteSquare = computed<boolean>(() => store.isWhiteSquare(props.index))
-const isLastMove = computed<boolean>(() => store.lastMove.includes(props.index))
-const isActive = computed<boolean>(() => props.index === store.activeIndex)
+const isWhiteSquare = computed<boolean>(() => store.isWhiteSquare(index))
+const isLastMove = computed<boolean>(() => store.lastMove.includes(index))
+const isActive = computed<boolean>(() => index === store.activeIndex)
+const hasCursor = computed<boolean>(
+  () => store.turn === store.getPieceColor(index)
+)
 
 const isHover = computed<boolean>(() => {
-  return props.index !== store.activeIndex && props.index === store.hoverIndex
+  return index !== store.activeIndex && index === store.hoverIndex
 })
 
 const isAlly = computed<boolean>(() => {
-  return (
-    store.getPiece(props.index) !== '' &&
-    store.getPieceColor(props.index) === store.turn
-  )
+  return piece !== '' && store.getPieceColor(index) === store.turn
 })
 
 const isSafe = computed<boolean>(() => {
   return (
-    (!store.underWhiteAttack[props.index] && store.turn === 'black') ||
-    (!store.underBlackAttack[props.index] && store.turn === 'white')
+    (!store.underWhiteAttack[index] && store.turn === 'black') ||
+    (!store.underBlackAttack[index] && store.turn === 'white')
   )
 })
 
 const isMoveable = computed<boolean>(() => {
-  return store.squaresForMove[props.index] && props.index !== store.activeIndex
+  return store.squaresForMove[index] && index !== store.activeIndex
 })
 
 const isAttacked = computed<boolean>(() => {
-  const i = props.index
   return (
-    (store.underWhiteAttack[i] && !store.isWhitePiece(i)) ||
-    (store.underBlackAttack[i] && store.isWhitePiece(i))
+    (store.underWhiteAttack[index] && !store.isWhitePiece(index)) ||
+    (store.underBlackAttack[index] && store.isWhitePiece(index))
   )
 })
 
 const isDefended = computed<boolean>(() => {
-  const i = props.index
   return (
-    (store.underWhiteAttack[i] && store.isWhitePiece(i)) ||
-    (store.underBlackAttack[i] && !store.isWhitePiece(i))
+    (store.underWhiteAttack[index] && store.isWhitePiece(index)) ||
+    (store.underBlackAttack[index] && !store.isWhitePiece(index))
   )
 })
 </script>
@@ -140,10 +128,10 @@ const isDefended = computed<boolean>(() => {
       { square_hover_unsafe: isHover && !isSafe && isMoveable && !isAlly }
     ]">
     <MyPiece
-      v-if="store.getPiece(props.index)"
+      v-if="piece"
       :piece="piece"
-      :index="props.index"
-      :color="store.getPieceColor(props.index)"
+      :index="index"
+      :color="store.getPieceColor(index)"
       :attacked="isAttacked"
       :defended="isDefended" />
   </div>
