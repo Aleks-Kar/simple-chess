@@ -117,8 +117,8 @@ const isDefended = computed<boolean>(() => {
       { square_cursor_pointer: hasCursor },
       { square_active_safe: isActive && isSafe },
       { square_active_unsafe: isActive && !isSafe },
-      { square_moveable_safe: isMoveable && isSafe },
-      { square_moveable_unsafe: isMoveable && !isSafe },
+      { square_moveable_safe: isMoveable && isSafe && !isHover },
+      { square_moveable_unsafe: isMoveable && !isSafe && !isHover },
       { square_immoveable: isHover && (!isMoveable || isAlly) },
       { square_hover_safe: isHover && isSafe && isMoveable && !isAlly },
       { square_hover_unsafe: isHover && !isSafe && isMoveable && !isAlly }
@@ -185,16 +185,16 @@ const isDefended = computed<boolean>(() => {
 
 .square_moveable_safe::after {
   content: '';
-  width: 90px;
-  height: 10px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background-color: var(--color_safe);
 }
 
 .square_moveable_unsafe::after {
   content: '';
-  width: 10px;
-  height: 90px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background-color: var(--color_unsafe);
 }
