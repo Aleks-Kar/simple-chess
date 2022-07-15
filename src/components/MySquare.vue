@@ -136,7 +136,7 @@ const isDefended = computed<boolean>(() => {
 <style>
 :root {
   --color_safe: hsl(240, 70%, 50%);
-  --color_unsafe: hsl(0, 100%, 60%);
+  --color_unsafe: hsl(330, 75%, 50%);
 }
 
 .square {
@@ -200,7 +200,7 @@ const isDefended = computed<boolean>(() => {
 }
 
 .square_immoveable {
-  background-color: var(--color_unsafe);
+  background-color: hsl(0, 100%, 58%);
 }
 
 .square_hover_safe {
