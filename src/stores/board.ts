@@ -104,8 +104,6 @@ export const useStore = defineStore('board', {
           const color = this.getPieceColor(i)
           if (piece !== '') {
             const attackedSquares = getAttackedSquares(this.pieces, piece, i)
-            
-
             for (let j = 0; j < 64; j++) {
               if (attackedSquares[j]) {
                 if (color === 'white') {
