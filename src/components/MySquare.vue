@@ -62,48 +62,27 @@ function mouseDown(e: MouseEvent): void {
 }
 
 /* UI VARIABLES */
-const isActiveSafe = computed<boolean>(() => {
+const isWhiteSquare = computed<boolean>(() => store.isWhiteSquare(props.index))
+const isLastMove = computed<boolean>(() => store.lastMove.includes(props.index))
+const isActive = computed<boolean>(() => props.index === store.activeIndex)
+const isHover = computed<boolean>(() => props.index === store.hoverIndex)
+
+const isAlly = computed<boolean>(() => {
   return (
-    store.activeIndex === props.index &&
-    ((store.underWhiteAttack[props.index] === 0 && store.turn === 'black') ||
-      (store.underBlackAttack[props.index] === 0 && store.turn === 'white'))
+    store.getPiece(props.index) !== '' &&
+    store.getPieceColor(props.index) === store.turn
   )
 })
 
-const isActiveUnsafe = computed<boolean>(() => {
+const isSafe = computed<boolean>(() => {
   return (
-    store.activeIndex === props.index &&
-    ((store.underWhiteAttack[props.index] > 0 && store.turn === 'black') ||
-      (store.underBlackAttack[props.index] > 0 && store.turn === 'white'))
+    (store.underWhiteAttack[props.index] === 0 && store.turn === 'black') ||
+    (store.underBlackAttack[props.index] === 0 && store.turn === 'white')
   )
 })
 
 const isMoveable = computed<boolean>(() => {
-  return (
-    props.index !== store.hoverIndex &&
-    store.squaresForMove[props.index] &&
-    store.getPiece(props.index) === ''
-  )
-})
-
-const isImmoveable = computed<boolean>(() => {
-  return (
-    (store.getPieceColor(props.index) === store.turn ||
-      !store.squaresForMove[props.index]) &&
-    props.index === store.hoverIndex &&
-    (store.getPiece(props.index) !== '' ||
-      (!store.squaresForMove[props.index] &&
-        props.index === store.hoverIndex)) &&
-    props.index !== store.dragIndex
-  )
-})
-
-const isHover = computed<boolean>(() => {
-  return (
-    props.index === store.hoverIndex &&
-    (store.getPieceColor(store.hoverIndex) !== store.turn ||
-      store.getPiece(props.index) === '')
-  )
+  return store.squaresForMove[props.index] && props.index !== store.activeIndex
 })
 
 const isAttacked = computed<boolean>(() => {
@@ -128,37 +107,17 @@ const isDefended = computed<boolean>(() => {
     class="square"
     @mousedown="mouseDown($event)"
     :class="[
-      { square_background_white: store.isWhiteSquare(props.index) },
-      { square_background_black: !store.isWhiteSquare(props.index) },
-      { square_active_safe: isActiveSafe },
-      { square_active_unsafe: isActiveUnsafe },
-      {
-        'square_last-moves_for-white':
-          store.lastMove.includes(props.index) &&
-          store.isWhiteSquare(props.index)
-      },
-      {
-        'square_last-moves_for-black':
-          store.lastMove.includes(props.index) &&
-          !store.isWhiteSquare(props.index)
-      },
-      { square_moveable_safe: isMoveable },
-      {
-        square_moveable_unsafe:
-          isMoveable &&
-          ((isAttacked && store.turn === 'white') ||
-            (isDefended && store.turn === 'black'))
-      },
-      { square_immoveable: isImmoveable },
-      { square_hover_safe: isHover && !isImmoveable },
-      {
-        square_hover_unsafe:
-          isHover &&
-          !isImmoveable &&
-          ((isAttacked && store.turn === 'white') ||
-            (isDefended && store.turn === 'black'))
-      },
-      { square_cursor_pointer: hasCursor }
+      { square_background_white: isWhiteSquare },
+      { square_background_black: !isWhiteSquare },
+      { 'square_last-moves_for-white': isLastMove && isWhiteSquare },
+      { 'square_last-moves_for-black': isLastMove && !isWhiteSquare },
+      { square_cursor_pointer: hasCursor },
+      { square_active_safe: isActive && isSafe },
+      { square_active_unsafe: isActive && !isSafe },
+      { square_moveable_safe: isMoveable && isSafe },
+      { square_moveable_unsafe: isMoveable && !isSafe },
+      { square_hover_safe: isHover && isSafe && isMoveable && !isAlly },
+      { square_hover_unsafe: isHover && !isSafe && isMoveable && !isAlly }
     ]">
     <MyPiece
       v-if="store.getPiece(props.index)"
@@ -222,16 +181,16 @@ const isDefended = computed<boolean>(() => {
 
 .square_moveable_safe::after {
   content: '';
-  width: 20px;
-  height: 20px;
+  width: 90px;
+  height: 10px;
   border-radius: 50%;
   background-color: var(--color_safe);
 }
 
 .square_moveable_unsafe::after {
   content: '';
-  width: 20px;
-  height: 20px;
+  width: 10px;
+  height: 90px;
   border-radius: 50%;
   background-color: var(--color_unsafe);
 }
