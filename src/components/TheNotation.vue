@@ -7,7 +7,7 @@ const store = useStore()
 <template>
   <div class="notation">
     {{ store.turn === 'black' ? 'ход чёрных' : 'ход белых' }}
-    {{store.activeIndex}}
+    {{ store.activeIndex }}
   </div>
 </template>
 

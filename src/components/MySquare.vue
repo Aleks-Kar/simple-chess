@@ -8,6 +8,8 @@ const props = defineProps<{ index: number }>()
 const store = useStore()
 
 const piece = store.getPiece(props.index)
+const index = props.index
+
 const hasCursor = computed<boolean>(
   () => store.turn === store.getPieceColor(props.index)
 )
@@ -25,11 +27,25 @@ function mouseDown(e: MouseEvent): void {
     store.activeIndex = props.index
 
     // showing moveable squares
-    if (store.getPiece(props.index).toUpperCase() === 'P') {
+    if (piece.toUpperCase() === 'P') {
       // calculating exclusive moves for a pawn
-      store.setMoveableSquares(
-        getPawnMoves(store.pieces, store.getPiece(props.index), props.index)
-      )
+      store.setMoveableSquares(getPawnMoves(store.pieces, piece, index))
+    } else if (piece.toUpperCase() === 'K') {
+      // calculating exclusive moves for a king
+      const attackedSquares = getAttackedSquares(store.pieces, piece, index)
+      const color = store.getPieceColor(index)
+
+      for (let i = 0; i < 64; i++) {
+        if (attackedSquares[i]) {
+          if (color === 'white' && store.underBlackAttack[i]) {
+            attackedSquares[i] = false
+          } else if (color === 'black' && store.underWhiteAttack[i]) {
+            attackedSquares[i] = false
+          }
+        }
+      }
+
+      store.setMoveableSquares(attackedSquares)
     } else {
       // calculating of moves for other pieces
       store.setMoveableSquares(
