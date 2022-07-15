@@ -17,11 +17,11 @@ export const useStore = defineStore('board', {
 
       cx: 0,
       cy: 0,
+      boardLeft: 0,
+      boardTop: 0,
       draggedItem: document.body.querySelector('.square'),
       dragIndex: 64,
-      hoverIndex: 64,
-      boardLeft: 0,
-      boardTop: 0
+      hoverIndex: 64
     }
   },
 

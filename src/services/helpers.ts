@@ -10,12 +10,11 @@ export function getPawnMoves(
   const moveableSquares = new Array<boolean>(64)
   moveableSquares.fill(false)
 
-  // getting coordinates
+  // gets coordinates
   const y = Math.trunc(index / 8)
   const x = index - y * 8
 
-  // PAWN, movement forward
-  // checking if pawn in an initial position
+  // checks if pawn in an initial position
   let maxLength: number = 0
   if (isWhite(piece)) {
     maxLength = y === 6 ? 3 : 2 // for the white pawn
@@ -23,6 +22,30 @@ export function getPawnMoves(
     maxLength = y === 1 ? 3 : 2 // for the black pawn
   }
 
+  const isWhitePiece = isWhite(piece)
+
+  // pawn attack
+  if (isWhitePiece) {
+    // left attack
+    const lIndex = x - 1 + (y - 1) * 8
+    if (pieces[lIndex] !== '' && !isWhite(pieces[lIndex]))
+      moveableSquares[lIndex] = true
+    // right attack
+    const rIndex = x + 1 + (y - 1) * 8
+    if (pieces[rIndex] !== '' && !isWhite(pieces[rIndex]))
+      moveableSquares[rIndex] = true
+  } else {
+    // left attack
+    const lIndex = x - 1 + (y + 1) * 8
+    if (pieces[lIndex] !== '' && isWhite(pieces[lIndex]))
+      moveableSquares[lIndex] = true
+    // right attack
+    const rIndex = x + 1 + (y + 1) * 8
+    if (pieces[rIndex] !== '' && isWhite(pieces[rIndex]))
+      moveableSquares[rIndex] = true
+  }
+
+  // pawn move forward
   for (let i = 1; i < maxLength; i++) {
     if (y < 1 || y > 6) break
     let index: number = 0
