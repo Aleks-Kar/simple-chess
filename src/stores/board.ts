@@ -5,8 +5,8 @@ export const useStore = defineStore('board', {
   state: () => {
     return {
       pieces: Array<string>(64),
-      underWhiteAttack: Array<number>(64),
-      underBlackAttack: Array<number>(64),
+      underWhiteAttack: Array<boolean>(64),
+      underBlackAttack: Array<boolean>(64),
       turn: 'white',
       activeIndex: 64,
       lastMove: Array<number>(2),
@@ -29,8 +29,8 @@ export const useStore = defineStore('board', {
     // setting up pieces
     init(): void {
       this.pieces.fill('')
-      this.underWhiteAttack.fill(0)
-      this.underBlackAttack.fill(0)
+      this.underWhiteAttack.fill(false)
+      this.underBlackAttack.fill(false)
 
       this.clearMoveableSquares()
       const blackStr: string = 'rnbqkbnrpppppppp'
@@ -47,9 +47,7 @@ export const useStore = defineStore('board', {
         )
 
         for (let j = 0; j < 64; j++) {
-          if (attackedSquares[j]) {
-            this.underBlackAttack[j]++
-          }
+          if (attackedSquares[j]) this.underBlackAttack[j] = true
         }
       }
 
@@ -62,9 +60,7 @@ export const useStore = defineStore('board', {
         )
 
         for (let j = 0; j < 64; j++) {
-          if (attackedSquares[j]) {
-            this.underWhiteAttack[j]++
-          }
+          if (attackedSquares[j]) this.underWhiteAttack[j] = true
         }
       }
     },
@@ -98,20 +94,24 @@ export const useStore = defineStore('board', {
         this.pieces[this.hoverIndex] = this.pieces[this.dragIndex]
         this.pieces[this.dragIndex] = ''
 
-        this.underWhiteAttack.fill(0)
-        this.underBlackAttack.fill(0)
+        const temp = performance.now()
+        this.underWhiteAttack.fill(false)
+        this.underBlackAttack.fill(false)
+        console.warn(performance.now() - temp)
 
         for (let i = 0; i < 64; i++) {
           const piece = this.getPiece(i)
           const color = this.getPieceColor(i)
           if (piece !== '') {
             const attackedSquares = getAttackedSquares(this.pieces, piece, i)
+            
+
             for (let j = 0; j < 64; j++) {
               if (attackedSquares[j]) {
                 if (color === 'white') {
-                  this.underWhiteAttack[j]++
+                  this.underWhiteAttack[j] = true
                 } else {
-                  this.underBlackAttack[j]++
+                  this.underBlackAttack[j] = true
                 }
               }
             }

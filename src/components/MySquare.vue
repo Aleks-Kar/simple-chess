@@ -79,8 +79,8 @@ const isAlly = computed<boolean>(() => {
 
 const isSafe = computed<boolean>(() => {
   return (
-    (store.underWhiteAttack[props.index] === 0 && store.turn === 'black') ||
-    (store.underBlackAttack[props.index] === 0 && store.turn === 'white')
+    (!store.underWhiteAttack[props.index] && store.turn === 'black') ||
+    (!store.underBlackAttack[props.index] && store.turn === 'white')
   )
 })
 
@@ -91,16 +91,16 @@ const isMoveable = computed<boolean>(() => {
 const isAttacked = computed<boolean>(() => {
   const i = props.index
   return (
-    (store.underWhiteAttack[i] > 0 && !store.isWhitePiece(i)) ||
-    (store.underBlackAttack[i] > 0 && store.isWhitePiece(i))
+    (store.underWhiteAttack[i] && !store.isWhitePiece(i)) ||
+    (store.underBlackAttack[i] && store.isWhitePiece(i))
   )
 })
 
 const isDefended = computed<boolean>(() => {
   const i = props.index
   return (
-    (store.underWhiteAttack[i] > 0 && store.isWhitePiece(i)) ||
-    (store.underBlackAttack[i] > 0 && !store.isWhitePiece(i))
+    (store.underWhiteAttack[i] && store.isWhitePiece(i)) ||
+    (store.underBlackAttack[i] && !store.isWhitePiece(i))
   )
 })
 </script>
