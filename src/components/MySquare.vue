@@ -50,7 +50,7 @@ function mouseDown(e: MouseEvent): void {
 
   // preparing for the dragging
   const boardPos: DOMRect | undefined = document.body
-    .querySelector('.board')
+    .querySelector('.board__field')
     ?.getBoundingClientRect()
 
   if (boardPos) store.boardLeft = Math.round(boardPos.left)
