@@ -69,7 +69,11 @@ function mouseLeave(): void {
   </div>
 
   <div class="notation_margin-left">
-    <TheNotation :turn="store.turn" :last-move="store.lastMove" />
+    <TheNotation
+      :turn="store.turn"
+      :move-from="store.lastMove[0]" 
+      :move-to="store.lastMove[1]"
+      :target-piece="store.targetPiece" />
   </div>
 </template>
 

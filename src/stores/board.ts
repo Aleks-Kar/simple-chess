@@ -21,7 +21,8 @@ export const useStore = defineStore('board', {
       boardTop: 0,
       draggedItem: document.body.querySelector('.square'),
       dragIndex: 64,
-      hoverIndex: 64
+      hoverIndex: 64,
+      targetPiece: ''
     }
   },
 
@@ -79,6 +80,8 @@ export const useStore = defineStore('board', {
         this.draggedItem.style.top = 0
         this.draggedItem.style.cursor = ''
       } else {
+        this.targetPiece = this.getPiece(this.hoverIndex)
+
         // saves the dragged piece and "moves" it
         this.board[this.hoverIndex] = this.board[this.dragIndex]
         this.board[this.dragIndex] = ''
@@ -86,6 +89,7 @@ export const useStore = defineStore('board', {
         this.underWhiteAttack.fill(false)
         this.underBlackAttack.fill(false)
 
+        // recalculate the attack squares
         for (let i = 0; i < 64; i++) {
           const piece = this.getPiece(i)
           const color = this.getPieceColor(i)

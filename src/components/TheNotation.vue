@@ -1,14 +1,37 @@
 <script setup lang="ts">
+import { toRef, watch } from 'vue'
+
 const props = defineProps<{
   turn: string
-  lastMove?: Array<number>
+  moveFrom?: number
+  moveTo?: number
+  targetPiece: string
 }>()
+
+// watch(
+//   () => props.board,
+//   (newValue, oldValue) => {
+//     console.warn(newValue, oldValue)
+//   }
+// )
+
+watch(
+  () => props.moveFrom,
+  (newValue, oldValue) => {
+    console.warn(newValue, oldValue)
+  }
+)
+
+const whiteMoves: string[] = []
 </script>
 
 <template>
   <div class="notation">
     <div class="notation__title">
-      <div>{{ props.turn === 'black' ? 'Ход чёрных' : 'Ход белых' }}</div>
+      <div>
+        {{ props.turn === 'black' ? 'Ход чёрных' : 'Ход белых' }},
+        <!-- {{ props.pieceCapture ? 'взятие фигуры' : 'пустая клетка' }} -->
+      </div>
     </div>
     <div class="notation__table">
       <div class="notation__table_column_first">
@@ -21,7 +44,7 @@ const props = defineProps<{
       </div>
       <div class="notation__table_column_third">
         <div>чёрные</div>
-        <div v-for="move in 20">{{ move }}</div>
+        <div></div>
       </div>
     </div>
   </div>
@@ -37,9 +60,11 @@ const props = defineProps<{
 
 .notation__title {
   height: 35px;
+  width: 286px;
   line-height: 35px;
   background-color: pink;
   border: 3px solid black;
+  overflow: hidden;
 }
 
 .notation__table {
