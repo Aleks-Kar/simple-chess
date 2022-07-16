@@ -68,7 +68,9 @@ function mouseLeave(): void {
     <TheBoard />
   </div>
 
-  <TheNotation :turn="store.turn" :last-move="store.lastMove" />
+  <div class="notation_margin-left">
+    <TheNotation :turn="store.turn" :last-move="store.lastMove" />
+  </div>
 </template>
 
 <style>
@@ -93,11 +95,15 @@ body {
   background-color: rgb(105, 172, 141);
 }
 
-.wrapper {
+/* .wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100vw;
   height: 100vh;
+} */
+
+.notation_margin-left {
+  margin-left: 40px;
 }
 </style>
