@@ -68,7 +68,7 @@ function mouseLeave(): void {
     <TheBoard />
   </div>
 
-  <TheNotation />
+  <TheNotation :turn="store.turn" :last-move="store.lastMove" />
 </template>
 
 <style>

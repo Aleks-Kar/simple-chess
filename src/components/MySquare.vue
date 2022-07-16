@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from '@vue/reactivity'
 import { useStore } from '../stores/board'
-import MyPiece from '/src/components/MyPiece.vue'
 import { getAttackedSquares, getPawnMoves } from '../services/helpers'
+import MyPiece from '/src/components/MyPiece.vue'
 
 const props = defineProps<{ index: number }>()
 const store = useStore()
