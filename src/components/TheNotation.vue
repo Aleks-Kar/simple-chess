@@ -38,9 +38,9 @@ const props = defineProps<{
 
 .notation__table {
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  flex-direction: row;
 }
 
 .notation__table_first-column,

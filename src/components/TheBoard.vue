@@ -15,14 +15,23 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="info"></div>
   <div class="board">
-    <div v-for="(_, y) in 8" class="board__row">
-      <MySquare
-        v-for="(_, x) in 8"
-        :key="getKey(x, y)"
-        :id="`square${x + y * 8}`"
-        :index="x + y * 8" />
+    <div class="board_naming_vertical">
+      <div v-for="number in '87654321'">{{ number }}</div>
+    </div>
+    <div>
+      <div class="board__field">
+        <div v-for="(_, y) in 8" class="board__row">
+          <MySquare
+            v-for="(_, x) in 8"
+            :key="getKey(x, y)"
+            :id="`square${x + y * 8}`"
+            :index="x + y * 8" />
+        </div>
+      </div>
+      <div class="board_naming_horizontal">
+        <div v-for="char in 'ABCDEFGH'">{{ char }}</div>
+      </div>
     </div>
   </div>
 </template>
@@ -30,13 +39,75 @@ onMounted(() => {
 <style>
 .board {
   display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: hsl(29, 34%, 55%);
+}
+
+.board__field {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
   width: 800px;
   height: 800px;
+  margin-top: 40px;
+  margin-right: 40px;
+  border: 4px solid black;
   user-select: none;
 }
 
 .board__row {
   display: flex;
+}
+
+.board_naming_horizontal {
+  display: flex;
+  justify-content: flex-start;
+  width: 800px;
+  color: black;
+  /* background-color: blue; */
+}
+
+.board_naming_horizontal > div {
+  text-align: center;
+  width: 20px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.board_naming_horizontal > div:first-child {
+  margin-left: 40px;
+}
+
+.board_naming_horizontal > div + div {
+  margin-left: 80px;
+}
+
+.board_naming_vertical {
+  /* display: flex; */
+  /* justify-content: flex-start; */
+  height: 800px;
+  color: black;
+}
+
+.board_naming_vertical > div {
+  text-align: center;
+  width: 40px;
+  height: 40px;
+  /* line-height: 40px; */
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.board_naming_vertical > div:first-child {
+  margin-top: 30px;
+}
+
+.board_naming_vertical > div + div {
+  margin-top: 60px;
 }
 </style>
