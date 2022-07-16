@@ -4,7 +4,7 @@ import { getAttackedSquares } from '../services/helpers'
 export const useStore = defineStore('board', {
   state: () => {
     return {
-      pieces: Array<string>(64),
+      board: Array<string>(64),
       underWhiteAttack: Array<boolean>(64),
       underBlackAttack: Array<boolean>(64),
       turn: 'white',
@@ -26,38 +26,30 @@ export const useStore = defineStore('board', {
   },
 
   actions: {
-    // setting up pieces
+    // setting up board
     init(): void {
-      this.pieces.fill('')
+      this.board.fill('')
       this.underWhiteAttack.fill(false)
       this.underBlackAttack.fill(false)
 
       this.clearMoveableSquares()
       const blackStr: string = 'rnbqkbnrpppppppp'
       const whiteStr: string = 'RNBKQBNRPPPPPPPP'
-      for (let i = 0; i < 16; i++) this.pieces[i] = blackStr[i]
-      for (let i = 63; i > 47; i--) this.pieces[i] = whiteStr[63 - i]
+      for (let i = 0; i < 16; i++) this.board[i] = blackStr[i]
+      for (let i = 63; i > 47; i--) this.board[i] = whiteStr[63 - i]
 
-      // calculates attacked squares by black pieces
+      // calculates attacked squares by black board
       for (let i = 0; i < 16; i++) {
-        const attackedSquares = getAttackedSquares(
-          this.pieces,
-          this.pieces[i],
-          i
-        )
+        const attackedSquares = getAttackedSquares(this.board, this.board[i], i)
 
         for (let j = 0; j < 64; j++) {
           if (attackedSquares[j]) this.underBlackAttack[j] = true
         }
       }
 
-      // calculates attacked squares by white pieces
+      // calculates attacked squares by white board
       for (let i = 48; i < 64; i++) {
-        const attackedSquares = getAttackedSquares(
-          this.pieces,
-          this.pieces[i],
-          i
-        )
+        const attackedSquares = getAttackedSquares(this.board, this.board[i], i)
 
         for (let j = 0; j < 64; j++) {
           if (attackedSquares[j]) this.underWhiteAttack[j] = true
@@ -68,8 +60,8 @@ export const useStore = defineStore('board', {
     setPieceOnHover(piece: string): void {
       if (this.hoverIndex === 64) {
       } else {
-        this.pieces[this.hoverIndex] = piece
-        this.pieces[this.dragIndex] = ''
+        this.board[this.hoverIndex] = piece
+        this.board[this.dragIndex] = ''
       }
     },
 
@@ -88,8 +80,8 @@ export const useStore = defineStore('board', {
         this.draggedItem.style.cursor = ''
       } else {
         // saves the dragged piece and "moves" it
-        this.pieces[this.hoverIndex] = this.pieces[this.dragIndex]
-        this.pieces[this.dragIndex] = ''
+        this.board[this.hoverIndex] = this.board[this.dragIndex]
+        this.board[this.dragIndex] = ''
 
         this.underWhiteAttack.fill(false)
         this.underBlackAttack.fill(false)
@@ -98,7 +90,7 @@ export const useStore = defineStore('board', {
           const piece = this.getPiece(i)
           const color = this.getPieceColor(i)
           if (piece !== '') {
-            const attackedSquares = getAttackedSquares(this.pieces, piece, i)
+            const attackedSquares = getAttackedSquares(this.board, piece, i)
             for (let j = 0; j < 64; j++) {
               if (attackedSquares[j]) {
                 if (color === 'white') {
@@ -132,7 +124,7 @@ export const useStore = defineStore('board', {
 
     delDraggedPiece(): void {
       if (this.hoverIndex === 64) return
-      this.pieces[this.dragIndex] = ''
+      this.board[this.dragIndex] = ''
     },
 
     toggleSide(): void {
@@ -152,18 +144,18 @@ export const useStore = defineStore('board', {
     getPiece:
       state =>
       (index: number): string => {
-        // return String(state.pieces[index])
-        return state.pieces[index]
+        // return String(state.board[index])
+        return state.board[index]
       },
 
     getDraggedPiece: state => (): string => {
-      return String(state.pieces[state.dragIndex])
+      return String(state.board[state.dragIndex])
     },
 
     getPieceColor:
       state =>
       (index: number): string => {
-        if (state.pieces[index] === String(state.pieces[index]).toUpperCase()) {
+        if (state.board[index] === String(state.board[index]).toUpperCase()) {
           return 'white'
         } else {
           return 'black'
@@ -181,7 +173,7 @@ export const useStore = defineStore('board', {
     isWhitePiece:
       state =>
       (index: number): boolean => {
-        const piece = state.pieces[index]
+        const piece = state.board[index]
         return piece === piece.toUpperCase()
       }
   }

@@ -3,7 +3,7 @@ function isWhite(piece: string): boolean {
 }
 
 export function getPawnMoves(
-  pieces: Array<string>,
+  board: Array<string>,
   piece: string,
   index: number
 ) {
@@ -28,20 +28,20 @@ export function getPawnMoves(
   if (isWhitePiece) {
     // left attack
     const lIndex = x - 1 + (y - 1) * 8
-    if (pieces[lIndex] !== '' && !isWhite(pieces[lIndex]))
+    if (board[lIndex] !== '' && !isWhite(board[lIndex]))
       moveableSquares[lIndex] = true
     // right attack
     const rIndex = x + 1 + (y - 1) * 8
-    if (pieces[rIndex] !== '' && !isWhite(pieces[rIndex]))
+    if (board[rIndex] !== '' && !isWhite(board[rIndex]))
       moveableSquares[rIndex] = true
   } else {
     // left attack
     const lIndex = x - 1 + (y + 1) * 8
-    if (pieces[lIndex] !== '' && isWhite(pieces[lIndex]))
+    if (board[lIndex] !== '' && isWhite(board[lIndex]))
       moveableSquares[lIndex] = true
     // right attack
     const rIndex = x + 1 + (y + 1) * 8
-    if (pieces[rIndex] !== '' && isWhite(pieces[rIndex]))
+    if (board[rIndex] !== '' && isWhite(board[rIndex]))
       moveableSquares[rIndex] = true
   }
 
@@ -55,7 +55,7 @@ export function getPawnMoves(
       index = x + (y + i) * 8 // for the black pawn
     }
 
-    if (pieces[index] === '') {
+    if (board[index] === '') {
       moveableSquares[index] = true
     } else {
       break
@@ -66,7 +66,7 @@ export function getPawnMoves(
 }
 
 export function getAttackedSquares(
-  pieces: Array<string>,
+  board: Array<string>,
   piece: string,
   index: number
 ): Array<boolean> {
@@ -82,7 +82,7 @@ export function getAttackedSquares(
     if (y > 0) {
       for (let i = y - 1; i >= 0; i--) {
         const index = x + i * 8
-        if (pieces[index] === '') {
+        if (board[index] === '') {
           attackedSquares[index] = true
         } else {
           attackedSquares[index] = true
@@ -96,7 +96,7 @@ export function getAttackedSquares(
     if (x < 7) {
       for (let i = x + 1; i <= 7; i++) {
         const index = i + y * 8
-        if (pieces[index] === '') {
+        if (board[index] === '') {
           attackedSquares[index] = true
         } else {
           attackedSquares[index] = true
@@ -110,7 +110,7 @@ export function getAttackedSquares(
     if (y < 7) {
       for (let i = y + 1; i <= 7; i++) {
         const index = x + i * 8
-        if (pieces[index] === '') {
+        if (board[index] === '') {
           attackedSquares[index] = true
         } else {
           attackedSquares[index] = true
@@ -124,7 +124,7 @@ export function getAttackedSquares(
     if (x > 0) {
       for (let i = x - 1; i >= 0; i--) {
         const index = i + y * 8
-        if (pieces[index] === '') {
+        if (board[index] === '') {
           attackedSquares[index] = true
         } else {
           attackedSquares[index] = true
@@ -139,7 +139,7 @@ export function getAttackedSquares(
     const length = 7 - x < y ? 7 - x : y
     for (let i = 1; i <= length; i++) {
       const index = x + y * 8 - 7 * i
-      if (pieces[index] === '') {
+      if (board[index] === '') {
         attackedSquares[index] = true
       } else {
         attackedSquares[index] = true
@@ -152,7 +152,7 @@ export function getAttackedSquares(
     const length = x === y ? 7 - x : 7 - Math.max(x, y)
     for (let i = 1; i <= length; i++) {
       const index = x + i + (y + i) * 8
-      if (pieces[index] === '') {
+      if (board[index] === '') {
         attackedSquares[index] = true
       } else {
         attackedSquares[index] = true
@@ -165,7 +165,7 @@ export function getAttackedSquares(
     const length = 7 - y < x ? 7 - y : x
     for (let i = 1; i <= length; i++) {
       const index = x + y * 8 + 7 * i
-      if (pieces[index] === '') {
+      if (board[index] === '') {
         attackedSquares[index] = true
       } else {
         attackedSquares[index] = true
@@ -178,7 +178,7 @@ export function getAttackedSquares(
     const length = x === y ? x : Math.min(x, y)
     for (let i = 1; i <= length; i++) {
       const index = x - i + (y - i) * 8
-      if (pieces[index] === '') {
+      if (board[index] === '') {
         attackedSquares[index] = true
       } else {
         attackedSquares[index] = true
