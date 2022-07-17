@@ -73,7 +73,7 @@ function mouseLeave(): void {
       :turn="store.turn"
       :board="store.board"
       :move="store.lastMove"
-      />
+      :had-captured="store.hadCaptured" />
   </div>
 </template>
 

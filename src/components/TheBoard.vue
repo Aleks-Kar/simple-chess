@@ -47,9 +47,9 @@ onMounted(() => {
 
 .board__field {
   display: flex;
+  flex-direction: column-reverse;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
   width: 800px;
   height: 800px;
   margin-top: 40px;
@@ -60,6 +60,10 @@ onMounted(() => {
 
 .board__row {
   display: flex;
+  /* justify-content: center; */
+  /* align-items: center; */
+  width: 800px;
+  height: 100px;
 }
 
 .board_naming_horizontal {

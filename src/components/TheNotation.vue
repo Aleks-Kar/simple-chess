@@ -5,8 +5,7 @@ const props = defineProps<{
   turn: string
   board: Array<string>
   move?: Array<number>
-  // moveFrom?: number
-  // moveTo?: number
+  hadCaptured?: string
 }>()
 
 let whiteMoves: string[] = []
@@ -15,7 +14,7 @@ let blackMoves: string[] = []
 function getCoord(index: number): string {
   const y = Math.trunc(index / 8)
   const x = index - y * 8
-  return 'ABCDEFG'[x] + (y + 1)
+  return 'abcdefgh'[x] + (y + 1)
 }
 
 const getMoveNotation = function (): string {
@@ -24,19 +23,20 @@ const getMoveNotation = function (): string {
   const initialPos = props.move[0]
   const targetPos = props.move[1]
   const piece = props.board[props.move[1]].toUpperCase()
+  const separator = props.hadCaptured?.length === 0 ? '—' : ':'
 
   if (piece === 'R') {
-    return `♖${getCoord(initialPos)}-${getCoord(targetPos)}`
+    return `♖${getCoord(initialPos)}${separator}${getCoord(targetPos)}`
   } else if (piece === 'N') {
-    return `♘${getCoord(initialPos)}-${getCoord(targetPos)}`
+    return `♘${getCoord(initialPos)}${separator}${getCoord(targetPos)}`
   } else if (piece === 'B') {
-    return `♗${getCoord(initialPos)}-${getCoord(targetPos)}`
+    return `♗${getCoord(initialPos)}${separator}${getCoord(targetPos)}`
   } else if (piece === 'Q') {
-    return `♕${getCoord(initialPos)}-${getCoord(targetPos)}`
+    return `♕${getCoord(initialPos)}${separator}${getCoord(targetPos)}`
   } else if (piece === 'K') {
-    return `♔${getCoord(initialPos)}-${getCoord(targetPos)}`
+    return `♔${getCoord(initialPos)}${separator}${getCoord(targetPos)}`
   } else {
-    return ''
+    return `${getCoord(initialPos)}${separator}${getCoord(targetPos)}`
   }
 }
 
@@ -90,7 +90,7 @@ watch(
 
 <style>
 .notation {
-  font-size: 30px;
+  font-size: 25px;
   color: black;
   text-align: center;
 }

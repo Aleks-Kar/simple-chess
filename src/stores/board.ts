@@ -21,7 +21,8 @@ export const useStore = defineStore('board', {
       boardTop: 0,
       draggedItem: document.body.querySelector('.square'),
       dragIndex: 64,
-      hoverIndex: 64
+      hoverIndex: 64,
+      hadCaptured: ''
     }
   },
 
@@ -33,17 +34,19 @@ export const useStore = defineStore('board', {
       this.underBlackAttack.fill(false)
 
       this.clearMoveableSquares()
-      const blackStr: string = 'rnbqkbnrpppppppp'
-      const whiteStr: string = 'RNBKQBNRPPPPPPPP'
-      for (let i = 0; i < 16; i++) this.board[i] = blackStr[i]
-      for (let i = 63; i > 47; i--) this.board[i] = whiteStr[63 - i]
+      const whitePieces: string = 'RNBQKBNRPPPPPPPP'
+      const blackPieces: string = 'pppppppprnbqkbnr'
+      for (let i = 0; i < 16; i++) this.board[i] = whitePieces[i]
+      for (let i = 48; i < 64; i++) this.board[i] = blackPieces[i - 48]
+      // this.board[27] = 'N'
+      // this.board[34] = 'N'
 
       // calculates attacked squares by black board
       for (let i = 0; i < 16; i++) {
         const attackedSquares = getAttackedSquares(this.board, this.board[i], i)
 
         for (let j = 0; j < 64; j++) {
-          if (attackedSquares[j]) this.underBlackAttack[j] = true
+          if (attackedSquares[j]) this.underWhiteAttack[j] = true
         }
       }
 
@@ -52,7 +55,7 @@ export const useStore = defineStore('board', {
         const attackedSquares = getAttackedSquares(this.board, this.board[i], i)
 
         for (let j = 0; j < 64; j++) {
-          if (attackedSquares[j]) this.underWhiteAttack[j] = true
+          if (attackedSquares[j]) this.underBlackAttack[j] = true
         }
       }
     },
@@ -79,6 +82,8 @@ export const useStore = defineStore('board', {
         this.draggedItem.style.top = 0
         this.draggedItem.style.cursor = ''
       } else {
+        this.hadCaptured = this.getPiece(this.hoverIndex)
+
         // saves the dragged piece and "moves" it
         this.board[this.hoverIndex] = this.board[this.dragIndex]
         this.board[this.dragIndex] = ''
