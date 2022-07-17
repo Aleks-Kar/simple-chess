@@ -40,16 +40,6 @@ const getMoveNotation = function (): string {
   }
 }
 
-// watch(
-//   () => props.turn,
-//   (newValue, oldValue) => {
-//     if (props.turn === 'black') {
-//       if (newValue) whiteMoves.push(convertToIcon(props.board[newValue]))
-//     } else if (props.turn === 'white') {
-//       if (newValue) blackMoves.push(convertToIcon(props.board[newValue]))
-//     }
-//   }
-// )
 watch(
   () => props.turn,
   () => {
@@ -64,74 +54,51 @@ watch(
 
 <template>
   <div class="notation">
-    <div class="notation__title">
-      <div>
-        {{ props.turn === 'black' ? 'Ход чёрных' : 'Ход белых' }},
-        <!-- {{ props.pieceCapture ? 'взятие фигуры' : 'пустая клетка' }} -->
-      </div>
-    </div>
-    <div class="notation__table">
-      <div class="notation__table_column_first">
-        <div>№</div>
-        <div v-for="number in 20">{{ number }}</div>
-      </div>
-      <div class="notation__table_column_second">
-        <div>белые</div>
-        <div v-for="move in whiteMoves">{{ move }}</div>
-      </div>
-      <div class="notation__table_column_third">
-        <div>чёрные</div>
-        <div v-for="move in blackMoves">{{ move }}</div>
-      </div>
-    </div>
+    <tr class="notation__row">
+      <th class="notation__title">№</th>
+      <th class="notation__title">Белые</th>
+      <th class="notation__title">Чёрные</th>
+    </tr>
+
+    <tr v-for="num in 10" class="notation__row">
+      <td class="notation__cell">{{ num }}</td>
+      <td class="notation__cell">{{ whiteMoves[num - 1] }}</td>
+      <td class="notation__cell">{{ blackMoves[num - 1] }}</td>
+    </tr>
   </div>
   <div></div>
 </template>
 
 <style>
+:root {
+  --table-border: 2px solid black;
+}
+
 .notation {
   font-size: 25px;
   color: black;
   text-align: center;
+  border-collapse: collapse;
 }
 
 .notation__title {
-  height: 35px;
-  width: 286px;
-  line-height: 35px;
-  background-color: pink;
-  border: 3px solid black;
-  overflow: hidden;
+  border: var(--table-border);
 }
 
-.notation__table {
-  display: flex;
-  background-color: hsl(74, 50%, 70%);
+.notation__row:last-child {
+  border-bottom: var(--table-border);
 }
 
-.notation__table_column_first {
-  width: 40px;
-  border-left: 3px solid black;
-  border-bottom: 3px solid black;
+.notation__cell {
+  border-left: var(--table-border);
+  border-right: var(--table-border);
 }
 
-.notation__table_column_second,
-.notation__table_column_third {
+.notation__cell:first-child {
+  width: 50px;
+}
+
+.notation__cell + .notation__cell {
   width: 120px;
-  border-bottom: 3px solid black;
-}
-
-.notation__table_column_first,
-.notation__table_column_second,
-.notation__table_column_third {
-  border-right: 3px solid black;
-}
-
-.notation__table_column_first > div:first-child,
-.notation__table_column_second > div:first-child,
-.notation__table_column_third > div:first-child {
-  height: 35px;
-  line-height: 35px;
-  border-bottom: 3px solid black;
 }
 </style>
