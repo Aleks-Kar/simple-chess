@@ -1,28 +1,65 @@
 <script setup lang="ts">
-import { toRef, watch } from 'vue'
+import { watch } from 'vue'
 
 const props = defineProps<{
   turn: string
-  moveFrom?: number
-  moveTo?: number
-  targetPiece: string
+  board: Array<string>
+  move?: Array<number>
+  // moveFrom?: number
+  // moveTo?: number
 }>()
 
+let whiteMoves: string[] = []
+let blackMoves: string[] = []
+
+function getCoord(index: number): string {
+  const y = Math.trunc(index / 8)
+  const x = index - y * 8
+  return 'ABCDEFG'[x] + (y + 1)
+}
+
+const getMoveNotation = function (): string {
+  if (!props.move) return ''
+
+  const initialPos = props.move[0]
+  const targetPos = props.move[1]
+  const piece = props.board[props.move[1]].toUpperCase()
+
+  if (piece === 'R') {
+    return `♖${getCoord(initialPos)}-${getCoord(targetPos)}`
+  } else if (piece === 'N') {
+    return `♘${getCoord(initialPos)}-${getCoord(targetPos)}`
+  } else if (piece === 'B') {
+    return `♗${getCoord(initialPos)}-${getCoord(targetPos)}`
+  } else if (piece === 'Q') {
+    return `♕${getCoord(initialPos)}-${getCoord(targetPos)}`
+  } else if (piece === 'K') {
+    return `♔${getCoord(initialPos)}-${getCoord(targetPos)}`
+  } else {
+    return ''
+  }
+}
+
 // watch(
-//   () => props.board,
+//   () => props.turn,
 //   (newValue, oldValue) => {
-//     console.warn(newValue, oldValue)
+//     if (props.turn === 'black') {
+//       if (newValue) whiteMoves.push(convertToIcon(props.board[newValue]))
+//     } else if (props.turn === 'white') {
+//       if (newValue) blackMoves.push(convertToIcon(props.board[newValue]))
+//     }
 //   }
 // )
-
 watch(
-  () => props.moveFrom,
-  (newValue, oldValue) => {
-    console.warn(newValue, oldValue)
+  () => props.turn,
+  () => {
+    if (props.turn === 'black') {
+      if (props.move) whiteMoves.push(getMoveNotation())
+    } else if (props.turn === 'white') {
+      if (props.move) blackMoves.push(getMoveNotation())
+    }
   }
 )
-
-const whiteMoves: string[] = []
 </script>
 
 <template>
@@ -40,11 +77,11 @@ const whiteMoves: string[] = []
       </div>
       <div class="notation__table_column_second">
         <div>белые</div>
-        <div v-for="move in 20">{{ move }}</div>
+        <div v-for="move in whiteMoves">{{ move }}</div>
       </div>
       <div class="notation__table_column_third">
         <div>чёрные</div>
-        <div></div>
+        <div v-for="move in blackMoves">{{ move }}</div>
       </div>
     </div>
   </div>
@@ -53,7 +90,7 @@ const whiteMoves: string[] = []
 
 <style>
 .notation {
-  font-size: 25px;
+  font-size: 30px;
   color: black;
   text-align: center;
 }

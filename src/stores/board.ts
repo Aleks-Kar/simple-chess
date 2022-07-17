@@ -21,8 +21,7 @@ export const useStore = defineStore('board', {
       boardTop: 0,
       draggedItem: document.body.querySelector('.square'),
       dragIndex: 64,
-      hoverIndex: 64,
-      targetPiece: ''
+      hoverIndex: 64
     }
   },
 
@@ -80,8 +79,6 @@ export const useStore = defineStore('board', {
         this.draggedItem.style.top = 0
         this.draggedItem.style.cursor = ''
       } else {
-        this.targetPiece = this.getPiece(this.hoverIndex)
-
         // saves the dragged piece and "moves" it
         this.board[this.hoverIndex] = this.board[this.dragIndex]
         this.board[this.dragIndex] = ''
