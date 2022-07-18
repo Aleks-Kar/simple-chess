@@ -62,7 +62,7 @@ export const useStore = defineStore('board', {
       // this.$reset
       this.init()
       this.turn = 'white'
-      // this.lastMove = [64, 64]
+      this.lastMove = [64, 64]
       this.activeIndex = 64
     },
 

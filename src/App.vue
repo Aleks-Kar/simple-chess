@@ -70,8 +70,9 @@ function newGame(): void {
   if (localStorage.turn) localStorage.removeItem('turn')
 
   // clears notation local storage
-  if (localStorage.notationWhite) localStorage.removeItem('notationWhite')
-  if (localStorage.notationBlack) localStorage.removeItem('notationBlack')
+  if (localStorage.notation) localStorage.removeItem('notation')
+  // if (localStorage.notationWhite) localStorage.removeItem('notationWhite')
+  // if (localStorage.notationBlack) localStorage.removeItem('notationBlack')
 
   store.restart()
   store.calculateAttacks()
@@ -136,5 +137,6 @@ body {
   width: 200px;
   height: 125px;
   font-size: 35px;
+  user-select: none;
 }
 </style>

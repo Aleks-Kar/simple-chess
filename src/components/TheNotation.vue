@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive } from '@vue/reactivity'
+import { writeHeapSnapshot } from 'v8'
 import { onMounted, ref, watch } from 'vue'
 
 const props = defineProps<{
@@ -10,21 +11,11 @@ const props = defineProps<{
   autoScroll: boolean
 }>()
 
-interface Notation {
-  whiteMoves: string[]
-  blackMoves: string[]
-  lowBound: number
-  blackMovesLen: number
-}
-
-
-
-let whiteMoves: string[] = []
-let blackMoves: string[] = []
-
-const key = ref(0)
-const lowBound = ref(0)
-const blackMovesLen = ref(0)
+const notation: any = reactive({
+  whiteMoves: [],
+  blackMoves: [],
+  lowBound: 0
+})
 
 function getCoord(index: number): string {
   const y = Math.trunc(index / 8)
@@ -58,18 +49,21 @@ const getMoveNotation = function (): string {
 const wheel = function (event: WheelEvent) {
   const range = 10
   if (event.deltaY > 0) {
-    if (blackMovesLen.value === 0 || blackMovesLen.value < lowBound.value + 10)
+    if (
+      notation.blackMoves.length === 0 ||
+      notation.blackMoves.length < notation.lowBound + 10
+    )
       return
-    lowBound.value += range
+    notation.lowBound += range
   } else {
-    if (lowBound.value === 0) return
-    lowBound.value -= range
+    if (notation.lowBound === 0) return
+    notation.lowBound -= range
   }
   // update()
 }
 
 const cursor = computed<string>(() => {
-  if (blackMovesLen.value < 10) {
+  if (notation.blackMoves.length < 10) {
     return 'auto'
   } else {
     return 'ns-resize'
@@ -79,45 +73,41 @@ const cursor = computed<string>(() => {
 watch(
   () => props.turn,
   () => {
-    if (props.move) {
+    if (props.move && getMoveNotation() !== '') {
       if (props.turn === 'black') {
-        whiteMoves.push(getMoveNotation())
-        // localStorage.notationWhite = JSON.stringify(whiteMoves)
+        notation.whiteMoves.push(getMoveNotation())
       } else if (props.turn === 'white') {
-        blackMovesLen.value++
-        blackMoves.push(getMoveNotation())
-        // localStorage.notationBlack = JSON.stringify(blackMoves)
+        notation.blackMoves.push(getMoveNotation())
+        const blackMovesLen = notation.blackMoves.length
         if (
           props.autoScroll &&
-          blackMovesLen.value !== 0 &&
-          blackMovesLen.value % 10 === 0
+          blackMovesLen !== 0 &&
+          blackMovesLen % 10 === 0
         ) {
-          lowBound.value = blackMovesLen.value
+          notation.lowBound = blackMovesLen
         }
       }
+
+      localStorage.notation = JSON.stringify(notation)
       // update()
     }
   }
 )
 
-const update = () => key.value++
+// const update = () => key.value++
 
 onMounted(() => {
-  // loads local storage values to the notation table
-  // if (localStorage.notationWhite) {
-  //   const arr = JSON.parse(localStorage.notationWhite)
-  //   whiteMoves.push(...arr)
-  // }
-  // if (localStorage.notationBlack) {
-  //   const arr = JSON.parse(localStorage.notationBlack)
-  //   blackMoves.push(...arr)
-  // }
-  // update()
+  if (localStorage.notation) {
+    const obj = JSON.parse(localStorage.notation)
+    for (const key in notation) {
+      notation[key] = obj[key]
+    }
+  }
 })
 
 const fn = function () {
-  console.warn('blackMovesLen:', blackMovesLen.value)
-  console.warn('lowBound:', lowBound.value)
+  // console.warn('blackMovesLen:', notation.blackMovesLen)
+  // console.warn('lowBound:', notation.lowBound)
 }
 </script>
 
@@ -132,16 +122,19 @@ const fn = function () {
 
     <tr
       v-for="num in 10"
-      :key="key"
       class="notation__row"
       :class="[
         { notation__cell_background_green: num % 2 === 0 },
         { 'notation__cell_background_light-green': num % 2 !== 0 }
       ]"
       @wheel.passive="wheel($event)">
-      <td class="notation__cell">{{ num + lowBound }}</td>
-      <td class="notation__cell">{{ whiteMoves[num + lowBound - 1] }}</td>
-      <td class="notation__cell">{{ blackMoves[num + lowBound - 1] }}</td>
+      <td class="notation__cell">{{ num + notation.lowBound }}</td>
+      <td class="notation__cell">
+        {{ notation.whiteMoves[num + notation.lowBound - 1] }}
+      </td>
+      <td class="notation__cell">
+        {{ notation.blackMoves[num + notation.lowBound - 1] }}
+      </td>
     </tr>
   </div>
   <div></div>
