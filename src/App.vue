@@ -73,7 +73,8 @@ function mouseLeave(): void {
       :turn="store.turn"
       :board="store.board"
       :move="store.lastMove"
-      :had-captured="store.hadCaptured" />
+      :had-captured="store.hadCaptured"
+      :auto-scroll="true" />
   </div>
 </template>
 
