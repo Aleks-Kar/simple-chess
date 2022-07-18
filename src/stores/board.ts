@@ -38,8 +38,6 @@ export const useStore = defineStore('board', {
       const blackPieces: string = 'pppppppprnbqkbnr'
       for (let i = 0; i < 16; i++) this.board[i] = whitePieces[i]
       for (let i = 48; i < 64; i++) this.board[i] = blackPieces[i - 48]
-      // this.board[27] = 'N'
-      // this.board[34] = 'N'
 
       // calculates attacked squares by black board
       for (let i = 0; i < 16; i++) {
@@ -58,6 +56,12 @@ export const useStore = defineStore('board', {
           if (attackedSquares[j]) this.underBlackAttack[j] = true
         }
       }
+    },
+
+    restart(): void {
+      this.init()
+      this.turn = 'white'
+      this.lastMove = [64, 64]
     },
 
     setPieceOnHover(piece: string): void {

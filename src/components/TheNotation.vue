@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from '@vue/reactivity'
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 const props = defineProps<{
   turn: string
@@ -12,6 +12,8 @@ const props = defineProps<{
 
 let whiteMoves: string[] = []
 let blackMoves: string[] = []
+
+const key = ref(0)
 const lowBound = ref(0)
 const blackMovesLen = ref(0)
 
@@ -22,7 +24,7 @@ function getCoord(index: number): string {
 }
 
 const getMoveNotation = function (): string {
-  if (!props.move) return ''
+  if (!props.move || props.move[0] === 64) return ''
 
   const initialPos = props.move[0]
   const targetPos = props.move[1]
@@ -70,9 +72,12 @@ watch(
     if (props.move) {
       if (props.turn === 'black') {
         whiteMoves.push(getMoveNotation())
+        localStorage.notationWhite = JSON.stringify(whiteMoves)
+        console.warn(whiteMoves)
       } else if (props.turn === 'white') {
         blackMovesLen.value++
         blackMoves.push(getMoveNotation())
+        localStorage.notationBlack = JSON.stringify(blackMoves)
         if (
           props.autoScroll &&
           blackMovesLen.value !== 0 &&
@@ -81,9 +86,29 @@ watch(
           lowBound.value = blackMovesLen.value
         }
       }
+      update()
     }
   }
 )
+
+const update = () => key.value++
+
+onMounted(() => {
+  // loads local storage values to the notation table
+  if (localStorage.notationWhite) {
+    const arr = JSON.parse(localStorage.notationWhite)
+    whiteMoves.push(...arr)
+  }
+  if (localStorage.notationBlack) {
+    const arr = JSON.parse(localStorage.notationBlack)
+    blackMoves.push(...arr)
+  }
+  update()
+})
+
+const fn = function () {
+  update()
+}
 </script>
 
 <template>
@@ -96,7 +121,7 @@ watch(
 
     <tr
       v-for="num in 10"
-      :key="num"
+      :key="key"
       class="notation__row"
       :class="[
         { notation__cell_background_green: num % 2 === 0 },

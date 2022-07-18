@@ -10,7 +10,11 @@ function getKey(x: number, y: number): string {
 }
 
 onMounted(() => {
-  store.init()
+  if (localStorage.board) {
+    
+  } else {
+    store.init()
+  }
 })
 </script>
 

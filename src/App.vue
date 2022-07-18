@@ -1,10 +1,14 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
 import { useStore } from './stores/board'
 import { getHoverIndex } from './services/helpers'
 import TheBoard from './components/TheBoard.vue'
 import TheNotation from './components/TheNotation.vue'
 
 const store = useStore()
+
+const notationStorageName = 'notation'
+const key = ref(0)
 
 /* THE MOUSE MOVE EVENT */
 function mouseMove(e: MouseEvent): void {
@@ -61,15 +65,31 @@ function mouseUp(): void {
 function mouseLeave(): void {
   if (store.pieceHadBeenMoved && store.dragIndex < 64) store.placePiece()
 }
+
+function newGame(): void {
+  // clears local storage
+  if (localStorage.notationWhite)
+    localStorage.removeItem(notationStorageName + 'White')
+
+  if (localStorage.notationBlack)
+    localStorage.removeItem(notationStorageName + 'Black')
+
+  store.restart()
+  update()
+}
+
+const update = () => key.value++
 </script>
 
 <template>
   <div @mousemove="mouseMove" @mouseup="mouseUp" @mouseleave="mouseLeave">
+    <button @click="newGame" class="button">Новая игра</button>
     <TheBoard />
   </div>
 
   <div class="notation_margin-left">
     <TheNotation
+      :key="key"
       :turn="store.turn"
       :board="store.board"
       :move="store.lastMove"
@@ -110,5 +130,11 @@ body {
 
 .notation_margin-left {
   margin-left: 40px;
+}
+
+.button {
+  width: 200px;
+  height: 125px;
+  font-size: 35px;
 }
 </style>
