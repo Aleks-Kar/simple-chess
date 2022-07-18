@@ -6,8 +6,6 @@ import TheBoard from './components/TheBoard.vue'
 import TheNotation from './components/TheNotation.vue'
 
 const store = useStore()
-
-const notationStorageName = 'notation'
 const key = ref(0)
 
 /* THE MOUSE MOVE EVENT */
@@ -67,14 +65,16 @@ function mouseLeave(): void {
 }
 
 function newGame(): void {
-  // clears local storage
-  if (localStorage.notationWhite)
-    localStorage.removeItem(notationStorageName + 'White')
+  // clears board local storage
+  if (localStorage.board) localStorage.removeItem('board')
+  if (localStorage.turn) localStorage.removeItem('turn')
 
-  if (localStorage.notationBlack)
-    localStorage.removeItem(notationStorageName + 'Black')
+  // clears notation local storage
+  if (localStorage.notationWhite) localStorage.removeItem('notationWhite')
+  if (localStorage.notationBlack) localStorage.removeItem('notationBlack')
 
   store.restart()
+  store.calculateAttacks()
   update()
 }
 

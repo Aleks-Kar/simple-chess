@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from '@vue/reactivity'
+import { computed, reactive } from '@vue/reactivity'
 import { onMounted, ref, watch } from 'vue'
 
 const props = defineProps<{
@@ -9,6 +9,15 @@ const props = defineProps<{
   hadCaptured?: string
   autoScroll: boolean
 }>()
+
+interface Notation {
+  whiteMoves: string[]
+  blackMoves: string[]
+  lowBound: number
+  blackMovesLen: number
+}
+
+
 
 let whiteMoves: string[] = []
 let blackMoves: string[] = []
@@ -24,7 +33,7 @@ function getCoord(index: number): string {
 }
 
 const getMoveNotation = function (): string {
-  if (!props.move || props.move[0] === 64) return ''
+  if (!props.move || !props.move[1]) return ''
 
   const initialPos = props.move[0]
   const targetPos = props.move[1]
@@ -56,6 +65,7 @@ const wheel = function (event: WheelEvent) {
     if (lowBound.value === 0) return
     lowBound.value -= range
   }
+  // update()
 }
 
 const cursor = computed<string>(() => {
@@ -72,12 +82,11 @@ watch(
     if (props.move) {
       if (props.turn === 'black') {
         whiteMoves.push(getMoveNotation())
-        localStorage.notationWhite = JSON.stringify(whiteMoves)
-        console.warn(whiteMoves)
+        // localStorage.notationWhite = JSON.stringify(whiteMoves)
       } else if (props.turn === 'white') {
         blackMovesLen.value++
         blackMoves.push(getMoveNotation())
-        localStorage.notationBlack = JSON.stringify(blackMoves)
+        // localStorage.notationBlack = JSON.stringify(blackMoves)
         if (
           props.autoScroll &&
           blackMovesLen.value !== 0 &&
@@ -86,7 +95,7 @@ watch(
           lowBound.value = blackMovesLen.value
         }
       }
-      update()
+      // update()
     }
   }
 )
@@ -95,24 +104,26 @@ const update = () => key.value++
 
 onMounted(() => {
   // loads local storage values to the notation table
-  if (localStorage.notationWhite) {
-    const arr = JSON.parse(localStorage.notationWhite)
-    whiteMoves.push(...arr)
-  }
-  if (localStorage.notationBlack) {
-    const arr = JSON.parse(localStorage.notationBlack)
-    blackMoves.push(...arr)
-  }
-  update()
+  // if (localStorage.notationWhite) {
+  //   const arr = JSON.parse(localStorage.notationWhite)
+  //   whiteMoves.push(...arr)
+  // }
+  // if (localStorage.notationBlack) {
+  //   const arr = JSON.parse(localStorage.notationBlack)
+  //   blackMoves.push(...arr)
+  // }
+  // update()
 })
 
 const fn = function () {
-  update()
+  console.warn('blackMovesLen:', blackMovesLen.value)
+  console.warn('lowBound:', lowBound.value)
 }
 </script>
 
 <template>
   <div class="notation">
+    <button @click="fn" class="button">Показать</button>
     <tr class="notation__row">
       <th class="notation__title">№</th>
       <th class="notation__title">Белые</th>
@@ -137,6 +148,12 @@ const fn = function () {
 </template>
 
 <style>
+.button {
+  width: 100px;
+  height: 100px;
+  font-size: 30px;
+}
+
 :root {
   --table-border: 3px solid black;
   --row-height: 50px;

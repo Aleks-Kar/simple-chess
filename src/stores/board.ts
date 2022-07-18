@@ -59,9 +59,11 @@ export const useStore = defineStore('board', {
     },
 
     restart(): void {
+      // this.$reset
       this.init()
       this.turn = 'white'
-      this.lastMove = [64, 64]
+      // this.lastMove = [64, 64]
+      this.activeIndex = 64
     },
 
     setPieceOnHover(piece: string): void {
@@ -69,6 +71,25 @@ export const useStore = defineStore('board', {
       } else {
         this.board[this.hoverIndex] = piece
         this.board[this.dragIndex] = ''
+      }
+    },
+
+    calculateAttacks(): void {
+      for (let i = 0; i < 64; i++) {
+        const piece = this.getPiece(i)
+        const color = this.getPieceColor(i)
+        if (piece !== '') {
+          const attackedSquares = getAttackedSquares(this.board, piece, i)
+          for (let j = 0; j < 64; j++) {
+            if (attackedSquares[j]) {
+              if (color === 'white') {
+                this.underWhiteAttack[j] = true
+              } else {
+                this.underBlackAttack[j] = true
+              }
+            }
+          }
+        }
       }
     },
 
@@ -96,28 +117,16 @@ export const useStore = defineStore('board', {
         this.underBlackAttack.fill(false)
 
         // recalculate the attack squares
-        for (let i = 0; i < 64; i++) {
-          const piece = this.getPiece(i)
-          const color = this.getPieceColor(i)
-          if (piece !== '') {
-            const attackedSquares = getAttackedSquares(this.board, piece, i)
-            for (let j = 0; j < 64; j++) {
-              if (attackedSquares[j]) {
-                if (color === 'white') {
-                  this.underWhiteAttack[j] = true
-                } else {
-                  this.underBlackAttack[j] = true
-                }
-              }
-            }
-          }
-        }
+        this.calculateAttacks()
 
         if (this.turn === 'white') {
           this.turn = 'black'
         } else {
           this.turn = 'white'
         }
+
+        localStorage.board = JSON.stringify(this.board)
+        localStorage.turn = JSON.stringify(this.turn)
       }
 
       // clearing

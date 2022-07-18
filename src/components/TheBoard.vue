@@ -11,10 +11,14 @@ function getKey(x: number, y: number): string {
 
 onMounted(() => {
   if (localStorage.board) {
-    
+    const arr = JSON.parse(localStorage.board)
+    store.board = []
+    store.board.push(...arr)
   } else {
     store.init()
   }
+
+  if (localStorage.turn) store.turn = JSON.parse(localStorage.turn)
 })
 </script>
 
@@ -47,6 +51,7 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   background-color: hsl(29, 34%, 55%);
+  user-select: none;
 }
 
 .board__field {
@@ -59,7 +64,6 @@ onMounted(() => {
   margin-top: 40px;
   margin-right: 40px;
   border: 4px solid black;
-  user-select: none;
 }
 
 .board__row {

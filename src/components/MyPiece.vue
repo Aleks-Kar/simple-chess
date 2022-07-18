@@ -6,8 +6,8 @@ const props = defineProps<{
   piece: string
   index: number
   color: 'white' | 'black'
-  attacked: boolean
-  defended: boolean
+  attacked?: boolean
+  defended?: boolean
 }>()
 
 const store = useStore()
@@ -48,6 +48,7 @@ const urlSvgDefend = computed<string>(() => {
 })
 
 const isKingUnderAttack = computed<boolean>(() => {
+  if (!props.attacked) return false
   return props.attacked && props.piece.toUpperCase() === 'K'
 })
 </script>
