@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { computed, reactive } from '@vue/reactivity'
-import { writeHeapSnapshot } from 'v8'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, watch } from 'vue'
 
 const props = defineProps<{
   turn: string
-  board: Array<string>
-  move?: Array<number>
+  board: string[]
+  move?: number[]
   hadCaptured?: string
   autoScroll: boolean
 }>()

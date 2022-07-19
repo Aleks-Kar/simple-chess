@@ -1,15 +1,27 @@
 import { defineStore } from 'pinia'
 import { getAttackedSquares } from '../services/helpers'
 
+interface Board {
+  pieces: string[]
+  turn: string
+  lastMove: number[]
+}
+
 export const useStore = defineStore('board', {
   state: () => {
     return {
-      board: Array<string>(64),
+      // board: Array<string>(64),
+      // turn: 'white',
+      // lastMove: Array<number>(2),
+      board: {
+        pieces: Array<string>(64),
+        turn: 'white',
+        lastMove: Array<number>(2)
+      },
+
       underWhiteAttack: Array<boolean>(64),
       underBlackAttack: Array<boolean>(64),
-      turn: 'white',
       activeIndex: 64,
-      lastMove: Array<number>(2),
       squaresForMove: Array<boolean>(64),
       lmbIsPressed: false,
       isReactivated: false,
@@ -59,7 +71,6 @@ export const useStore = defineStore('board', {
     },
 
     restart(): void {
-      // this.$reset
       this.init()
       this.turn = 'white'
       this.lastMove = [64, 64]

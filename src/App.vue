@@ -26,6 +26,7 @@ function mouseMove(e: MouseEvent): void {
 
   store.draggedItem.style.left = `${e.clientX - store.cx}px`
   store.draggedItem.style.top = `${e.clientY - store.cy}px`
+  false
 }
 
 /* THE MOUSE UP EVENT */
@@ -75,7 +76,6 @@ function newGame(): void {
   // if (localStorage.notationBlack) localStorage.removeItem('notationBlack')
 
   store.restart()
-  store.calculateAttacks()
   update()
 }
 

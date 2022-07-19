@@ -21,7 +21,8 @@ function mouseDown(e: MouseEvent): void {
 
   if (!store.isReactivated) {
     store.activeIndex = index
-    store.calculateAttacks()
+    // calculates the attacks once again if the page had been reloaded
+    if (store.underWhiteAttack[0] === undefined) store.calculateAttacks()
 
     // showing moveable squares
     if (piece.toUpperCase() === 'P') {
