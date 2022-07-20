@@ -87,9 +87,6 @@ watch(
       }
 
       localStorage.notation = JSON.stringify(notation)
-
-      console.warn('white', notation.whiteMoves[notation.whiteMoves.length - 1])
-      console.warn('black', notation.blackMoves[notation.blackMoves.length - 1])
     }
   }
 )
