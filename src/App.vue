@@ -66,14 +66,9 @@ function mouseLeave(): void {
 }
 
 function newGame(): void {
-  // clears board local storage
+  // clears board and notation in local storage
   if (localStorage.board) localStorage.removeItem('board')
-  if (localStorage.turn) localStorage.removeItem('turn')
-
-  // clears notation local storage
   if (localStorage.notation) localStorage.removeItem('notation')
-  // if (localStorage.notationWhite) localStorage.removeItem('notationWhite')
-  // if (localStorage.notationBlack) localStorage.removeItem('notationBlack')
 
   store.restart()
   update()

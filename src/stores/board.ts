@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 import { getAttackedSquares } from '../services/helpers'
 
 export const useStore = defineStore('board', {
@@ -68,7 +68,6 @@ export const useStore = defineStore('board', {
     },
 
     restart(): void {
-      // this.$reset
       this.init()
       this.turn = 'white'
       this.lastMove = [64, 64]
@@ -124,8 +123,6 @@ export const useStore = defineStore('board', {
 
         this.underWhiteAttack.fill(false)
         this.underBlackAttack.fill(false)
-
-        // recalculate the attack squares
         this.calculateAttacks()
 
         if (this.turn === 'white') {
@@ -134,11 +131,13 @@ export const useStore = defineStore('board', {
           this.turn = 'white'
         }
 
-        // const board = {
-        //   placement: this.board
-        // }
-        // localStorage.board = JSON.stringify(this.board)
-        localStorage.turn = JSON.stringify(this.turn)
+        const board = {
+          arrangement: this.arrangement,
+          turn: this.turn,
+          lastMove: this.lastMove
+        }
+
+        localStorage.board = JSON.stringify(board)
       }
 
       // clearing

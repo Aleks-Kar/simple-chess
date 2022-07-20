@@ -58,7 +58,6 @@ const wheel = function (event: WheelEvent) {
     if (notation.lowBound === 0) return
     notation.lowBound -= range
   }
-  // update()
 }
 
 const cursor = computed<string>(() => {
@@ -72,28 +71,19 @@ const cursor = computed<string>(() => {
 watch(
   () => props.turn,
   () => {
-    if (props.move && getMoveNotation() !== '') {
-      if (props.turn === 'black') {
-        notation.whiteMoves.push(getMoveNotation())
-      } else if (props.turn === 'white') {
-        notation.blackMoves.push(getMoveNotation())
-        const blackMovesLen = notation.blackMoves.length
-        if (
-          props.autoScroll &&
-          blackMovesLen !== 0 &&
-          blackMovesLen % 10 === 0
-        ) {
-          notation.lowBound = blackMovesLen
-        }
+    if (props.turn === 'black') {
+      notation.whiteMoves.push(getMoveNotation())
+    } else if (props.turn === 'white') {
+      notation.blackMoves.push(getMoveNotation())
+      const blackMovesLen = notation.blackMoves.length
+      if (props.autoScroll && blackMovesLen !== 0 && blackMovesLen % 10 === 0) {
+        notation.lowBound = blackMovesLen
       }
 
       localStorage.notation = JSON.stringify(notation)
-      // update()
     }
   }
 )
-
-// const update = () => key.value++
 
 onMounted(() => {
   if (localStorage.notation) {
@@ -103,16 +93,10 @@ onMounted(() => {
     }
   }
 })
-
-const fn = function () {
-  // console.warn('blackMovesLen:', notation.blackMovesLen)
-  // console.warn('lowBound:', notation.lowBound)
-}
 </script>
 
 <template>
   <div class="notation">
-    <button @click="fn" class="button">Показать</button>
     <tr class="notation__row">
       <th class="notation__title">№</th>
       <th class="notation__title">Белые</th>

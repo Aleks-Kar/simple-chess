@@ -5,33 +5,19 @@ import MySquare from './MySquare.vue'
 
 const store = useStore()
 
-// interface Board {
-//   pieces: string[]
-//   turn: string
-//   lastMove: number[]
-// }
-
-// const board: Board = {
-//   pieces: store.board,
-//   turn: store.turn,
-//   lastMove: store.lastMove
-// }
-
 function getKey(x: number, y: number): string {
   return store.getPiece(x + y * 8) + String(x + y * 8)
 }
 
 onMounted(() => {
   if (localStorage.board) {
-    const arr = JSON.parse(localStorage.board)
-    store.arrangement= []
-    store.arrangement.push(...arr)
-    store.calculateAttacks()
+    const obj = JSON.parse(localStorage.board)
+    store.arrangement = obj.arrangement
+    store.turn = obj.turn
+    store.lastMove = obj.lastMove
   } else {
     store.init()
   }
-
-  if (localStorage.turn) store.turn = JSON.parse(localStorage.turn)
 })
 </script>
 
@@ -81,8 +67,6 @@ onMounted(() => {
 
 .board__row {
   display: flex;
-  /* justify-content: center; */
-  /* align-items: center; */
   width: 800px;
   height: 100px;
 }
@@ -92,7 +76,6 @@ onMounted(() => {
   justify-content: flex-start;
   width: 800px;
   color: black;
-  /* background-color: blue; */
 }
 
 .board_naming_horizontal > div {
@@ -113,8 +96,6 @@ onMounted(() => {
 }
 
 .board_naming_vertical {
-  /* display: flex; */
-  /* justify-content: flex-start; */
   height: 800px;
   color: black;
 }
@@ -123,7 +104,6 @@ onMounted(() => {
   text-align: center;
   width: 40px;
   height: 40px;
-  /* line-height: 40px; */
   font-size: 30px;
   font-weight: bold;
 }
