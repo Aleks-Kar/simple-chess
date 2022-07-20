@@ -71,15 +71,25 @@ const cursor = computed<string>(() => {
 watch(
   () => props.turn,
   () => {
-    if (props.turn === 'black') {
-      notation.whiteMoves.push(getMoveNotation())
-    } else if (props.turn === 'white') {
-      notation.blackMoves.push(getMoveNotation())
-      const blackMovesLen = notation.blackMoves.length
-      if (props.autoScroll && blackMovesLen !== 0 && blackMovesLen % 10 === 0) {
-        notation.lowBound = blackMovesLen
+    if (props.turn !== '') {
+      if (props.turn === 'black') {
+        notation.whiteMoves.push(getMoveNotation())
+      } else if (props.turn === 'white') {
+        notation.blackMoves.push(getMoveNotation())
+        const blackMovesLen = notation.blackMoves.length
+        if (
+          props.autoScroll &&
+          blackMovesLen !== 0 &&
+          blackMovesLen % 10 === 0
+        ) {
+          notation.lowBound = blackMovesLen
+        }
       }
+
       localStorage.notation = JSON.stringify(notation)
+
+      console.warn('white', notation.whiteMoves[notation.whiteMoves.length - 1])
+      console.warn('black', notation.blackMoves[notation.blackMoves.length - 1])
     }
   }
 )
@@ -94,6 +104,7 @@ onMounted(() => {
 
 <template>
   <div class="notation">
+    <div>_{{ props.turn }}_</div>
     <tr class="notation__row">
       <th class="notation__title">№</th>
       <th class="notation__title">Белые</th>

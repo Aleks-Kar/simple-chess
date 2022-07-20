@@ -15,6 +15,7 @@ onMounted(() => {
     store.arrangement = obj.arrangement
     store.turn = obj.turn
     store.lastMove = obj.lastMove
+    store.calculateAttacks()
   } else {
     store.init()
   }

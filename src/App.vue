@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { compile, onMounted, ref } from 'vue'
 import { useStore } from './stores/board'
 import { getHoverIndex } from './services/helpers'
 import TheBoard from './components/TheBoard.vue'
 import TheNotation from './components/TheNotation.vue'
+import { computed } from '@vue/reactivity'
 
 const store = useStore()
 const key = ref(0)
@@ -69,10 +70,17 @@ function newGame(): void {
   // clears board and notation in local storage
   if (localStorage.board) localStorage.removeItem('board')
   if (localStorage.notation) localStorage.removeItem('notation')
-
   store.restart()
   update()
 }
+
+const turn = computed<string>(() => {
+  if (store.underWhiteAttack[0] === undefined) {
+    return ''
+  } else {
+    return store.turn
+  }
+})
 
 const update = () => key.value++
 </script>
@@ -87,7 +95,7 @@ const update = () => key.value++
     <TheNotation
       :key="key"
       :arrangement="store.arrangement"
-      :turn="store.turn"
+      :turn="turn"
       :move="store.lastMove"
       :had-captured="store.hadCaptured"
       :auto-scroll="true" />
