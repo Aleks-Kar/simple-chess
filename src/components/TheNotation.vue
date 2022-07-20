@@ -3,8 +3,8 @@ import { computed, reactive } from '@vue/reactivity'
 import { onMounted, watch } from 'vue'
 
 const props = defineProps<{
+  arrangement: string[]
   turn: string
-  board: string[]
   move?: number[]
   hadCaptured?: string
   autoScroll: boolean
@@ -27,7 +27,7 @@ const getMoveNotation = function (): string {
 
   const initialPos = props.move[0]
   const targetPos = props.move[1]
-  const piece = props.board[props.move[1]].toUpperCase()
+  const piece = props.arrangement[props.move[1]].toUpperCase()
   const separator = props.hadCaptured?.length === 0 ? '–' : ':'
 
   if (piece === 'R') {

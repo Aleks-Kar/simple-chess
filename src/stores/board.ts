@@ -1,23 +1,12 @@
 import { defineStore } from 'pinia'
 import { getAttackedSquares } from '../services/helpers'
 
-interface Board {
-  pieces: string[]
-  turn: string
-  lastMove: number[]
-}
-
 export const useStore = defineStore('board', {
   state: () => {
     return {
-      // board: Array<string>(64),
-      // turn: 'white',
-      // lastMove: Array<number>(2),
-      board: {
-        pieces: Array<string>(64),
-        turn: 'white',
-        lastMove: Array<number>(2)
-      },
+      arrangement: Array<string>(64),
+      turn: 'white',
+      lastMove: Array<number>(2),
 
       underWhiteAttack: Array<boolean>(64),
       underBlackAttack: Array<boolean>(64),
@@ -41,19 +30,23 @@ export const useStore = defineStore('board', {
   actions: {
     // setting up board
     init(): void {
-      this.board.fill('')
+      this.arrangement.fill('')
       this.underWhiteAttack.fill(false)
       this.underBlackAttack.fill(false)
 
       this.clearMoveableSquares()
       const whitePieces: string = 'RNBQKBNRPPPPPPPP'
       const blackPieces: string = 'pppppppprnbqkbnr'
-      for (let i = 0; i < 16; i++) this.board[i] = whitePieces[i]
-      for (let i = 48; i < 64; i++) this.board[i] = blackPieces[i - 48]
+      for (let i = 0; i < 16; i++) this.arrangement[i] = whitePieces[i]
+      for (let i = 48; i < 64; i++) this.arrangement[i] = blackPieces[i - 48]
 
       // calculates attacked squares by black board
       for (let i = 0; i < 16; i++) {
-        const attackedSquares = getAttackedSquares(this.board, this.board[i], i)
+        const attackedSquares = getAttackedSquares(
+          this.arrangement,
+          this.arrangement[i],
+          i
+        )
 
         for (let j = 0; j < 64; j++) {
           if (attackedSquares[j]) this.underWhiteAttack[j] = true
@@ -62,7 +55,11 @@ export const useStore = defineStore('board', {
 
       // calculates attacked squares by white board
       for (let i = 48; i < 64; i++) {
-        const attackedSquares = getAttackedSquares(this.board, this.board[i], i)
+        const attackedSquares = getAttackedSquares(
+          this.arrangement,
+          this.arrangement[i],
+          i
+        )
 
         for (let j = 0; j < 64; j++) {
           if (attackedSquares[j]) this.underBlackAttack[j] = true
@@ -71,6 +68,7 @@ export const useStore = defineStore('board', {
     },
 
     restart(): void {
+      // this.$reset
       this.init()
       this.turn = 'white'
       this.lastMove = [64, 64]
@@ -80,8 +78,8 @@ export const useStore = defineStore('board', {
     setPieceOnHover(piece: string): void {
       if (this.hoverIndex === 64) {
       } else {
-        this.board[this.hoverIndex] = piece
-        this.board[this.dragIndex] = ''
+        this.arrangement[this.hoverIndex] = piece
+        this.arrangement[this.dragIndex] = ''
       }
     },
 
@@ -90,7 +88,7 @@ export const useStore = defineStore('board', {
         const piece = this.getPiece(i)
         const color = this.getPieceColor(i)
         if (piece !== '') {
-          const attackedSquares = getAttackedSquares(this.board, piece, i)
+          const attackedSquares = getAttackedSquares(this.arrangement, piece, i)
           for (let j = 0; j < 64; j++) {
             if (attackedSquares[j]) {
               if (color === 'white') {
@@ -121,8 +119,8 @@ export const useStore = defineStore('board', {
         this.hadCaptured = this.getPiece(this.hoverIndex)
 
         // saves the dragged piece and "moves" it
-        this.board[this.hoverIndex] = this.board[this.dragIndex]
-        this.board[this.dragIndex] = ''
+        this.arrangement[this.hoverIndex] = this.arrangement[this.dragIndex]
+        this.arrangement[this.dragIndex] = ''
 
         this.underWhiteAttack.fill(false)
         this.underBlackAttack.fill(false)
@@ -136,7 +134,10 @@ export const useStore = defineStore('board', {
           this.turn = 'white'
         }
 
-        localStorage.board = JSON.stringify(this.board)
+        // const board = {
+        //   placement: this.board
+        // }
+        // localStorage.board = JSON.stringify(this.board)
         localStorage.turn = JSON.stringify(this.turn)
       }
 
@@ -154,7 +155,7 @@ export const useStore = defineStore('board', {
 
     delDraggedPiece(): void {
       if (this.hoverIndex === 64) return
-      this.board[this.dragIndex] = ''
+      this.arrangement[this.dragIndex] = ''
     },
 
     toggleSide(): void {
@@ -175,17 +176,20 @@ export const useStore = defineStore('board', {
       state =>
       (index: number): string => {
         // return String(state.board[index])
-        return state.board[index]
+        return state.arrangement[index]
       },
 
     getDraggedPiece: state => (): string => {
-      return String(state.board[state.dragIndex])
+      return String(state.arrangement[state.dragIndex])
     },
 
     getPieceColor:
       state =>
       (index: number): string => {
-        if (state.board[index] === String(state.board[index]).toUpperCase()) {
+        if (
+          state.arrangement[index] ===
+          String(state.arrangement[index]).toUpperCase()
+        ) {
           return 'white'
         } else {
           return 'black'
@@ -203,7 +207,7 @@ export const useStore = defineStore('board', {
     isWhitePiece:
       state =>
       (index: number): boolean => {
-        const piece = state.board[index]
+        const piece = state.arrangement[index]
         return piece === piece.toUpperCase()
       }
   }

@@ -5,33 +5,33 @@ import MySquare from './MySquare.vue'
 
 const store = useStore()
 
-interface Board {
-  pieces: string[]
-  turn: string
-  lastMove: number[]
-}
+// interface Board {
+//   pieces: string[]
+//   turn: string
+//   lastMove: number[]
+// }
 
-const board: Board = {
-  pieces: store.board,
-  turn: store.turn,
-  lastMove: store.lastMove
-}
+// const board: Board = {
+//   pieces: store.board,
+//   turn: store.turn,
+//   lastMove: store.lastMove
+// }
 
 function getKey(x: number, y: number): string {
   return store.getPiece(x + y * 8) + String(x + y * 8)
 }
 
 onMounted(() => {
-  // if (localStorage.board) {
-  //   const arr = JSON.parse(localStorage.board)
-  //   store.board = []
-  //   store.board.push(...arr)
-  //   store.calculateAttacks()
-  // } else {
+  if (localStorage.board) {
+    const arr = JSON.parse(localStorage.board)
+    store.arrangement= []
+    store.arrangement.push(...arr)
+    store.calculateAttacks()
+  } else {
     store.init()
-  // }
+  }
 
-  // if (localStorage.turn) store.turn = JSON.parse(localStorage.turn)
+  if (localStorage.turn) store.turn = JSON.parse(localStorage.turn)
 })
 </script>
 

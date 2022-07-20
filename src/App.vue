@@ -91,8 +91,8 @@ const update = () => key.value++
   <div class="notation_margin-left">
     <TheNotation
       :key="key"
+      :arrangement="store.arrangement"
       :turn="store.turn"
-      :board="store.board"
       :move="store.lastMove"
       :had-captured="store.hadCaptured"
       :auto-scroll="true" />
