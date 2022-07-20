@@ -104,7 +104,6 @@ onMounted(() => {
 
 <template>
   <div class="notation">
-    <div>_{{ props.turn }}_</div>
     <tr class="notation__row">
       <th class="notation__title">№</th>
       <th class="notation__title">Белые</th>
