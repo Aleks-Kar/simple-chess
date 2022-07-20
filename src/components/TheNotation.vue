@@ -71,7 +71,7 @@ const cursor = computed<string>(() => {
 watch(
   () => props.turn,
   () => {
-    if (props.turn !== '') {
+    if (props.turn !== '' && getMoveNotation() !== '') {
       if (props.turn === 'black') {
         notation.whiteMoves.push(getMoveNotation())
       } else if (props.turn === 'white') {
