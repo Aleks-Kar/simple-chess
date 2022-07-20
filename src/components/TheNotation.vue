@@ -5,8 +5,8 @@ import { onMounted, watch } from 'vue'
 const props = defineProps<{
   arrangement: string[]
   turn: string
-  move?: number[]
-  hadCaptured?: string
+  move: number[]
+  hadCaptured: string
   autoScroll: boolean
 }>()
 
@@ -79,7 +79,6 @@ watch(
       if (props.autoScroll && blackMovesLen !== 0 && blackMovesLen % 10 === 0) {
         notation.lowBound = blackMovesLen
       }
-
       localStorage.notation = JSON.stringify(notation)
     }
   }
@@ -88,9 +87,7 @@ watch(
 onMounted(() => {
   if (localStorage.notation) {
     const obj = JSON.parse(localStorage.notation)
-    for (const key in notation) {
-      notation[key] = obj[key]
-    }
+    for (const key in notation) notation[key] = obj[key]
   }
 })
 </script>
