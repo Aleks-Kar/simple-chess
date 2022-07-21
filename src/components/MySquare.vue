@@ -12,6 +12,19 @@ const index = props.index
 
 /* THE MOUSE DOWN EVENT */
 function mouseDown(e: MouseEvent): void {
+  console.warn(
+    'white',
+    store.lWhiteRookHadBeenMoved,
+    store.whiteKingHadBeenMoved,
+    store.rWhiteRookHadBeenMoved
+  )
+  console.warn(
+    'black',
+    store.lBlackRookHadBeenMoved,
+    store.blackKingHadBeenMoved,
+    store.rBlackRookHadBeenMoved
+  )
+
   if (store.turn !== store.getPieceColor(index)) return
   if (store.activeIndex !== 64 && index === store.activeIndex)
     store.isReactivated = true

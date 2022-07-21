@@ -79,12 +79,20 @@ const cursor = computed<string>(() => {
 watch(
   () => props.turn,
   () => {
-    console.warn(props.turn)
-
-    if (props.turn !== '' && getMoveNotation() !== '') {
-      if (props.turn === 'black') {
+    /* the first condition protects against a false entry
+    in the local storage after the page is reloaded */
+    if (getMoveNotation() !== '') {
+      if (
+        props.turn === 'black' &&
+        notation.whiteMoves[notation.whiteMoves.length - 1] !==
+          getMoveNotation()
+      ) {
         notation.whiteMoves.push(getMoveNotation())
-      } else if (props.turn === 'white') {
+      } else if (
+        props.turn === 'white' &&
+        notation.blackMoves[notation.blackMoves.length - 1] !==
+          getMoveNotation()
+      ) {
         notation.blackMoves.push(getMoveNotation())
         const blackMovesLen = notation.blackMoves.length
         if (

@@ -7,7 +7,6 @@ export const useStore = defineStore('board', {
       arrangement: Array<string>(64),
       turn: 'white',
       lastMove: Array<number>(2),
-
       lWhiteRookHadBeenMoved: false,
       whiteKingHadBeenMoved: false,
       rWhiteRookHadBeenMoved: false,
@@ -78,6 +77,12 @@ export const useStore = defineStore('board', {
       this.init()
       this.turn = 'white'
       this.lastMove = [64, 64]
+      this.lWhiteRookHadBeenMoved = false
+      this.whiteKingHadBeenMoved = false
+      this.rWhiteRookHadBeenMoved = false
+      this.lBlackRookHadBeenMoved = false
+      this.blackKingHadBeenMoved = false
+      this.rBlackRookHadBeenMoved = false
       this.activeIndex = 64
     },
 
@@ -128,14 +133,21 @@ export const useStore = defineStore('board', {
         // castling
         if (this.getPiece(this.dragIndex).toUpperCase() === 'K') {
           if (this.turn === 'white') {
-            if (this.hoverIndex === 6) {
+            if (this.dragIndex === 4 && this.hoverIndex === 6) {
               this.arrangement[7] = ''
               this.arrangement[5] = 'R'
-            } else if (this.hoverIndex === 2) {
+            } else if (this.dragIndex === 4 && this.hoverIndex === 2) {
               this.arrangement[0] = ''
               this.arrangement[3] = 'R'
             }
           } else if (this.turn === 'black') {
+            if (this.dragIndex === 60 && this.hoverIndex === 62) {
+              this.arrangement[63] = ''
+              this.arrangement[61] = 'r'
+            } else if (this.dragIndex === 60 && this.hoverIndex === 58) {
+              this.arrangement[56] = ''
+              this.arrangement[59] = 'r'
+            }
           }
         }
 
@@ -154,15 +166,21 @@ export const useStore = defineStore('board', {
           if (this.dragIndex === 7) this.rWhiteRookHadBeenMoved = true
         } else {
           this.turn = 'white'
-          if (this.dragIndex === 63) this.lWhiteRookHadBeenMoved = true
-          if (this.dragIndex === 60) this.whiteKingHadBeenMoved = true
-          if (this.dragIndex === 56) this.rWhiteRookHadBeenMoved = true
+          if (this.dragIndex === 63) this.lBlackRookHadBeenMoved = true
+          if (this.dragIndex === 60) this.blackKingHadBeenMoved = true
+          if (this.dragIndex === 56) this.rBlackRookHadBeenMoved = true
         }
 
         const board = {
           arrangement: this.arrangement,
           turn: this.turn,
-          lastMove: this.lastMove
+          lastMove: this.lastMove,
+          lWhiteRookHadBeenMoved: this.lWhiteRookHadBeenMoved,
+          whiteKingHadBeenMoved: this.whiteKingHadBeenMoved,
+          rWhiteRookHadBeenMoved: this.rWhiteRookHadBeenMoved,
+          lBlackRookHadBeenMoved: this.lBlackRookHadBeenMoved,
+          blackKingHadBeenMoved: this.blackKingHadBeenMoved,
+          rBlackRookHadBeenMoved: this.rBlackRookHadBeenMoved
         }
         localStorage.board = JSON.stringify(board)
       }
@@ -193,8 +211,6 @@ export const useStore = defineStore('board', {
         // exclusive moves for a pawn
         this.squaresForMove = [...getPawnMoves(this.arrangement, piece, index)]
       } else if (piece.toUpperCase() === 'K') {
-        console.warn('set moveable squares for King')
-
         // exclusive moves for a king
         const attackedSquares = getAttackedSquares(
           this.arrangement,

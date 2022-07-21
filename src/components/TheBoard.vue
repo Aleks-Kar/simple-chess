@@ -15,6 +15,12 @@ onMounted(() => {
     store.arrangement = obj.arrangement
     store.turn = obj.turn
     store.lastMove = obj.lastMove
+    store.lWhiteRookHadBeenMoved = obj.lWhiteRookHadBeenMoved
+    store.whiteKingHadBeenMoved = obj.whiteKingHadBeenMoved
+    store.rWhiteRookHadBeenMoved = obj.rWhiteRookHadBeenMoved
+    store.lBlackRookHadBeenMoved = obj.lBlackRookHadBeenMoved
+    store.blackKingHadBeenMoved = obj.blackKingHadBeenMoved
+    store.rBlackRookHadBeenMoved = obj.rBlackRookHadBeenMoved
     store.calculateAttacks()
   } else {
     store.init()
