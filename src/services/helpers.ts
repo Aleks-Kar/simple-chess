@@ -2,8 +2,9 @@ function isWhite(piece: string): boolean {
   return piece === piece.toUpperCase()
 }
 
+/* PAWN MOVES AND ANGLE ATTACKS */
 export function getPawnMoves(
-  board: Array<string>,
+  board: string[],
   piece: string,
   index: number
 ) {
