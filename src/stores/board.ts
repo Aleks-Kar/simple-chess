@@ -380,10 +380,6 @@ export const useStore = defineStore('board', {
         return state.arrangement[index]
       },
 
-    getDraggedPiece: state => (): string => {
-      return String(state.arrangement[state.dragIndex])
-    },
-
     getPieceColor:
       state =>
       (index: number): string => {
