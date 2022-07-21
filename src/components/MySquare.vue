@@ -24,7 +24,7 @@ function mouseDown(e: MouseEvent): void {
     // calculates the attacks once again if the page had been reloaded
     if (store.underWhiteAttack[0] === undefined) store.calculateAttacks()
 
-    // calculates moveable squares
+    /* calculates moveable squares */
     if (piece.toUpperCase() === 'P') {
       // exclusive moves for a pawn
       store.setMoveableSquares(getPawnMoves(store.arrangement, piece, index))

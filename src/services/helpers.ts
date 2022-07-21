@@ -20,7 +20,7 @@ export function getPawnMoves(board: string[], piece: string, index: number) {
   const moveableSquares = new Array<boolean>(64)
   moveableSquares.fill(false)
 
-  /* PAWN ANGLE MOVES */
+  /* pawn angle moves */
   if (isWhitePiece) {
     // the left corner move of the white pawn
     if (x > 0 && y < 7) {
@@ -49,7 +49,7 @@ export function getPawnMoves(board: string[], piece: string, index: number) {
     }
   }
 
-  /* PAWN FORWARD MOVES */
+  /* pawn forward moves */
   for (let i = 1; i < maxLength; i++) {
     if (y < 1 || y > 6) break
     let index: number = 0
@@ -82,7 +82,7 @@ export function getAttackedSquares(
   const y = Math.trunc(index / 8)
   const x = index - y * 8
 
-  // FUNCTIONS FOR CALCULATING THE ATTACKS OF THE ROOK, BISHOP AND QUEEN
+  /* functions for calculating the attacks of the rook, bishop and queen */
   function orthoUp() {
     if (y < 7) {
       for (let i = y + 1; i <= 7; i++) {
@@ -139,7 +139,7 @@ export function getAttackedSquares(
     }
   }
 
-  // FUNCTIONS FOR CALCULATING THE ATTACKS OF THE BISHOP AND QUEEN
+  /* functions for calculating the attacks of the bishop and queen */
   function angularUpperRight() {
     const length = x === y ? 7 - x : 7 - Math.max(x, y)
     for (let i = 1; i <= length; i++) {
@@ -193,16 +193,16 @@ export function getAttackedSquares(
   }
 
   if (piece.toUpperCase() === 'B') {
-    // BISHOP, the upper right corner attack
+    // bishop, the upper right corner attack
     angularUpperRight()
-    // BISHOP, the lower right corner attack
+    // bishop, the lower right corner attack
     angularLowerRight()
-    // BISHOP, the lower left corner attack
+    // bishop, the lower left corner attack
     angularLowerLeft()
-    // BISHOP, the upper left corner attack
+    // bishop, the upper left corner attack
     angularUpperLeft()
   } else if (piece.toUpperCase() === 'K') {
-    /* KING ATTACKS */
+    /* king attacks */
     if (y < 7) attackedSquares[x + (y + 1) * 8] = true // top
     if (x < 7 && y < 7) attackedSquares[x + 1 + (y + 1) * 8] = true // upper right
     if (x < 7) attackedSquares[x + 1 + y * 8] = true // right
@@ -212,7 +212,7 @@ export function getAttackedSquares(
     if (x > 0) attackedSquares[x - 1 + y * 8] = true // left
     if (x > 0 && y < 7) attackedSquares[x - 1 + (y + 1) * 8] = true // upper left
   } else if (piece.toUpperCase() === 'N') {
-    /* KNIGHT ATTACKS */
+    /* knight attacks */
     if (x > 0 && y < 6) attackedSquares[x - 1 + (y + 2) * 8] = true // top left
     if (x < 7 && y < 6) attackedSquares[x + 1 + (y + 2) * 8] = true // top right
     if (x < 6 && y < 7) attackedSquares[x + 2 + (y + 1) * 8] = true // right top
@@ -222,7 +222,7 @@ export function getAttackedSquares(
     if (x > 1 && y > 0) attackedSquares[x - 2 + (y - 1) * 8] = true // left bottom
     if (x > 1 && y < 7) attackedSquares[x - 2 + (y + 1) * 8] = true // left top
   } else if (piece.toUpperCase() === 'P') {
-    /* PAWN ATTACKS */
+    /* pawn attacks */
     if (piece.toUpperCase() === piece) {
       // the left corner attack of the white pawn
       if (x > 0 && y < 7) attackedSquares[x - 1 + (y + 1) * 8] = true
@@ -235,33 +235,33 @@ export function getAttackedSquares(
       if (x < 7 && y > 0) attackedSquares[x + 1 + (y - 1) * 8] = true
     }
 
-    // PAWN, taking on the pass
+    // pawn, taking on the pass
     // ...
   } else if (piece.toUpperCase() === 'Q') {
-    // QUEEN, the up attack
+    // queen, the up attack
     orthoUp()
-    // QUEEN, the upper right corner attack
+    // queen, the upper right corner attack
     angularUpperRight()
-    // QUEEN, the right attack
+    // queen, the right attack
     orthoRight()
-    // QUEEN, the lower right corner attack
+    // queen, the lower right corner attack
     angularLowerRight()
-    // QUEEN, the down attack
+    // queen, the down attack
     orthoDown()
-    // QUEEN, the lower left corner attack
+    // queen, the lower left corner attack
     angularLowerLeft()
-    // QUEEN, the left attack
+    // queen, the left attack
     orthoLeft()
-    // QUEEN, the upper left corner attack
+    // queen, the upper left corner attack
     angularUpperLeft()
   } else if (piece.toUpperCase() === 'R') {
-    // ROOK, the up attack
+    // rook, the up attack
     orthoUp()
-    // ROOK, the right attack
+    // rook, the right attack
     orthoRight()
-    // ROOK, the down attack
+    // rook, the down attack
     orthoDown()
-    // ROOK, the left attack
+    // rook, the left attack
     orthoLeft()
   }
 
