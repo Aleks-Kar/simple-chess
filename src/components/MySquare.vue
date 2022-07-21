@@ -24,12 +24,12 @@ function mouseDown(e: MouseEvent): void {
     // calculates the attacks once again if the page had been reloaded
     if (store.underWhiteAttack[0] === undefined) store.calculateAttacks()
 
-    // showing moveable squares
+    // calculates moveable squares
     if (piece.toUpperCase() === 'P') {
-      // calculating exclusive moves for a pawn
+      // exclusive moves for a pawn
       store.setMoveableSquares(getPawnMoves(store.arrangement, piece, index))
     } else if (piece.toUpperCase() === 'K') {
-      // calculating exclusive moves for a king
+      // exclusive moves for a king
       const attackedSquares = getAttackedSquares(
         store.arrangement,
         piece,
@@ -49,7 +49,7 @@ function mouseDown(e: MouseEvent): void {
 
       store.setMoveableSquares(attackedSquares)
     } else {
-      // calculating of moves for other board
+      // moves for other pieces 
       store.setMoveableSquares(
         getAttackedSquares(store.arrangement, piece, index)
       )

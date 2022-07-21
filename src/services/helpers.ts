@@ -217,6 +217,7 @@ export function getAttackedSquares(
     if (x > 1 && y > 0) attackedSquares[x - 2 + (y - 1) * 8] = true // left bottom
     if (x > 1 && y < 7) attackedSquares[x - 2 + (y + 1) * 8] = true // left top
   } else if (piece.toUpperCase() === 'P') {
+    console.warn('pawn');
     // PAWN, attack movement
     if (piece.toUpperCase() === piece) {
       // the left square for the attack of the white pawn
