@@ -34,13 +34,13 @@ export const useStore = defineStore('board', {
   },
 
   actions: {
-    // setting up board
+    // sets up the board
     init(): void {
       this.arrangement.fill('')
       this.underWhiteAttack.fill(false)
       this.underBlackAttack.fill(false)
 
-      this.clearMoveableSquares()
+      this.squaresForMove.fill(false)
       const whitePieces: string = 'RNBQKBNRPPPPPPPP'
       const blackPieces: string = 'pppppppprnbqkbnr'
       for (let i = 0; i < 16; i++) this.arrangement[i] = whitePieces[i]
@@ -84,14 +84,6 @@ export const useStore = defineStore('board', {
       this.blackKingHadBeenMoved = false
       this.rBlackRookHadBeenMoved = false
       this.activeIndex = 64
-    },
-
-    setPieceOnHover(piece: string): void {
-      if (this.hoverIndex === 64) {
-      } else {
-        this.arrangement[this.hoverIndex] = piece
-        this.arrangement[this.dragIndex] = ''
-      }
     },
 
     calculateAttacks(): void {
@@ -188,7 +180,7 @@ export const useStore = defineStore('board', {
       // clearing
       this.dragIndex = 64
       this.draggedItem = null
-      this.clearMoveableSquares()
+      this.squaresForMove.fill(false)
       this.boardLeft = 0
       this.boardTop = 0
       this.hoverIndex = 64
@@ -197,100 +189,108 @@ export const useStore = defineStore('board', {
       this.activeIndex = 64
     },
 
-    delDraggedPiece(): void {
-      if (this.hoverIndex === 64) return
-      this.arrangement[this.dragIndex] = ''
-    },
+    setMoveableSquares(index: number): void {
+      if (this.turn !== this.getPieceColor(index)) return
+      if (this.activeIndex !== 64 && index === this.activeIndex)
+        this.isReactivated = true
 
-    toggleSide(): void {
-      this.turn = this.turn === 'white' ? 'black' : 'white'
-    },
+      this.lmbIsPressed = true
+      this.dragIndex = index
 
-    setMoveableSquares(piece: string, index: number): void {
-      if (piece.toUpperCase() === 'P') {
-        // exclusive moves for a pawn
-        this.squaresForMove = [...getPawnMoves(this.arrangement, piece, index)]
-      } else if (piece.toUpperCase() === 'K') {
-        // exclusive moves for a king
-        const attackedSquares = getAttackedSquares(
-          this.arrangement,
-          piece,
-          index
-        )
+      if (!this.isReactivated) {
+        this.activeIndex = index
+        // calculates the attacks once again if the page had been reloaded
+        if (this.underWhiteAttack[0] === undefined) this.calculateAttacks()
 
-        const color = this.getPieceColor(index)
-        for (let i = 0; i < 64; i++) {
-          if (attackedSquares[i]) {
-            if (color === 'white' && this.underBlackAttack[i]) {
-              attackedSquares[i] = false
-            } else if (color === 'black' && this.underWhiteAttack[i]) {
-              attackedSquares[i] = false
+        const piece = this.getPiece(index)
+
+        if (piece.toUpperCase() === 'P') {
+          // exclusive moves for a pawn
+          this.squaresForMove = [
+            ...getPawnMoves(this.arrangement, piece, index)
+          ]
+        } else if (piece.toUpperCase() === 'K') {
+          // exclusive moves for a king
+          const attackedSquares = getAttackedSquares(
+            this.arrangement,
+            piece,
+            index
+          )
+
+          const color = this.getPieceColor(index)
+          for (let i = 0; i < 64; i++) {
+            if (attackedSquares[i]) {
+              if (color === 'white' && this.underBlackAttack[i]) {
+                attackedSquares[i] = false
+              } else if (color === 'black' && this.underWhiteAttack[i]) {
+                attackedSquares[i] = false
+              }
             }
           }
+
+          if (this.turn === 'white') {
+            // short castling
+            if (
+              !this.whiteKingHadBeenMoved &&
+              !this.rWhiteRookHadBeenMoved &&
+              this.arrangement[5] === '' &&
+              this.arrangement[6] === '' &&
+              !this.underBlackAttack[4] &&
+              !this.underBlackAttack[5] &&
+              !this.underBlackAttack[6]
+            ) {
+              attackedSquares[6] = true
+            }
+
+            // long castling
+            if (
+              !this.whiteKingHadBeenMoved &&
+              !this.lWhiteRookHadBeenMoved &&
+              this.arrangement[1] === '' &&
+              this.arrangement[2] === '' &&
+              this.arrangement[3] === '' &&
+              !this.underBlackAttack[2] &&
+              !this.underBlackAttack[3] &&
+              !this.underBlackAttack[4]
+            ) {
+              attackedSquares[2] = true
+            }
+          } else if (this.turn === 'black') {
+            // short castling
+            if (
+              !this.blackKingHadBeenMoved &&
+              !this.rBlackRookHadBeenMoved &&
+              this.arrangement[61] === '' &&
+              this.arrangement[62] === '' &&
+              !this.underWhiteAttack[60] &&
+              !this.underWhiteAttack[61] &&
+              !this.underWhiteAttack[62]
+            ) {
+              attackedSquares[62] = true
+            }
+
+            // long castling
+            if (
+              !this.blackKingHadBeenMoved &&
+              !this.lBlackRookHadBeenMoved &&
+              this.arrangement[57] === '' &&
+              this.arrangement[58] === '' &&
+              this.arrangement[59] === '' &&
+              !this.underWhiteAttack[58] &&
+              !this.underWhiteAttack[59] &&
+              !this.underWhiteAttack[60]
+            ) {
+              attackedSquares[58] = true
+            }
+          }
+
+          this.squaresForMove = [...attackedSquares]
+        } else {
+          // moves for other pieces
+          this.squaresForMove = [
+            ...getAttackedSquares(this.arrangement, piece, index)
+          ]
         }
-
-        if (this.turn === 'white') {
-          // short castling
-          if (
-            !this.whiteKingHadBeenMoved &&
-            !this.rWhiteRookHadBeenMoved &&
-            this.arrangement[5] === '' &&
-            this.arrangement[6] === '' &&
-            !this.underBlackAttack[4] &&
-            !this.underBlackAttack[5] &&
-            !this.underBlackAttack[6]
-          ) {
-            attackedSquares[6] = true
-          }
-
-          // long castling
-          if (
-            !this.whiteKingHadBeenMoved &&
-            !this.lWhiteRookHadBeenMoved &&
-            this.arrangement[1] === '' &&
-            this.arrangement[2] === '' &&
-            this.arrangement[3] === '' &&
-            !this.underBlackAttack[2] &&
-            !this.underBlackAttack[3] &&
-            !this.underBlackAttack[4]
-          ) {
-            attackedSquares[2] = true
-          }
-        } else if (this.turn === 'black') {
-          // short castling
-          if (
-            !this.blackKingHadBeenMoved &&
-            !this.rBlackRookHadBeenMoved &&
-            this.arrangement[61] === '' &&
-            this.arrangement[62] === '' &&
-            !this.underWhiteAttack[60] &&
-            !this.underWhiteAttack[61] &&
-            !this.underWhiteAttack[62]
-          ) {
-            attackedSquares[62] = true
-          }
-
-          // long castling
-          if (
-            !this.blackKingHadBeenMoved &&
-            !this.lBlackRookHadBeenMoved &&
-            this.arrangement[57] === '' &&
-            this.arrangement[58] === '' &&
-            this.arrangement[59] === '' &&
-            !this.underWhiteAttack[58] &&
-            !this.underWhiteAttack[59] &&
-            !this.underWhiteAttack[60]
-          ) {
-            attackedSquares[58] = true
-          }
-        }
-
-        this.squaresForMove = [...attackedSquares]
-      } else {
-        // moves for other pieces
-        this.squaresForMove = [
-          ...getAttackedSquares(this.arrangement, piece, index)
-        ]
       }
     },
 
@@ -311,10 +311,6 @@ export const useStore = defineStore('board', {
 
       this.cx = e.clientX - (e.offsetX - 45)
       this.cy = e.clientY - (e.offsetY - 45)
-    },
-
-    clearMoveableSquares(): void {
-      this.squaresForMove.fill(false)
     }
   },
 

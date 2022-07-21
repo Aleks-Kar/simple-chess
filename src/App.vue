@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { compile, onMounted, ref } from 'vue'
+import { computed, ref } from '@vue/reactivity'
 import { useStore } from './stores/board'
 import { getHoverIndex } from './services/helpers'
 import TheBoard from './components/TheBoard.vue'
 import TheNotation from './components/TheNotation.vue'
-import { computed } from '@vue/reactivity'
 
 const store = useStore()
 const key = ref(0)
@@ -43,7 +42,7 @@ function mouseUp(): void {
     store.isReactivated = false
     // store.deactivateSquare()
     store.activeIndex = 64
-    store.clearMoveableSquares()
+    store.squaresForMove.fill(false)
     return
   } else if (isReactivated) {
     store.isReactivated = false

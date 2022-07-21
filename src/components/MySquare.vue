@@ -12,21 +12,7 @@ const index = props.index
 
 /* THE MOUSE DOWN EVENT */
 function mouseDown(e: MouseEvent): void {
-  if (store.turn !== store.getPieceColor(index)) return
-  if (store.activeIndex !== 64 && index === store.activeIndex)
-    store.isReactivated = true
-
-  store.lmbIsPressed = true
-  store.dragIndex = index
-
-  if (!store.isReactivated) {
-    store.activeIndex = index
-    // calculates the attacks once again if the page had been reloaded
-    if (store.underWhiteAttack[0] === undefined) store.calculateAttacks()
-    store.setMoveableSquares(piece, index)
-  }
-
-  // preparing for the dragging
+  store.setMoveableSquares(index)
   store.prepareForDragging(e, index)
 }
 
@@ -90,7 +76,7 @@ const isDefended = computed<boolean>(() => {
       { square_hover_safe: isHover && isSafe && isMoveable && !isAlly },
       { square_hover_unsafe: isHover && !isSafe && isMoveable && !isAlly }
     ]">
-    {{ props.index }}
+    <!-- {{ props.index }} -->
     <MyPiece
       v-if="piece"
       :piece="piece"
