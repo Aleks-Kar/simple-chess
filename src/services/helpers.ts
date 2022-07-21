@@ -219,20 +219,20 @@ export function getAttackedSquares(
     // PAWN, attack movement
     if (piece.toUpperCase() === piece) {
       // the left square for the attack of the white pawn
-      if (x > 0 && y > 0) {
+      if (x > 0 && y < 7) {
         attackedSquares[x - 1 + (y + 1) * 8] = true
       }
       // the right square for the attack of the white pawn
-      if (x < 7 && y > 0) {
+      if (x < 7 && y < 7) {
         attackedSquares[x + 1 + (y + 1) * 8] = true
       }
     } else {
       // the left square for the attack of the black pawn
-      if (x > 0 && y < 7) {
+      if (x > 0 && y > 0) {
         attackedSquares[x - 1 + (y - 1) * 8] = true
       }
       // the right square for the attack of the black pawn
-      if (x < 7 && y < 7) {
+      if (x < 7 && y > 0) {
         attackedSquares[x + 1 + (y - 1) * 8] = true
       }
     }
