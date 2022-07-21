@@ -39,6 +39,14 @@ const getMoveNotation = function (): string {
   } else if (piece === 'Q') {
     return `♕${getCoord(initialPos)}${separator}${getCoord(targetPos)}`
   } else if (piece === 'K') {
+    // castling
+    if (props.turn === 'black') {
+      if (props.move[0] === 4 && props.move[1] === 6) return '0-0'
+      if (props.move[0] === 4 && props.move[1] === 2) return '0-0-0'
+    } else if (props.turn === 'white') {
+      if (props.move[0] === 60 && props.move[1] === 62) return '0-0'
+      if (props.move[0] === 60 && props.move[1] === 58) return '0-0-0'
+    }
     return `♔${getCoord(initialPos)}${separator}${getCoord(targetPos)}`
   } else {
     return `${getCoord(initialPos)}${separator}${getCoord(targetPos)}`
@@ -71,6 +79,8 @@ const cursor = computed<string>(() => {
 watch(
   () => props.turn,
   () => {
+    console.warn(props.turn)
+
     if (props.turn !== '' && getMoveNotation() !== '') {
       if (props.turn === 'black') {
         notation.whiteMoves.push(getMoveNotation())

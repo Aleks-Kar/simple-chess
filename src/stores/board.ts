@@ -124,20 +124,9 @@ export const useStore = defineStore('board', {
       } else {
         this.hadCaptured = this.getPiece(this.hoverIndex)
 
-        // saves the dragged piece and "moves" it
-        this.arrangement[this.hoverIndex] = this.arrangement[this.dragIndex]
-        this.arrangement[this.dragIndex] = ''
-
-        this.underWhiteAttack.fill(false)
-        this.underBlackAttack.fill(false)
-        this.calculateAttacks()
-
-        /* special cases */
+        /* handle special cases */
         // castling
-
         if (this.getPiece(this.dragIndex).toUpperCase() === 'K') {
-          console.warn('asfd')
-
           if (this.turn === 'white') {
             if (this.hoverIndex === 6) {
               this.arrangement[7] = ''
@@ -149,6 +138,14 @@ export const useStore = defineStore('board', {
           } else if (this.turn === 'black') {
           }
         }
+
+        // saves the dragged piece and "moves" it
+        this.arrangement[this.hoverIndex] = this.arrangement[this.dragIndex]
+        this.arrangement[this.dragIndex] = ''
+
+        this.underWhiteAttack.fill(false)
+        this.underBlackAttack.fill(false)
+        this.calculateAttacks()
 
         if (this.turn === 'white') {
           this.turn = 'black'
