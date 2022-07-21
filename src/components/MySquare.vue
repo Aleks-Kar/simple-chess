@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from '@vue/reactivity'
 import { useStore } from '../stores/board'
-import { getAttackedSquares, getPawnMoves } from '../services/helpers'
 import MyPiece from '/src/components/MyPiece.vue'
 
 const props = defineProps<{ index: number }>()
@@ -12,8 +11,7 @@ const index = props.index
 
 /* THE MOUSE DOWN EVENT */
 function mouseDown(e: MouseEvent): void {
-  store.setMoveableSquares(index)
-  store.prepareForDragging(e, index)
+  store.mouseDownHandler(e, index)
 }
 
 /* UI VARIABLES */

@@ -1,5 +1,9 @@
 import { defineStore } from 'pinia'
-import { getAttackedSquares, getPawnMoves } from '../services/helpers'
+import {
+  getAttackedSquares,
+  getHoverIndex,
+  getPawnMoves
+} from '../services/helpers'
 
 export const useStore = defineStore('board', {
   state: () => {
@@ -311,6 +315,60 @@ export const useStore = defineStore('board', {
 
       this.cx = e.clientX - (e.offsetX - 45)
       this.cy = e.clientY - (e.offsetY - 45)
+    },
+
+    mouseDownHandler(e: MouseEvent, index: number): void {
+      this.setMoveableSquares(index)
+      this.prepareForDragging(e, index)
+    },
+
+    mouseMoveHandler(e: MouseEvent): void {
+      if (!this.draggedItem || !this.lmbIsPressed) return
+
+      this.hoverIndex = getHoverIndex(
+        this.boardLeft,
+        this.boardTop,
+        e.clientX,
+        e.clientY
+      )
+
+      if (!this.pieceHadBeenMoved) {
+        this.pieceHadBeenMoved = true
+        this.draggedItem.style.cursor = 'grabbing'
+      }
+
+      this.draggedItem.style.left = `${e.clientX - this.cx}px`
+      this.draggedItem.style.top = `${e.clientY - this.cy}px`
+    },
+
+    mouseUpHandler(): void {
+      this.lmbIsPressed = false
+      const isReactivated = this.isReactivated
+      const pieceHadBeenMoved = this.pieceHadBeenMoved
+      const dragIndex = this.dragIndex
+      const hoverIndex = this.hoverIndex
+      const turn = this.turn
+
+      if (isReactivated && !pieceHadBeenMoved) {
+        this.isReactivated = false
+        this.activeIndex = 64
+        this.squaresForMove.fill(false)
+        return
+      } else if (isReactivated) {
+        this.isReactivated = false
+      }
+
+      if (
+        this.squaresForMove[hoverIndex] &&
+        (this.getPiece(hoverIndex) === '' ||
+          (!this.isWhitePiece(hoverIndex) && turn === 'white') ||
+          (this.isWhitePiece(hoverIndex) && turn === 'black'))
+      ) {
+        this.lastMove[0] = dragIndex
+        this.lastMove[1] = hoverIndex
+      }
+
+      if (pieceHadBeenMoved) this.placePiece()
     }
   },
 

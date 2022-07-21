@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from '@vue/reactivity'
 import { useStore } from './stores/board'
-import { getHoverIndex } from './services/helpers'
 import TheBoard from './components/TheBoard.vue'
 import TheNotation from './components/TheNotation.vue'
 
@@ -10,55 +9,12 @@ const key = ref(0)
 
 /* THE MOUSE MOVE EVENT */
 function mouseMove(e: MouseEvent): void {
-  if (!store.draggedItem || !store.lmbIsPressed) return
-
-  store.hoverIndex = getHoverIndex(
-    store.boardLeft,
-    store.boardTop,
-    e.clientX,
-    e.clientY
-  )
-
-  if (!store.pieceHadBeenMoved) {
-    store.pieceHadBeenMoved = true
-    store.draggedItem.style.cursor = 'grabbing'
-  }
-
-  store.draggedItem.style.left = `${e.clientX - store.cx}px`
-  store.draggedItem.style.top = `${e.clientY - store.cy}px`
-  false
+  store.mouseMoveHandler(e)
 }
 
 /* THE MOUSE UP EVENT */
 function mouseUp(): void {
-  store.lmbIsPressed = false
-  const isReactivated = store.isReactivated
-  const pieceHadBeenMoved = store.pieceHadBeenMoved
-  const dragIndex = store.dragIndex
-  const hoverIndex = store.hoverIndex
-  const turn = store.turn
-
-  if (isReactivated && !pieceHadBeenMoved) {
-    store.isReactivated = false
-    // store.deactivateSquare()
-    store.activeIndex = 64
-    store.squaresForMove.fill(false)
-    return
-  } else if (isReactivated) {
-    store.isReactivated = false
-  }
-
-  if (
-    store.squaresForMove[hoverIndex] &&
-    (store.getPiece(hoverIndex) === '' ||
-      (!store.isWhitePiece(hoverIndex) && turn === 'white') ||
-      (store.isWhitePiece(hoverIndex) && turn === 'black'))
-  ) {
-    store.lastMove[0] = dragIndex
-    store.lastMove[1] = hoverIndex
-  }
-
-  if (pieceHadBeenMoved) store.placePiece()
+  store.mouseUpHandler()
 }
 
 function mouseLeave(): void {
@@ -66,7 +22,6 @@ function mouseLeave(): void {
 }
 
 function newGame(): void {
-  // clears board and notation in local storage
   if (localStorage.board) localStorage.removeItem('board')
   if (localStorage.notation) localStorage.removeItem('notation')
   store.restart()
