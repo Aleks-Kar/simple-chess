@@ -35,8 +35,8 @@ function mouseDown(e: MouseEvent): void {
         piece,
         index
       )
-      const color = store.getPieceColor(index)
 
+      const color = store.getPieceColor(index)
       for (let i = 0; i < 64; i++) {
         if (attackedSquares[i]) {
           if (color === 'white' && store.underBlackAttack[i]) {
