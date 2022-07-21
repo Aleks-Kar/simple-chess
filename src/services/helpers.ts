@@ -225,22 +225,14 @@ export function getAttackedSquares(
     /* PAWN ATTACKS */
     if (piece.toUpperCase() === piece) {
       // the left corner attack of the white pawn
-      if (x > 0 && y < 7) {
-        attackedSquares[x - 1 + (y + 1) * 8] = true
-      }
+      if (x > 0 && y < 7) attackedSquares[x - 1 + (y + 1) * 8] = true
       // the right corner attack of the white pawn
-      if (x < 7 && y < 7) {
-        attackedSquares[x + 1 + (y + 1) * 8] = true
-      }
+      if (x < 7 && y < 7) attackedSquares[x + 1 + (y + 1) * 8] = true
     } else {
       // the left corner attack of the black pawn
-      if (x > 0 && y > 0) {
-        attackedSquares[x - 1 + (y - 1) * 8] = true
-      }
+      if (x > 0 && y > 0) attackedSquares[x - 1 + (y - 1) * 8] = true
       // the right corner attack of the black pawn
-      if (x < 7 && y > 0) {
-        attackedSquares[x + 1 + (y - 1) * 8] = true
-      }
+      if (x < 7 && y > 0) attackedSquares[x + 1 + (y - 1) * 8] = true
     }
 
     // PAWN, taking on the pass
@@ -250,26 +242,26 @@ export function getAttackedSquares(
     orthoUp()
     // QUEEN, the upper right corner attack
     angularUpperRight()
-    // QUEEN, movement to the right
+    // QUEEN, the right attack
     orthoRight()
-    // QUEEN, movement to the lower right corner
+    // QUEEN, the lower right corner attack
     angularLowerRight()
-    // QUEEN, movement to the down
+    // QUEEN, the down attack
     orthoDown()
-    // QUEEN, movement to the lower left corner
+    // QUEEN, the lower left corner attack
     angularLowerLeft()
-    // QUEEN, movement to the left
+    // QUEEN, the left attack
     orthoLeft()
-    // QUEEN, movement to the upper left corner
+    // QUEEN, the upper left corner attack
     angularUpperLeft()
   } else if (piece.toUpperCase() === 'R') {
-    // ROOK, movement to the up
+    // ROOK, the up attack
     orthoUp()
-    // ROOK, movement to the right
+    // ROOK, the right attack
     orthoRight()
-    // ROOK, movement to the down
+    // ROOK, the down attack
     orthoDown()
-    // ROOK, movement to the left
+    // ROOK, the left attack
     orthoLeft()
   }
 
