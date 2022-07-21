@@ -20,28 +20,28 @@ export function getPawnMoves(board: string[], piece: string, index: number) {
   const moveableSquares = new Array<boolean>(64)
   moveableSquares.fill(false)
 
-  /* pawn angle moves */
+  /* PAWN ANGLE MOVES */
   if (isWhitePiece) {
-    // the move to the left corner of the white piece
+    // the left corner move of the white pawn
     if (x > 0 && y < 7) {
       const lIndex = x - 1 + (y + 1) * 8
       if (board[lIndex] !== '' && !isWhite(board[lIndex]))
         moveableSquares[lIndex] = true
     }
-    // the move to the right corner of the white piece
+    // the right corner move of the white pawn
     if (x < 7 && y < 7) {
       const rIndex = x + 1 + (y + 1) * 8
       if (board[rIndex] !== '' && !isWhite(board[rIndex]))
         moveableSquares[rIndex] = true
     }
   } else {
-    // the move to the left corner of the black piece
+    // the left corner move of the black pawn
     if (x > 0 && y > 0) {
       const lIndex = x - 1 + (y - 1) * 8
       if (board[lIndex] !== '' && isWhite(board[lIndex]))
         moveableSquares[lIndex] = true
     }
-    // the move to the right corner of the black piece
+    // the right corner move of the black pawn
     if (x < 7 && y > 0) {
       const rIndex = x + 1 + (y - 1) * 8
       if (board[rIndex] !== '' && isWhite(board[rIndex]))
@@ -49,7 +49,7 @@ export function getPawnMoves(board: string[], piece: string, index: number) {
     }
   }
 
-  /* pawn forward moves */
+  /* PAWN FORWARD MOVES */
   for (let i = 1; i < maxLength; i++) {
     if (y < 1 || y > 6) break
     let index: number = 0
@@ -202,7 +202,7 @@ export function getAttackedSquares(
     // BISHOP, the upper left corner attack
     angularUpperLeft()
   } else if (piece.toUpperCase() === 'K') {
-    // KING attack
+    /* KING ATTACKS */
     if (y < 7) attackedSquares[x + (y + 1) * 8] = true // top
     if (x < 7 && y < 7) attackedSquares[x + 1 + (y + 1) * 8] = true // upper right
     if (x < 7) attackedSquares[x + 1 + y * 8] = true // right
@@ -212,7 +212,7 @@ export function getAttackedSquares(
     if (x > 0) attackedSquares[x - 1 + y * 8] = true // left
     if (x > 0 && y < 7) attackedSquares[x - 1 + (y + 1) * 8] = true // upper left
   } else if (piece.toUpperCase() === 'N') {
-    // KNIGHT attack
+    /* KNIGHT ATTACKS */
     if (x > 0 && y < 6) attackedSquares[x - 1 + (y + 2) * 8] = true // top left
     if (x < 7 && y < 6) attackedSquares[x + 1 + (y + 2) * 8] = true // top right
     if (x < 6 && y < 7) attackedSquares[x + 2 + (y + 1) * 8] = true // right top
@@ -222,22 +222,22 @@ export function getAttackedSquares(
     if (x > 1 && y > 0) attackedSquares[x - 2 + (y - 1) * 8] = true // left bottom
     if (x > 1 && y < 7) attackedSquares[x - 2 + (y + 1) * 8] = true // left top
   } else if (piece.toUpperCase() === 'P') {
-    // PAWN attack
+    /* PAWN ATTACKS */
     if (piece.toUpperCase() === piece) {
-      // the left square for the attack of the white pawn
+      // the left corner attack of the white pawn
       if (x > 0 && y < 7) {
         attackedSquares[x - 1 + (y + 1) * 8] = true
       }
-      // the right square for the attack of the white pawn
+      // the right corner attack of the white pawn
       if (x < 7 && y < 7) {
         attackedSquares[x + 1 + (y + 1) * 8] = true
       }
     } else {
-      // the left square for the attack of the black pawn
+      // the left corner attack of the black pawn
       if (x > 0 && y > 0) {
         attackedSquares[x - 1 + (y - 1) * 8] = true
       }
-      // the right square for the attack of the black pawn
+      // the right corner attack of the black pawn
       if (x < 7 && y > 0) {
         attackedSquares[x + 1 + (y - 1) * 8] = true
       }
