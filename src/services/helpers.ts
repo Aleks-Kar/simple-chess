@@ -2,7 +2,7 @@ function isWhite(piece: string): boolean {
   return piece === piece.toUpperCase()
 }
 
-/* PAWN MOVES AND ANGLE ATTACKS */
+/* PAWN MOVES */
 export function getPawnMoves(board: string[], piece: string, index: number) {
   // gets coordinates
   const y = Math.trunc(index / 8)
@@ -23,22 +23,30 @@ export function getPawnMoves(board: string[], piece: string, index: number) {
   // pawn attack
   if (isWhitePiece) {
     // left attack
-    const lIndex = x - 1 + (y + 1) * 8
-    if (board[lIndex] !== '' && !isWhite(board[lIndex]))
-      moveableSquares[lIndex] = true
+    if (x > 0 && y < 7) {
+      const lIndex = x - 1 + (y + 1) * 8
+      if (board[lIndex] !== '' && !isWhite(board[lIndex]))
+        moveableSquares[lIndex] = true
+    }
     // right attack
-    const rIndex = x + 1 + (y + 1) * 8
-    if (board[rIndex] !== '' && !isWhite(board[rIndex]))
-      moveableSquares[rIndex] = true
+    if (x < 7 && y < 7) {
+      const rIndex = x + 1 + (y + 1) * 8
+      if (board[rIndex] !== '' && !isWhite(board[rIndex]))
+        moveableSquares[rIndex] = true
+    }
   } else {
     // left attack
-    const lIndex = x - 1 + (y - 1) * 8
-    if (board[lIndex] !== '' && isWhite(board[lIndex]))
-      moveableSquares[lIndex] = true
+    if (x > 0 && y > 0) {
+      const lIndex = x - 1 + (y - 1) * 8
+      if (board[lIndex] !== '' && isWhite(board[lIndex]))
+        moveableSquares[lIndex] = true
+    }
     // right attack
-    const rIndex = x + 1 + (y - 1) * 8
-    if (board[rIndex] !== '' && isWhite(board[rIndex]))
-      moveableSquares[rIndex] = true
+    if (x < 7 && y > 0) {
+      const rIndex = x + 1 + (y - 1) * 8
+      if (board[rIndex] !== '' && isWhite(board[rIndex]))
+        moveableSquares[rIndex] = true
+    }
   }
 
   // pawn move forward
@@ -213,7 +221,6 @@ export function getAttackedSquares(
     if (x > 1 && y > 0) attackedSquares[x - 2 + (y - 1) * 8] = true // left bottom
     if (x > 1 && y < 7) attackedSquares[x - 2 + (y + 1) * 8] = true // left top
   } else if (piece.toUpperCase() === 'P') {
-    console.warn('pawn')
     // PAWN, attack movement
     if (piece.toUpperCase() === piece) {
       // the left square for the attack of the white pawn
