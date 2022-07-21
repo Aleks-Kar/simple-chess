@@ -23,56 +23,11 @@ function mouseDown(e: MouseEvent): void {
     store.activeIndex = index
     // calculates the attacks once again if the page had been reloaded
     if (store.underWhiteAttack[0] === undefined) store.calculateAttacks()
-
-    /* calculates moveable squares */
-    if (piece.toUpperCase() === 'P') {
-      // exclusive moves for a pawn
-      store.setMoveableSquares(getPawnMoves(store.arrangement, piece, index))
-    } else if (piece.toUpperCase() === 'K') {
-      // exclusive moves for a king
-      const attackedSquares = getAttackedSquares(
-        store.arrangement,
-        piece,
-        index
-      )
-
-      const color = store.getPieceColor(index)
-      for (let i = 0; i < 64; i++) {
-        if (attackedSquares[i]) {
-          if (color === 'white' && store.underBlackAttack[i]) {
-            attackedSquares[i] = false
-          } else if (color === 'black' && store.underWhiteAttack[i]) {
-            attackedSquares[i] = false
-          }
-        }
-      }
-
-      store.setMoveableSquares(attackedSquares)
-    } else {
-      // moves for other pieces
-      store.setMoveableSquares(
-        getAttackedSquares(store.arrangement, piece, index)
-      )
-    }
+    store.setMoveableSquares(piece, index)
   }
 
   // preparing for the dragging
-  const boardPos: DOMRect | undefined = document.body
-    .querySelector('.board__field')
-    ?.getBoundingClientRect()
-  // saves the board position parameters
-  if (boardPos) store.boardLeft = Math.round(boardPos.left)
-  if (boardPos) store.boardTop = Math.round(boardPos.top)
-
-  const svgElement: SVGSVGElement | null = document.body.querySelector(
-    `#square${index} svg`
-  )
-
-  store.draggedItem = svgElement
-  if (svgElement) svgElement.style.position = 'relative'
-
-  store.cx = e.clientX - (e.offsetX - 45)
-  store.cy = e.clientY - (e.offsetY - 45)
+  store.prepareForDragging(e, index)
 }
 
 /* UI VARIABLES */
@@ -135,7 +90,7 @@ const isDefended = computed<boolean>(() => {
       { square_hover_safe: isHover && isSafe && isMoveable && !isAlly },
       { square_hover_unsafe: isHover && !isSafe && isMoveable && !isAlly }
     ]">
-    <!-- {{ props.index }} -->
+    {{ props.index }}
     <MyPiece
       v-if="piece"
       :piece="piece"
