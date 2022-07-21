@@ -132,6 +132,24 @@ export const useStore = defineStore('board', {
         this.underBlackAttack.fill(false)
         this.calculateAttacks()
 
+        /* special cases */
+        // castling
+
+        if (this.getPiece(this.dragIndex).toUpperCase() === 'K') {
+          console.warn('asfd')
+
+          if (this.turn === 'white') {
+            if (this.hoverIndex === 6) {
+              this.arrangement[7] = ''
+              this.arrangement[5] = 'R'
+            } else if (this.hoverIndex === 2) {
+              this.arrangement[0] = ''
+              this.arrangement[3] = 'R'
+            }
+          } else if (this.turn === 'black') {
+          }
+        }
+
         if (this.turn === 'white') {
           this.turn = 'black'
           if (this.dragIndex === 0) this.lWhiteRookHadBeenMoved = true
@@ -178,6 +196,8 @@ export const useStore = defineStore('board', {
         // exclusive moves for a pawn
         this.squaresForMove = [...getPawnMoves(this.arrangement, piece, index)]
       } else if (piece.toUpperCase() === 'K') {
+        console.warn('set moveable squares for King')
+
         // exclusive moves for a king
         const attackedSquares = getAttackedSquares(
           this.arrangement,
