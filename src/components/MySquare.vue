@@ -49,7 +49,7 @@ function mouseDown(e: MouseEvent): void {
 
       store.setMoveableSquares(attackedSquares)
     } else {
-      // moves for other pieces 
+      // moves for other pieces
       store.setMoveableSquares(
         getAttackedSquares(store.arrangement, piece, index)
       )
@@ -60,7 +60,7 @@ function mouseDown(e: MouseEvent): void {
   const boardPos: DOMRect | undefined = document.body
     .querySelector('.board__field')
     ?.getBoundingClientRect()
-
+  // saves the board position parameters
   if (boardPos) store.boardLeft = Math.round(boardPos.left)
   if (boardPos) store.boardTop = Math.round(boardPos.top)
 
