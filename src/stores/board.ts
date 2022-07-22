@@ -20,6 +20,8 @@ export const useStore = defineStore('board', {
 
       underWhiteAttack: Array<boolean>(64),
       underBlackAttack: Array<boolean>(64),
+      whiteKingUnderAttack: false,
+      blackKingUnderAttack: false,
       activeIndex: 64,
       squaresForMove: Array<boolean>(64),
       lmbIsPressed: false,
@@ -38,7 +40,6 @@ export const useStore = defineStore('board', {
   },
 
   actions: {
-    // sets up the board
     init(): void {
       this.arrangement.fill('')
       this.underWhiteAttack.fill(false)
@@ -123,6 +124,8 @@ export const useStore = defineStore('board', {
         this.draggedItem.style.top = 0
         this.draggedItem.style.cursor = ''
       } else {
+        this.checkWhiteKing()
+        this.checkBlackKing()
         this.hadCaptured = this.getPiece(this.hoverIndex)
 
         /* handle special cases */
@@ -369,6 +372,16 @@ export const useStore = defineStore('board', {
       }
 
       if (pieceHadBeenMoved) this.placePiece()
+    },
+
+    checkWhiteKing(): void {
+      const whiteKingIndex = this.arrangement.indexOf('K')
+      this.whiteKingUnderAttack = this.underBlackAttack[whiteKingIndex]
+    },
+
+    checkBlackKing(): void {
+      const blackKingIndex = this.arrangement.indexOf('k')
+      this.blackKingUnderAttack = this.underWhiteAttack[blackKingIndex]
     }
   },
 

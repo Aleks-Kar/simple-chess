@@ -3,6 +3,7 @@ import { computed, ref } from '@vue/reactivity'
 import { useStore } from './stores/board'
 import TheBoard from './components/TheBoard.vue'
 import TheNotation from './components/TheNotation.vue'
+import BaseButton from './components/ui/BaseButton.vue'
 
 const store = useStore()
 const key = ref(0)
@@ -41,11 +42,12 @@ const update = () => key.value++
 
 <template>
   <div @mousemove="mouseMove" @mouseup="mouseUp" @mouseleave="mouseLeave">
-    <button @click="newGame" class="button">Новая игра</button>
     <TheBoard />
   </div>
 
-  <div class="notation_margin-left">
+  <div class="notation__container">
+    <BaseButton @click="newGame">Новая игра</BaseButton>
+
     <TheNotation
       :key="key"
       :arrangement="store.arrangement"
@@ -71,29 +73,20 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* text-align: center; */
   background-size: cover;
   color: hsl(210, 29%, 24%);
   overflow: hidden;
-  background-color: rgb(105, 172, 141);
+  background-color: hsl(0, 30%, 80%);
 }
 
-/* .wrapper {
+.notation__container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  width: 100vw;
-  height: 100vh;
-} */
-
-.notation_margin-left {
   margin-left: 40px;
 }
 
-.button {
-  width: 200px;
-  height: 125px;
-  font-size: 35px;
-  user-select: none;
+.notation__container button {
+  margin-bottom: 15px;
 }
 </style>
