@@ -18,17 +18,15 @@ function getUrl(name: string): string {
 
 const urlWhitePiece = computed<string>(() => {
   // return `url("/src/assets/pieces/w${props.piece}.svg")`
-  return `url(${getUrl('pieces/w' + props.piece)})`
+  const str = `pieces/w${props.piece}`
+  return `url(${getUrl(str)})`
 })
 
 const urlBlackPiece = computed<string>(() => {
   // return `url("/src/assets/pieces/b${props.piece}.svg")`
-  return `url(${getUrl('pieces/b' + props.piece)})`
+  const str = `pieces/b${props.piece}`
+  return `url(${getUrl(str)})`
 })
-
-// const urlBlackPiece = computed<string>(() => {
-//   return `url("/src/assets/pieces/b${props.piece}.svg")`
-// })
 
 const urlSvgAttack = computed<string>(() => {
   if (
