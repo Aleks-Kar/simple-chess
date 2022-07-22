@@ -74,9 +74,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-size: cover;
-  color: hsl(210, 29%, 24%);
-  overflow: hidden;
-  background-color: hsl(0, 30%, 80%);
+  background-color: hsl(0, 30%, 75%);
+  /* overflow: hidden; */
 }
 
 .notation__container {
