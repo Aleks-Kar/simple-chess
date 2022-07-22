@@ -13,17 +13,17 @@ const props = defineProps<{
 const store = useStore()
 
 function getUrl(name: string): string {
-  return new URL(`/src/assets/pieces/${name}.svg`, import.meta.url).href
+  return new URL(`/src/assets/${name}.svg`, import.meta.url).href
 }
 
 const urlWhitePiece = computed<string>(() => {
   // return `url("/src/assets/pieces/w${props.piece}.svg")`
-  return `url(${getUrl('w' + props.piece)})`
+  return `url(${getUrl('pieces/w' + props.piece)})`
 })
 
 const urlBlackPiece = computed<string>(() => {
   // return `url("/src/assets/pieces/b${props.piece}.svg")`
-  return `url(${getUrl('b' + props.piece)})`
+  return `url(${getUrl('pieces/b' + props.piece)})`
 })
 
 // const urlBlackPiece = computed<string>(() => {
@@ -37,7 +37,8 @@ const urlSvgAttack = computed<string>(() => {
     store.squaresForMove[props.index] &&
     props.piece.toUpperCase() !== 'K'
   ) {
-    return 'url("/src/assets/swords.svg")'
+    // return new URL('url("/src/assets/swords.svg")
+    return `url(${getUrl('swords')})`
   } else {
     return 'none'
   }
@@ -51,7 +52,8 @@ const urlSvgDefend = computed<string>(() => {
     store.squaresForMove[props.index] &&
     props.piece.toUpperCase() !== 'K'
   ) {
-    return 'url("/src/assets/shield.svg")'
+    return `url(${getUrl('shield')})`
+    // return 'url("/src/assets/shield.svg")'
   } else {
     return 'none'
   }
