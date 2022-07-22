@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useStore } from '../stores/board'
-import MySquare from './MySquare.vue'
+import MySquare from '@/components/MySquare.vue'
 
 const store = useStore()
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from '@vue/reactivity'
 import { useStore } from '../stores/board'
-import MyPiece from '/src/components/MyPiece.vue'
+import MyPiece from '@/components/MyPiece.vue'
 
 const props = defineProps<{ index: number }>()
 const store = useStore()
