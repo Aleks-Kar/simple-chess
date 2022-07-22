@@ -6,10 +6,10 @@ process.env.BROWSER = "chrome";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
-  server: {
-    open: "/index.html",
-  },
   base: "/simple-chess/",
+  server: {
+    open: "/simple-chess/index.html",
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

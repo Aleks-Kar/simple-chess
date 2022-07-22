@@ -1,11 +1,12 @@
 {
   "name": "simple-chess",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite"
+    "preview": "vite preview",
+    "serve": "vue-tsc --noEmit && vite build && vite preview"
   },
   "dependencies": {
     "pinia": "^2.0.14",
