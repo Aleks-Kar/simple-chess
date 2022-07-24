@@ -50,12 +50,17 @@ onMounted(() => {
   </div>
 </template>
 
-<style>
+<style lang="scss">
+$width: 800px;
+$height: 800px;
+
 .board {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  font-size: 30px;
+  font-weight: bold;
   background-color: hsl(29, 34%, 55%);
   user-select: none;
 }
@@ -63,10 +68,7 @@ onMounted(() => {
 .board__field {
   display: flex;
   flex-direction: column-reverse;
-  justify-content: center;
-  align-items: center;
-  width: 800px;
-  height: 800px;
+  height: $height;
   margin-top: 40px;
   margin-right: 40px;
   border: 4px solid black;
@@ -74,52 +76,43 @@ onMounted(() => {
 
 .board__row {
   display: flex;
-  width: 800px;
-  height: 100px;
+  width: $width;
+  height: $height;
 }
 
 .board_naming_horizontal {
   display: flex;
-  justify-content: flex-start;
-  width: 800px;
-  color: black;
-}
 
-.board_naming_horizontal > div {
-  text-align: center;
-  width: 20px;
-  height: 40px;
-  line-height: 40px;
-  font-size: 30px;
-  font-weight: bold;
-}
+  div {
+    text-align: center;
+    width: 20px;
+    height: 40px;
+  }
 
-.board_naming_horizontal > div:first-child {
-  margin-left: 40px;
-}
+  div:first-child {
+    margin-left: 40px;
+  }
 
-.board_naming_horizontal > div + div {
-  margin-left: 80px;
+  div + div {
+    margin-left: 80px;
+  }
 }
 
 .board_naming_vertical {
-  height: 800px;
-  color: black;
-}
+  height: $height;
 
-.board_naming_vertical > div {
-  text-align: center;
-  width: 40px;
-  height: 40px;
-  font-size: 30px;
-  font-weight: bold;
-}
+  div {
+    text-align: center;
+    width: 40px;
+    height: 40px;
+  }
 
-.board_naming_vertical > div:first-child {
-  margin-top: 30px;
-}
+  div:first-child {
+    margin-top: 30px;
+  }
 
-.board_naming_vertical > div + div {
-  margin-top: 60px;
+  div + div {
+    margin-top: 60px;
+  }
 }
 </style>

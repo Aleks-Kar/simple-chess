@@ -145,54 +145,47 @@ onMounted(() => {
   <div></div>
 </template>
 
-<style>
-.button {
-  width: 100px;
-  height: 100px;
-  font-size: 30px;
-}
-
-:root {
-  --table-border: 3px solid black;
-  --row-height: 50px;
-}
+<style lang="scss">
+$table-border: 3px solid black;
+$row-height: 50px;
 
 .notation {
   font-size: 30px;
   color: black;
   text-align: center;
-
   vertical-align: middle;
   border-collapse: collapse;
 }
 
 .notation__title {
-  height: var(--row-height);
-  border: var(--table-border);
+  height: $row-height;
+  border: $table-border;
   background-color: hsl(245, 55%, 75%);
   user-select: none;
 }
 
-.notation__row + .notation__row {
-  cursor: v-bind(cursor);
-}
+.notation__row {
+  & + & {
+    cursor: v-bind(cursor);
+  }
 
-.notation__row:last-child {
-  border-bottom: var(--table-border);
+  &:last-child {
+    border-bottom: $table-border;
+  }
 }
 
 .notation__cell {
-  height: var(--row-height);
-  border-left: var(--table-border);
-  border-right: var(--table-border);
-}
+  height: $row-height;
+  border-left: $table-border;
+  border-right: $table-border;
 
-.notation__cell:first-child {
-  width: 60px;
-}
+  &:first-child {
+    width: 60px;
+  }
 
-.notation__cell + .notation__cell {
-  width: 140px;
+  & + & {
+    width: 140px;
+  }
 }
 
 .notation__cell_background_green {

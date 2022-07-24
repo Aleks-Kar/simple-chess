@@ -85,11 +85,9 @@ const isDefended = computed<boolean>(() => {
   </div>
 </template>
 
-<style>
-:root {
-  --color_safe: hsl(240, 70%, 50%);
-  --color_unsafe: hsl(330, 75%, 50%);
-}
+<style lang="scss">
+$color_safe: hsl(240, 70%, 50%);
+$color_unsafe: hsl(330, 75%, 50%);
 
 .square {
   position: relative;
@@ -120,11 +118,11 @@ const isDefended = computed<boolean>(() => {
 }
 
 .square_active_safe {
-  border: 5px solid var(--color_safe);
+  border: 5px solid $color_safe;
 }
 
 .square_active_unsafe {
-  border: 5px solid var(--color_unsafe);
+  border: 5px solid $color_unsafe;
 }
 
 .square_last-moves_for-white {
@@ -135,20 +133,20 @@ const isDefended = computed<boolean>(() => {
   background-color: hsl(55, 50%, 40%);
 }
 
-.square_moveable_safe::after {
-  content: '';
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: var(--color_safe);
-}
-
+.square_moveable_safe::after,
 .square_moveable_unsafe::after {
   content: '';
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: var(--color_unsafe);
+}
+
+.square_moveable_safe::after {
+  background-color: $color_safe;
+}
+
+.square_moveable_unsafe::after {
+  background-color: $color_unsafe;
 }
 
 .square_immoveable {
@@ -156,10 +154,10 @@ const isDefended = computed<boolean>(() => {
 }
 
 .square_hover_safe {
-  border: 5px solid var(--color_safe);
+  border: 5px solid $color_safe;
 }
 
 .square_hover_unsafe {
-  border: 5px solid var(--color_unsafe);
+  border: 5px solid $color_unsafe;
 }
 </style>
