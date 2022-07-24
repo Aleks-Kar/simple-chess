@@ -99,65 +99,65 @@ $color_unsafe: hsl(330, 75%, 50%);
   border: 5px solid transparent;
   pointer-events: none;
   user-select: none;
-}
 
-.square:active {
-  z-index: 10;
-}
+  &:active {
+    z-index: 10;
+  }
 
-.square_cursor_pointer {
-  cursor: pointer;
-}
+  &_cursor_pointer {
+    cursor: pointer;
+  }
 
-.square_background_white {
-  background-color: hsl(40, 63%, 82%);
-}
+  &_background_white {
+    background-color: hsl(40, 63%, 82%);
+  }
 
-.square_background_black {
-  background-color: hsl(29, 34%, 55%);
-}
+  &_background_black {
+    background-color: hsl(29, 34%, 55%);
+  }
 
-.square_active_safe {
-  border: 5px solid $color_safe;
-}
+  &_active_safe {
+    border: 5px solid $color_safe;
+  }
 
-.square_active_unsafe {
-  border: 5px solid $color_unsafe;
-}
+  &_active_unsafe {
+    border: 5px solid $color_unsafe;
+  }
 
-.square_last-moves_for-white {
-  background-color: hsl(65, 50%, 60%);
-}
+  &_last-moves_for-white {
+    background-color: hsl(65, 50%, 60%);
+  }
 
-.square_last-moves_for-black {
-  background-color: hsl(55, 50%, 40%);
-}
+  &_last-moves_for-black {
+    background-color: hsl(55, 50%, 40%);
+  }
 
-.square_moveable_safe::after,
-.square_moveable_unsafe::after {
-  content: '';
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
+  &_moveable_safe::after,
+  &_moveable_unsafe::after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }
 
-.square_moveable_safe::after {
-  background-color: $color_safe;
-}
+  &_moveable_safe::after {
+    background-color: $color_safe;
+  }
 
-.square_moveable_unsafe::after {
-  background-color: $color_unsafe;
-}
+  &_moveable_unsafe::after {
+    background-color: $color_unsafe;
+  }
 
-.square_immoveable {
-  background-color: hsl(0, 100%, 58%);
-}
+  &_immoveable {
+    background-color: hsl(0, 100%, 58%);
+  }
 
-.square_hover_safe {
-  border: 5px solid $color_safe;
-}
+  &_hover_safe {
+    border: 5px solid $color_safe;
+  }
 
-.square_hover_unsafe {
-  border: 5px solid $color_unsafe;
+  &_hover_unsafe {
+    border: 5px solid $color_unsafe;
+  }
 }
 </style>

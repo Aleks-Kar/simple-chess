@@ -155,13 +155,13 @@ $row-height: 50px;
   text-align: center;
   vertical-align: middle;
   border-collapse: collapse;
-}
 
-.notation__title {
-  height: $row-height;
-  border: $table-border;
-  background-color: hsl(245, 55%, 75%);
-  user-select: none;
+  &__title {
+    height: $row-height;
+    border: $table-border;
+    background-color: hsl(245, 55%, 75%);
+    user-select: none;
+  }
 }
 
 .notation__row {
@@ -186,13 +186,13 @@ $row-height: 50px;
   & + & {
     width: 140px;
   }
-}
 
-.notation__cell_background_green {
-  background-color: hsl(120, 35%, 55%);
-}
+  &_background_green {
+    background-color: hsl(120, 35%, 55%);
+  }
 
-.notation__cell_background_light-green {
-  background-color: hsl(120, 35%, 70%);
+  &_background_light-green {
+    background-color: hsl(120, 35%, 70%);
+  }
 }
 </style>

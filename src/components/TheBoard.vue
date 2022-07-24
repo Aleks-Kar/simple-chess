@@ -63,21 +63,21 @@ $height: 800px;
   font-weight: bold;
   background-color: hsl(29, 34%, 55%);
   user-select: none;
-}
 
-.board__field {
-  display: flex;
-  flex-direction: column-reverse;
-  height: $height;
-  margin-top: 40px;
-  margin-right: 40px;
-  border: 4px solid black;
-}
+  &__field {
+    display: flex;
+    flex-direction: column-reverse;
+    height: $height;
+    margin-top: 40px;
+    margin-right: 40px;
+    border: 4px solid black;
+  }
 
-.board__row {
-  display: flex;
-  width: $width;
-  height: $height;
+  &__row {
+    display: flex;
+    width: $width;
+    height: $height;
+  }
 }
 
 .board_naming_horizontal {

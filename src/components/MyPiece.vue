@@ -66,11 +66,11 @@ const isKingUnderAttack = computed<boolean>(() => {
     <svg
       v-if="props.color === 'white'"
       class="piece_color_white"
-      :class="{ 'piece_king-under-attack': isKingUnderAttack }"></svg>
+      :class="{ 'piece_under-attack': isKingUnderAttack }"></svg>
     <svg
       v-else-if="props.color === 'black'"
       class="piece_color_black"
-      :class="{ 'piece_king-under-attack': isKingUnderAttack }"></svg>
+      :class="{ 'piece_under-attack': isKingUnderAttack }"></svg>
   </div>
 </template>
 
@@ -103,25 +103,25 @@ const isKingUnderAttack = computed<boolean>(() => {
     right: -5px;
     background-image: v-bind(urlSvgDefend);
   }
-}
 
-.piece_color_white,
-.piece_color_black {
-  width: 90px;
-  height: 90px;
-  background-size: cover;
-}
+  &_color_white,
+  &_color_black {
+    width: 90px;
+    height: 90px;
+    background-size: cover;
+  }
 
-.piece_color_white {
-  background-image: v-bind(urlWhitePiece);
-}
+  &_color_white {
+    background-image: v-bind(urlWhitePiece);
+  }
 
-.piece_color_black {
-  background-image: v-bind(urlBlackPiece);
-}
+  &_color_black {
+    background-image: v-bind(urlBlackPiece);
+  }
 
-.piece_king-under-attack {
-  color: red;
-  filter: drop-shadow(0 0 10px) drop-shadow(0 0 10px) drop-shadow(0 0 10px);
+  &_under-attack {
+    color: red;
+    filter: drop-shadow(0 0 10px) drop-shadow(0 0 10px) drop-shadow(0 0 10px);
+  }
 }
 </style>
