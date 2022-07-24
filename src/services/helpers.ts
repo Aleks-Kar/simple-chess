@@ -193,16 +193,13 @@ export function getAttackedSquares(
   }
 
   if (piece.toUpperCase() === 'B') {
-    // bishop, the upper right corner attack
-    angularUpperRight()
-    // bishop, the lower right corner attack
-    angularLowerRight()
-    // bishop, the lower left corner attack
-    angularLowerLeft()
-    // bishop, the upper left corner attack
-    angularUpperLeft()
+    /* Bishop */
+    angularUpperRight() // the upper right corner attack
+    angularLowerRight() // the lower right corner attack
+    angularLowerLeft() // the lower left corner attack
+    angularUpperLeft() // the upper left corner attack
   } else if (piece.toUpperCase() === 'K') {
-    /* king attacks */
+    /* King */
     if (y < 7) attackedSquares[x + (y + 1) * 8] = true // top
     if (x < 7 && y < 7) attackedSquares[x + 1 + (y + 1) * 8] = true // upper right
     if (x < 7) attackedSquares[x + 1 + y * 8] = true // right
@@ -212,7 +209,7 @@ export function getAttackedSquares(
     if (x > 0) attackedSquares[x - 1 + y * 8] = true // left
     if (x > 0 && y < 7) attackedSquares[x - 1 + (y + 1) * 8] = true // upper left
   } else if (piece.toUpperCase() === 'N') {
-    /* knight attacks */
+    /* Knight */
     if (x > 0 && y < 6) attackedSquares[x - 1 + (y + 2) * 8] = true // top left
     if (x < 7 && y < 6) attackedSquares[x + 1 + (y + 2) * 8] = true // top right
     if (x < 6 && y < 7) attackedSquares[x + 2 + (y + 1) * 8] = true // right top
@@ -222,7 +219,7 @@ export function getAttackedSquares(
     if (x > 1 && y > 0) attackedSquares[x - 2 + (y - 1) * 8] = true // left bottom
     if (x > 1 && y < 7) attackedSquares[x - 2 + (y + 1) * 8] = true // left top
   } else if (piece.toUpperCase() === 'P') {
-    /* pawn attacks */
+    /* Pawn */
     if (piece.toUpperCase() === piece) {
       // the left corner attack of the white pawn
       if (x > 0 && y < 7) attackedSquares[x - 1 + (y + 1) * 8] = true
@@ -238,31 +235,21 @@ export function getAttackedSquares(
     // pawn, taking on the pass
     // ...
   } else if (piece.toUpperCase() === 'Q') {
-    // queen, the up attack
-    orthoUp()
-    // queen, the upper right corner attack
-    angularUpperRight()
-    // queen, the right attack
-    orthoRight()
-    // queen, the lower right corner attack
-    angularLowerRight()
-    // queen, the down attack
-    orthoDown()
-    // queen, the lower left corner attack
-    angularLowerLeft()
-    // queen, the left attack
-    orthoLeft()
-    // queen, the upper left corner attack
-    angularUpperLeft()
+    /* Queen */
+    orthoUp() // the up attack
+    angularUpperRight() // the upper right corner attack
+    orthoRight() // the right attack
+    angularLowerRight() // the lower right corner attack
+    orthoDown() // the down attack
+    angularLowerLeft() // the lower left corner attack
+    orthoLeft() // the left attack
+    angularUpperLeft() // the upper left corner attack
   } else if (piece.toUpperCase() === 'R') {
-    // rook, the up attack
-    orthoUp()
-    // rook, the right attack
-    orthoRight()
-    // rook, the down attack
-    orthoDown()
-    // rook, the left attack
-    orthoLeft()
+    /* Rook */
+    orthoUp() // the up attack
+    orthoRight() // the right attack
+    orthoDown() // the down attack
+    orthoLeft() // the left attack
   }
 
   return attackedSquares
