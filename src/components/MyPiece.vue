@@ -25,13 +25,8 @@ function getUrlBlack(): string {
   return new URL(`/src/assets/pieces/b${str}.svg`, import.meta.url).href
 }
 
-const urlWhitePiece = computed<string>(() => {
-  return `url(${getUrlWhite()})`
-})
-
-const urlBlackPiece = computed<string>(() => {
-  return `url(${getUrlBlack()})`
-})
+const urlWhitePiece = computed<string>(() => `url(${getUrlWhite()})`)
+const urlBlackPiece = computed<string>(() => `url(${getUrlBlack()})`)
 
 const urlSvgAttack = computed<string>(() => {
   if (
