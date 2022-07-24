@@ -58,7 +58,7 @@ const update = () => key.value++
   </div>
 </template>
 
-<style>
+<style lang="scss">
 body {
   margin: 0;
   padding: 0;
@@ -83,9 +83,9 @@ body {
   flex-direction: column;
   align-items: center;
   margin-left: 40px;
-}
 
-.notation__container button {
-  margin-bottom: 15px;
+  button {
+    margin-bottom: 15px;
+  }
 }
 </style>

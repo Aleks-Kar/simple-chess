@@ -79,47 +79,49 @@ const isKingUnderAttack = computed<boolean>(() => {
   </div>
 </template>
 
-<style>
+<style lang="scss">
 .piece {
   width: 90px;
   height: 90px;
   pointer-events: stroke;
   user-select: none;
+
+  &::before,
+  &::after {
+    position: absolute;
+    content: '';
+    background-size: cover;
+  }
+
+  &::before {
+    width: 18px;
+    height: 18px;
+    top: -3px;
+    left: -3px;
+    background-image: v-bind(urlSvgAttack);
+  }
+
+  &::after {
+    width: 24px;
+    height: 24px;
+    top: -5px;
+    right: -5px;
+    background-image: v-bind(urlSvgDefend);
+  }
 }
 
-.piece::before {
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  top: -3px;
-  left: -3px;
-  content: '';
-  background-size: cover;
-  background-image: v-bind(urlSvgAttack);
-}
-
-.piece::after {
-  position: absolute;
-  width: 24px;
-  height: 24px;
-  top: -5px;
-  right: -5px;
-  content: '';
-  background-size: cover;
-  background-image: v-bind(urlSvgDefend);
-}
-
-.piece_color_white {
-  width: 90px;
-  height: 90px;
-  background-size: cover;
-  background-image: v-bind(urlWhitePiece);
-}
-
+.piece_color_white,
 .piece_color_black {
   width: 90px;
   height: 90px;
   background-size: cover;
+}
+
+.piece_color_white {
+  background-image: v-bind(urlWhitePiece);
+}
+
+.piece_color_black {
   background-image: v-bind(urlBlackPiece);
 }
 
