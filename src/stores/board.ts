@@ -202,36 +202,36 @@ export const useStore = defineStore('board', {
       if (this.turn !== this.getPieceColor(index)) return
       if (this.activeIndex !== 64 && index === this.activeIndex)
         this.isReactivated = true
-      if (this.isReactivated) return
-
       this.lmbIsPressed = true
       this.dragIndex = index
+
+      if (this.isReactivated) return
 
       this.activeIndex = index
       // calculates the attacks once again if the page had been reloaded
       if (this.underWhiteAttack[0] === undefined) this.calculateAttacks()
 
       const piece = this.getPiece(index)
-      const movesOfKing = Array<boolean>(64)
+      let movesOfKing = Array<boolean>(64)
       movesOfKing.fill(false)
 
       if (piece.toUpperCase() === 'P') {
         // exclusive moves for a pawn
-        this.squaresForMove = [...getPawnMoves(this.arrangement, 'P', index)]
+        this.squaresForMove = getPawnMoves(this.arrangement, piece, index)
       } else if (piece.toUpperCase() === 'K') {
         // exclusive moves for a king
-        const attackedSquares = getAttackedSquares(this.arrangement, 'K', index)
+        // movesOfKing = [...getAttackedSquares(this.arrangement, 'K', index)]
 
-        const color = this.getPieceColor(index)
-        for (let i = 0; i < 64; i++) {
-          if (attackedSquares[i]) {
-            if (color === 'white' && this.underBlackAttack[i]) {
-              attackedSquares[i] = false
-            } else if (color === 'black' && this.underWhiteAttack[i]) {
-              attackedSquares[i] = false
-            }
-          }
-        }
+        // const color = this.getPieceColor(index)
+        // for (let i = 0; i < 64; i++) {
+        //   if (movesOfKing[i]) {
+        //     if (color === 'white' && this.underBlackAttack[i]) {
+        //       movesOfKing[i] = false
+        //     } else if (color === 'black' && this.underWhiteAttack[i]) {
+        //       movesOfKing[i] = false
+        //     }
+        //   }
+        // }
 
         if (this.turn === 'white') {
           // short castling
@@ -292,9 +292,7 @@ export const useStore = defineStore('board', {
         this.squaresForMove = [...movesOfKing]
       } else {
         // moves for other pieces
-        this.squaresForMove = [
-          ...getAttackedSquares(this.arrangement, piece, index)
-        ]
+        this.squaresForMove = getAttackedSquares(this.arrangement, piece, index)
       }
 
       this.checkWhiteKing()
