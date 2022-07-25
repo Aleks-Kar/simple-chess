@@ -280,3 +280,52 @@ export function getHoverIndex(
 
   return x - 1 + y * 8
 }
+
+export function getCoordFromIndex(index: number): number[] {
+  const y = Math.trunc(index / 8)
+  const x = index - y * 8
+  return [x, y]
+}
+
+export function getSquareIndexesInBetween(
+  index1: number,
+  index2: number
+): number[] {
+  const array1 = getCoordFromIndex(index1)
+  const array2 = getCoordFromIndex(index2)
+  // console.warn(array1, array2)
+
+  const outcome: number[] = []
+
+  if (array1[0] === array2[0]) {
+    // vertical
+    const length = Math.abs(array1[1] - array2[1]) - 1
+    const lowBound = Math.min(array1[1], array2[1]) + 1
+    for (let i = lowBound; i < lowBound + length; i++) {
+      outcome.push(Math.min(array1[0], array2[0]) + i * 8)
+    }
+  } else if (array1[1] === array2[1]) {
+    // horizontal
+    const length = Math.abs(array1[0] - array2[0]) - 1
+    const lowBound = Math.min(array1[0], array2[0]) + 1
+    for (let i = lowBound; i < lowBound + length; i++) {
+      outcome.push(i + Math.min(array1[1], array2[1]) * 8)
+    }
+  } else {
+    // diagonal
+    const x = Math.min(array1[0], array2[0])
+    const y = x === array1[0] ? array1[1] : array2[1]
+    const z = x === array1[0] ? array2[1] : array1[1]
+    const length = Math.abs(array1[0] - array2[0]) - 1
+
+    if (y < z) {
+      // from lower left corner to upper right corner
+      for (let i = 1; i <= length; i++) outcome.push(x + i + (y + i) * 8)
+    } else {
+      // from upper left corner to lower right corner
+      for (let i = 1; i <= length; i++) outcome.push(x + y * 8 - 7 * i)
+    }
+  }
+
+  return outcome
+}

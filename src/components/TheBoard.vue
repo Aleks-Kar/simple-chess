@@ -59,8 +59,6 @@ $height: 800px;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  font-size: 30px;
-  font-weight: bold;
   background-color: hsl(29, 34%, 55%);
   user-select: none;
 
@@ -82,6 +80,8 @@ $height: 800px;
 
 .board_naming_horizontal {
   display: flex;
+  font-size: 30px;
+  font-weight: bold;
 
   div {
     text-align: center;
@@ -100,6 +100,8 @@ $height: 800px;
 
 .board_naming_vertical {
   height: $height;
+  font-size: 30px;
+  font-weight: bold;
 
   div {
     text-align: center;

@@ -2,7 +2,9 @@ import { defineStore } from 'pinia'
 import {
   getAttackedSquares,
   getHoverIndex,
-  getPawnMoves
+  getPawnMoves,
+  getCoordFromIndex,
+  getSquareIndexesInBetween
 } from '../services/helpers'
 
 export const useStore = defineStore('board', {
@@ -124,8 +126,8 @@ export const useStore = defineStore('board', {
         this.draggedItem.style.top = 0
         this.draggedItem.style.cursor = ''
       } else {
-        this.checkWhiteKing()
-        this.checkBlackKing()
+        // this.checkWhiteKing()
+        // this.checkBlackKing()
         this.hadCaptured = this.getPiece(this.hoverIndex)
 
         /* handle special cases */
@@ -200,103 +202,177 @@ export const useStore = defineStore('board', {
       if (this.turn !== this.getPieceColor(index)) return
       if (this.activeIndex !== 64 && index === this.activeIndex)
         this.isReactivated = true
+      if (this.isReactivated) return
 
       this.lmbIsPressed = true
       this.dragIndex = index
 
-      if (!this.isReactivated) {
-        this.activeIndex = index
-        // calculates the attacks once again if the page had been reloaded
-        if (this.underWhiteAttack[0] === undefined) this.calculateAttacks()
+      this.activeIndex = index
+      // calculates the attacks once again if the page had been reloaded
+      if (this.underWhiteAttack[0] === undefined) this.calculateAttacks()
 
-        const piece = this.getPiece(index)
+      const piece = this.getPiece(index)
+      const movesOfKing = Array<boolean>(64)
+      movesOfKing.fill(false)
 
-        if (piece.toUpperCase() === 'P') {
-          // exclusive moves for a pawn
-          this.squaresForMove = [
-            ...getPawnMoves(this.arrangement, piece, index)
-          ]
-        } else if (piece.toUpperCase() === 'K') {
-          // exclusive moves for a king
-          const attackedSquares = getAttackedSquares(
-            this.arrangement,
-            piece,
-            index
-          )
+      if (piece.toUpperCase() === 'P') {
+        // exclusive moves for a pawn
+        this.squaresForMove = [...getPawnMoves(this.arrangement, 'P', index)]
+      } else if (piece.toUpperCase() === 'K') {
+        // exclusive moves for a king
+        const attackedSquares = getAttackedSquares(this.arrangement, 'K', index)
 
-          const color = this.getPieceColor(index)
-          for (let i = 0; i < 64; i++) {
-            if (attackedSquares[i]) {
-              if (color === 'white' && this.underBlackAttack[i]) {
-                attackedSquares[i] = false
-              } else if (color === 'black' && this.underWhiteAttack[i]) {
-                attackedSquares[i] = false
+        const color = this.getPieceColor(index)
+        for (let i = 0; i < 64; i++) {
+          if (attackedSquares[i]) {
+            if (color === 'white' && this.underBlackAttack[i]) {
+              attackedSquares[i] = false
+            } else if (color === 'black' && this.underWhiteAttack[i]) {
+              attackedSquares[i] = false
+            }
+          }
+        }
+
+        if (this.turn === 'white') {
+          // short castling
+          if (
+            !this.whiteKingHadBeenMoved &&
+            !this.rWhiteRookHadBeenMoved &&
+            this.arrangement[5] === '' &&
+            this.arrangement[6] === '' &&
+            !this.underBlackAttack[4] &&
+            !this.underBlackAttack[5] &&
+            !this.underBlackAttack[6]
+          ) {
+            movesOfKing[6] = true
+          }
+
+          // long castling
+          if (
+            !this.whiteKingHadBeenMoved &&
+            !this.lWhiteRookHadBeenMoved &&
+            this.arrangement[1] === '' &&
+            this.arrangement[2] === '' &&
+            this.arrangement[3] === '' &&
+            !this.underBlackAttack[2] &&
+            !this.underBlackAttack[3] &&
+            !this.underBlackAttack[4]
+          ) {
+            movesOfKing[2] = true
+          }
+        } else if (this.turn === 'black') {
+          // short castling
+          if (
+            !this.blackKingHadBeenMoved &&
+            !this.lBlackRookHadBeenMoved &&
+            this.arrangement[61] === '' &&
+            this.arrangement[62] === '' &&
+            !this.underWhiteAttack[60] &&
+            !this.underWhiteAttack[61] &&
+            !this.underWhiteAttack[62]
+          ) {
+            movesOfKing[62] = true
+          }
+
+          // long castling
+          if (
+            !this.blackKingHadBeenMoved &&
+            !this.rBlackRookHadBeenMoved &&
+            this.arrangement[57] === '' &&
+            this.arrangement[58] === '' &&
+            this.arrangement[59] === '' &&
+            !this.underWhiteAttack[58] &&
+            !this.underWhiteAttack[59] &&
+            !this.underWhiteAttack[60]
+          ) {
+            movesOfKing[58] = true
+          }
+        }
+
+        this.squaresForMove = [...movesOfKing]
+      } else {
+        // moves for other pieces
+        this.squaresForMove = [
+          ...getAttackedSquares(this.arrangement, piece, index)
+        ]
+      }
+
+      this.checkWhiteKing()
+      this.checkBlackKing()
+
+      if (this.whiteKingUnderAttack || this.blackKingUnderAttack) {
+        // looks for which square the threat is coming from
+        let kingIndex = 0
+        if (this.whiteKingUnderAttack) {
+          kingIndex = this.arrangement.indexOf('K')
+        } else {
+          kingIndex = this.arrangement.indexOf('k')
+        }
+
+        const attackedSquares = getAttackedSquares(
+          this.arrangement,
+          'Q',
+          kingIndex
+        )
+
+        for (let i = 0; i < 64; i++) {
+          // looks for attacked pieces
+          if (attackedSquares[i] && this.getPiece(i) !== '') {
+            // looks for enemy pieces
+            if (!this.isWhitePiece(i) && this.turn === 'white') {
+              // checks if enemy piece has attack the king
+              const squaresAttackedByEnemyPiece = getAttackedSquares(
+                this.arrangement,
+                this.getPiece(i),
+                i
+              )
+
+              const enemyPieceIndex = i
+
+              let flag = false
+              for (let i = 0; i < 64; i++) {
+                if (squaresAttackedByEnemyPiece[i]) {
+                  if (i === kingIndex) {
+                    flag = true
+                    break
+                  }
+                }
+              }
+
+              if (flag) {
+                /* searches the indexes of squares between
+                   the king and the enemy piece */
+
+                const indexesInBetween = getSquareIndexesInBetween(
+                  kingIndex,
+                  enemyPieceIndex
+                )
+
+                // console.warn('indexes', indexesInBetween)
+
+                const kingMoves = getAttackedSquares(
+                  this.arrangement,
+                  'K',
+                  index
+                )
+
+                /* exclusion of moves of allied pieces
+                  that are not aimed at protecting the king */
+                for (let i = 0; i < 64; i++) {
+                  // if (piece === 'K' && kingMoves[i]) continue
+                  if (i === enemyPieceIndex) continue
+
+                  if (this.squaresForMove[i]) {
+                    if (!indexesInBetween.includes(i)) {
+                      this.squaresForMove[i] = false
+                    }
+                  }
+                }
+
+                break
               }
             }
           }
-
-          if (this.turn === 'white') {
-            // short castling
-            if (
-              !this.whiteKingHadBeenMoved &&
-              !this.rWhiteRookHadBeenMoved &&
-              this.arrangement[5] === '' &&
-              this.arrangement[6] === '' &&
-              !this.underBlackAttack[4] &&
-              !this.underBlackAttack[5] &&
-              !this.underBlackAttack[6]
-            ) {
-              attackedSquares[6] = true
-            }
-
-            // long castling
-            if (
-              !this.whiteKingHadBeenMoved &&
-              !this.lWhiteRookHadBeenMoved &&
-              this.arrangement[1] === '' &&
-              this.arrangement[2] === '' &&
-              this.arrangement[3] === '' &&
-              !this.underBlackAttack[2] &&
-              !this.underBlackAttack[3] &&
-              !this.underBlackAttack[4]
-            ) {
-              attackedSquares[2] = true
-            }
-          } else if (this.turn === 'black') {
-            // short castling
-            if (
-              !this.blackKingHadBeenMoved &&
-              !this.lBlackRookHadBeenMoved &&
-              this.arrangement[61] === '' &&
-              this.arrangement[62] === '' &&
-              !this.underWhiteAttack[60] &&
-              !this.underWhiteAttack[61] &&
-              !this.underWhiteAttack[62]
-            ) {
-              attackedSquares[62] = true
-            }
-
-            // long castling
-            if (
-              !this.blackKingHadBeenMoved &&
-              !this.rBlackRookHadBeenMoved &&
-              this.arrangement[57] === '' &&
-              this.arrangement[58] === '' &&
-              this.arrangement[59] === '' &&
-              !this.underWhiteAttack[58] &&
-              !this.underWhiteAttack[59] &&
-              !this.underWhiteAttack[60]
-            ) {
-              attackedSquares[58] = true
-            }
-          }
-
-          this.squaresForMove = [...attackedSquares]
-        } else {
-          // moves for other pieces
-          this.squaresForMove = [
-            ...getAttackedSquares(this.arrangement, piece, index)
-          ]
         }
       }
     },
