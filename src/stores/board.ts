@@ -266,7 +266,7 @@ export const useStore = defineStore('board', {
             // short castling
             if (
               !this.blackKingHadBeenMoved &&
-              !this.rBlackRookHadBeenMoved &&
+              !this.lBlackRookHadBeenMoved &&
               this.arrangement[61] === '' &&
               this.arrangement[62] === '' &&
               !this.underWhiteAttack[60] &&
@@ -279,7 +279,7 @@ export const useStore = defineStore('board', {
             // long castling
             if (
               !this.blackKingHadBeenMoved &&
-              !this.lBlackRookHadBeenMoved &&
+              !this.rBlackRookHadBeenMoved &&
               this.arrangement[57] === '' &&
               this.arrangement[58] === '' &&
               this.arrangement[59] === '' &&

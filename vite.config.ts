@@ -9,6 +9,7 @@ export default defineConfig({
   base: "/simple-chess/",
   server: {
     open: "/simple-chess/index.html",
+    port: 3000,
   },
   resolve: {
     alias: {
