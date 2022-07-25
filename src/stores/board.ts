@@ -202,6 +202,7 @@ export const useStore = defineStore('board', {
       if (this.turn !== this.getPieceColor(index)) return
       if (this.activeIndex !== 64 && index === this.activeIndex)
         this.isReactivated = true
+
       this.lmbIsPressed = true
       this.dragIndex = index
 
