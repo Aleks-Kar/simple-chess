@@ -3,7 +3,6 @@ import {
   getAttackedSquares,
   getHoverIndex,
   getPawnMoves,
-  getCoordFromIndex,
   getSquareIndexesInBetween
 } from '../services/helpers'
 

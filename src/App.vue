@@ -74,8 +74,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-size: cover;
-  // background-color: hsl(0, 30%, 75%);
-  background-color: hsl(240, 15%, 35%);
+  background-color: hsl(240, 25%, 25%);
   /* overflow: hidden; */
 }
 

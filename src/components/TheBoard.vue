@@ -60,6 +60,7 @@ $height: 800px;
   justify-content: center;
   align-items: center;
   background-color: hsl(29, 34%, 55%);
+  border-radius: 20px;
   user-select: none;
 
   &__field {
