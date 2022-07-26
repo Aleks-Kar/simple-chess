@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { useKingStore } from './king'
 import {
   getAttackedSquares,
   getHoverIndex,
@@ -132,23 +133,8 @@ export const useBoardStore = defineStore('board', {
         /* handle special cases */
         // castling
         if (this.getPiece(this.dragIndex).toUpperCase() === 'K') {
-          if (this.turn === 'white') {
-            if (this.dragIndex === 4 && this.hoverIndex === 6) {
-              this.arrangement[7] = ''
-              this.arrangement[5] = 'R'
-            } else if (this.dragIndex === 4 && this.hoverIndex === 2) {
-              this.arrangement[0] = ''
-              this.arrangement[3] = 'R'
-            }
-          } else if (this.turn === 'black') {
-            if (this.dragIndex === 60 && this.hoverIndex === 62) {
-              this.arrangement[63] = ''
-              this.arrangement[61] = 'r'
-            } else if (this.dragIndex === 60 && this.hoverIndex === 58) {
-              this.arrangement[56] = ''
-              this.arrangement[59] = 'r'
-            }
-          }
+          const king = useKingStore()
+          king.place()
         }
 
         // saves the dragged piece and "moves" it
@@ -212,26 +198,26 @@ export const useBoardStore = defineStore('board', {
       if (this.underWhiteAttack[0] === undefined) this.calculateAttacks()
 
       const piece = this.getPiece(index)
-      let movesOfKing = Array<boolean>(64)
-      movesOfKing.fill(false)
+      // let movesOfKing = Array<boolean>(64)
+      // movesOfKing.fill(false)
 
       if (piece.toUpperCase() === 'P') {
         // exclusive moves for a pawn
         this.squaresForMove = getPawnMoves(this.arrangement, piece, index)
       } else if (piece.toUpperCase() === 'K') {
         // exclusive moves for a king
-        // movesOfKing = [...getAttackedSquares(this.arrangement, 'K', index)]
+        const movesOfKing = [...getAttackedSquares(this.arrangement, 'K', index)]
 
-        // const color = this.getPieceColor(index)
-        // for (let i = 0; i < 64; i++) {
-        //   if (movesOfKing[i]) {
-        //     if (color === 'white' && this.underBlackAttack[i]) {
-        //       movesOfKing[i] = false
-        //     } else if (color === 'black' && this.underWhiteAttack[i]) {
-        //       movesOfKing[i] = false
-        //     }
-        //   }
-        // }
+        const color = this.getPieceColor(index)
+        for (let i = 0; i < 64; i++) {
+          if (movesOfKing[i]) {
+            if (color === 'white' && this.underBlackAttack[i]) {
+              movesOfKing[i] = false
+            } else if (color === 'black' && this.underWhiteAttack[i]) {
+              movesOfKing[i] = false
+            }
+          }
+        }
 
         if (this.turn === 'white') {
           // short castling
@@ -348,24 +334,24 @@ export const useBoardStore = defineStore('board', {
 
                 // console.warn('indexes', indexesInBetween)
 
-                const kingMoves = getAttackedSquares(
-                  this.arrangement,
-                  'K',
-                  index
-                )
+                // const kingMoves = getAttackedSquares(
+                //   this.arrangement,
+                //   'K',
+                //   index
+                // )
 
                 /* exclusion of moves of allied pieces
                   that are not aimed at protecting the king */
-                for (let i = 0; i < 64; i++) {
-                  // if (piece === 'K' && kingMoves[i]) continue
-                  if (i === enemyPieceIndex) continue
+                // for (let i = 0; i < 64; i++) {
+                //   // if (piece === 'K' && kingMoves[i]) continue
+                //   if (i === enemyPieceIndex) continue
 
-                  if (this.squaresForMove[i]) {
-                    if (!indexesInBetween.includes(i)) {
-                      this.squaresForMove[i] = false
-                    }
-                  }
-                }
+                //   if (this.squaresForMove[i]) {
+                //     if (!indexesInBetween.includes(i)) {
+                //       this.squaresForMove[i] = false
+                //     }
+                //   }
+                // }
 
                 break
               }
