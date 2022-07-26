@@ -1,57 +1,57 @@
 <script setup lang="ts">
 import { computed } from '@vue/reactivity'
-import { useStore } from '../stores/board'
+import { useBoardStore } from '../stores/board'
 import MyPiece from '@/components/MyPiece.vue'
 
 const props = defineProps<{ index: number }>()
-const store = useStore()
+const board = useBoardStore()
 
-const piece = store.getPiece(props.index)
+const piece = board.getPiece(props.index)
 const index = props.index
 
 /* THE MOUSE DOWN EVENT */
 function mouseDown(e: MouseEvent): void {
-  store.mouseDownHandler(e, index)
+  board.mouseDownHandler(e, index)
 }
 
 /* UI VARIABLES */
-const isWhiteSquare = computed<boolean>(() => store.isWhiteSquare(index))
-const isLastMove = computed<boolean>(() => store.lastMove.includes(index))
-const isActive = computed<boolean>(() => index === store.activeIndex)
+const isWhiteSquare = computed<boolean>(() => board.isWhiteSquare(index))
+const isLastMove = computed<boolean>(() => board.lastMove.includes(index))
+const isActive = computed<boolean>(() => index === board.activeIndex)
 const hasCursor = computed<boolean>(
-  () => store.turn === store.getPieceColor(index)
+  () => board.turn === board.getPieceColor(index)
 )
 
 const isHover = computed<boolean>(() => {
-  return index !== store.activeIndex && index === store.hoverIndex
+  return index !== board.activeIndex && index === board.hoverIndex
 })
 
 const isAlly = computed<boolean>(() => {
-  return piece !== '' && store.getPieceColor(index) === store.turn
+  return piece !== '' && board.getPieceColor(index) === board.turn
 })
 
 const isSafe = computed<boolean>(() => {
   return (
-    (!store.underWhiteAttack[index] && store.turn === 'black') ||
-    (!store.underBlackAttack[index] && store.turn === 'white')
+    (!board.underWhiteAttack[index] && board.turn === 'black') ||
+    (!board.underBlackAttack[index] && board.turn === 'white')
   )
 })
 
 const isMoveable = computed<boolean>(() => {
-  return store.squaresForMove[index] && index !== store.activeIndex
+  return board.squaresForMove[index] && index !== board.activeIndex
 })
 
 const isAttacked = computed<boolean>(() => {
   return (
-    (store.underWhiteAttack[index] && !store.isWhitePiece(index)) ||
-    (store.underBlackAttack[index] && store.isWhitePiece(index))
+    (board.underWhiteAttack[index] && !board.isWhitePiece(index)) ||
+    (board.underBlackAttack[index] && board.isWhitePiece(index))
   )
 })
 
 const isDefended = computed<boolean>(() => {
   return (
-    (store.underWhiteAttack[index] && store.isWhitePiece(index)) ||
-    (store.underBlackAttack[index] && !store.isWhitePiece(index))
+    (board.underWhiteAttack[index] && board.isWhitePiece(index)) ||
+    (board.underBlackAttack[index] && !board.isWhitePiece(index))
   )
 })
 </script>
@@ -79,7 +79,7 @@ const isDefended = computed<boolean>(() => {
       v-if="piece"
       :piece="piece"
       :index="index"
-      :color="store.getPieceColor(index)"
+      :color="board.getPieceColor(index)"
       :attacked="isAttacked"
       :defended="isDefended" />
   </div>

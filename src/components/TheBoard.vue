@@ -1,29 +1,29 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { useStore } from '../stores/board'
+import { useBoardStore } from '../stores/board'
 import MySquare from '@/components/MySquare.vue'
 
-const store = useStore()
+const board = useBoardStore()
 
 function getKey(x: number, y: number): string {
-  return store.getPiece(x + y * 8) + String(x + y * 8)
+  return board.getPiece(x + y * 8) + String(x + y * 8)
 }
 
 onMounted(() => {
   if (localStorage.board) {
     const obj = JSON.parse(localStorage.board)
-    store.arrangement = obj.arrangement
-    store.turn = obj.turn
-    store.lastMove = obj.lastMove
-    store.lWhiteRookHadBeenMoved = obj.lWhiteRookHadBeenMoved
-    store.whiteKingHadBeenMoved = obj.whiteKingHadBeenMoved
-    store.rWhiteRookHadBeenMoved = obj.rWhiteRookHadBeenMoved
-    store.lBlackRookHadBeenMoved = obj.lBlackRookHadBeenMoved
-    store.blackKingHadBeenMoved = obj.blackKingHadBeenMoved
-    store.rBlackRookHadBeenMoved = obj.rBlackRookHadBeenMoved
-    store.calculateAttacks()
+    board.arrangement = obj.arrangement
+    board.turn = obj.turn
+    board.lastMove = obj.lastMove
+    board.lWhiteRookHadBeenMoved = obj.lWhiteRookHadBeenMoved
+    board.whiteKingHadBeenMoved = obj.whiteKingHadBeenMoved
+    board.rWhiteRookHadBeenMoved = obj.rWhiteRookHadBeenMoved
+    board.lBlackRookHadBeenMoved = obj.lBlackRookHadBeenMoved
+    board.blackKingHadBeenMoved = obj.blackKingHadBeenMoved
+    board.rBlackRookHadBeenMoved = obj.rBlackRookHadBeenMoved
+    board.calculateAttacks()
   } else {
-    store.init()
+    board.init()
   }
 })
 </script>
@@ -44,7 +44,7 @@ onMounted(() => {
         </div>
       </div>
       <div class="board_naming_horizontal">
-        <div v-for="char in 'ABCDEFGH'">{{ char }}</div>
+        <div v-for="char in 'abcdefgh'">{{ char }}</div>
       </div>
     </div>
   </div>

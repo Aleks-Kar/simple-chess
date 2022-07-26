@@ -7,7 +7,7 @@ import {
   getSquareIndexesInBetween
 } from '../services/helpers'
 
-export const useStore = defineStore('board', {
+export const useBoardStore = defineStore('board', {
   state: () => {
     return {
       arrangement: Array<string>(64),

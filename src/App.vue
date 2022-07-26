@@ -1,39 +1,39 @@
 <script setup lang="ts">
 import { computed, ref } from '@vue/reactivity'
-import { useStore } from './stores/board'
+import { useBoardStore } from './stores/board'
 import TheBoard from '@/components/TheBoard.vue'
 import TheNotation from '@/components/TheNotation.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 
-const store = useStore()
+const board = useBoardStore()
 const key = ref(0)
 
 /* THE MOUSE MOVE EVENT */
 function mouseMove(e: MouseEvent): void {
-  store.mouseMoveHandler(e)
+  board.mouseMoveHandler(e)
 }
 
 /* THE MOUSE UP EVENT */
 function mouseUp(): void {
-  store.mouseUpHandler()
+  board.mouseUpHandler()
 }
 
 function mouseLeave(): void {
-  if (store.pieceHadBeenMoved && store.dragIndex < 64) store.placePiece()
+  if (board.pieceHadBeenMoved && board.dragIndex < 64) board.placePiece()
 }
 
 function newGame(): void {
   if (localStorage.board) localStorage.removeItem('board')
   if (localStorage.notation) localStorage.removeItem('notation')
-  store.restart()
+  board.restart()
   update()
 }
 
 const turn = computed<string>(() => {
-  if (store.underWhiteAttack[0] === undefined) {
+  if (board.underWhiteAttack[0] === undefined) {
     return ''
   } else {
-    return store.turn
+    return board.turn
   }
 })
 
@@ -50,10 +50,10 @@ const update = () => key.value++
 
     <TheNotation
       :key="key"
-      :arrangement="store.arrangement"
+      :arrangement="board.arrangement"
       :turn="turn"
-      :move="store.lastMove"
-      :had-captured="store.hadCaptured"
+      :move="board.lastMove"
+      :had-captured="board.hadCaptured"
       :auto-scroll="true" />
   </div>
 </template>
@@ -74,7 +74,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-size: cover;
-  background-color: hsl(0, 30%, 75%);
+  // background-color: hsl(0, 30%, 75%);
+  background-color: hsl(240, 15%, 35%);
   /* overflow: hidden; */
 }
 

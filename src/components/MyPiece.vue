@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from '@vue/reactivity'
-import { useStore } from '../stores/board'
+import { useBoardStore } from '../stores/board'
 
 const props = defineProps<{
   piece: string
@@ -10,7 +10,7 @@ const props = defineProps<{
   defended?: boolean
 }>()
 
-const store = useStore()
+const board = useBoardStore()
 
 function getUrl(name: string): string {
   return new URL(`/src/assets/${name}.svg`, import.meta.url).href
@@ -31,8 +31,8 @@ const urlBlackPiece = computed<string>(() => `url(${getUrlBlack()})`)
 const urlSvgAttack = computed<string>(() => {
   if (
     props.attacked &&
-    props.color !== store.turn &&
-    store.squaresForMove[props.index] &&
+    props.color !== board.turn &&
+    board.squaresForMove[props.index] &&
     props.piece.toUpperCase() !== 'K'
   ) {
     return `url(${getUrl('swords')})`
@@ -45,8 +45,8 @@ const urlSvgDefend = computed<string>(() => {
   if (
     props.attacked &&
     props.defended &&
-    props.color !== store.turn &&
-    store.squaresForMove[props.index] &&
+    props.color !== board.turn &&
+    board.squaresForMove[props.index] &&
     props.piece.toUpperCase() !== 'K'
   ) {
     return `url(${getUrl('shield')})`
