@@ -2,20 +2,19 @@
 import { computed } from '@vue/reactivity'
 import { useBoardStore } from '../store/board'
 
-const props = withDefaults(
-  defineProps<{
-    piece: string
-    index: number
-    // color: 'white' | 'black'
-    color: string
-    attacked: boolean
-    defended: boolean
-  }>(),
-  {
-    attacked: false,
-    defended: false
-  }
-)
+export interface Props {
+  piece: string
+  index: number
+  // color: 'white' | 'black'
+  color: string
+  attacked: boolean
+  defended: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  attacked: false,
+  defended: false
+})
 
 const board = useBoardStore()
 
