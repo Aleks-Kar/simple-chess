@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from '@vue/reactivity'
-import { useBoardStore } from '../stores/board'
-import MyPiece from '@/components/MyPiece.vue'
+import { useBoardStore } from '../store/board'
+import MyPiece from './MyPiece.vue'
 
 const props = defineProps<{ index: number }>()
 const board = useBoardStore()
@@ -9,7 +9,6 @@ const board = useBoardStore()
 const piece = board.getPiece(props.index)
 const index = props.index
 
-/* THE MOUSE DOWN EVENT */
 function mouseDown(e: MouseEvent): void {
   board.mouseDownHandler(e, index)
 }
@@ -74,7 +73,6 @@ const isDefended = computed<boolean>(() => {
       { square_hover_safe: isHover && isSafe && isMoveable && !isAlly },
       { square_hover_unsafe: isHover && !isSafe && isMoveable && !isAlly }
     ]">
-    <!-- {{ props.index }} -->
     <MyPiece
       v-if="piece"
       :piece="piece"

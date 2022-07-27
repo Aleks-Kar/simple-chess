@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
-import { useKingStore } from './king'
+import { useKingStore } from '../models/king'
 import {
   getAttackedSquares,
   getHoverIndex,
   getPawnMoves,
   getSquareIndexesInBetween
-} from '../services/helpers'
+} from '../../../services/helpers'
 
 export const useBoardStore = defineStore('board', {
   state: () => {

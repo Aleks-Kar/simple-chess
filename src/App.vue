@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from '@vue/reactivity'
-import { useBoardStore } from './stores/board'
-import TheBoard from '@/components/TheBoard.vue'
-import TheNotation from '@/components/TheNotation.vue'
-import BaseButton from '@/components/ui/BaseButton.vue'
+import { useBoardStore } from './modules/Board/store/board'
+import TheBoard from '@/modules/Board/components/TheBoard.vue'
+import TheNotation from '@/modules/Notation/components/TheNotation.vue'
+import BaseButton from './components/BaseButton.vue';
 
 const board = useBoardStore()
 const key = ref(0)
