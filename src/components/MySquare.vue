@@ -74,7 +74,7 @@ const isDefended = computed<boolean>(() => {
       { square_hover_safe: isHover && isSafe && isMoveable && !isAlly },
       { square_hover_unsafe: isHover && !isSafe && isMoveable && !isAlly }
     ]">
-    {{ props.index }}
+    <!-- {{ props.index }} -->
     <MyPiece
       v-if="piece"
       :piece="piece"

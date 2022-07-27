@@ -206,7 +206,9 @@ export const useBoardStore = defineStore('board', {
         this.squaresForMove = getPawnMoves(this.arrangement, piece, index)
       } else if (piece.toUpperCase() === 'K') {
         // exclusive moves for a king
-        const movesOfKing = [...getAttackedSquares(this.arrangement, 'K', index)]
+        const movesOfKing = [
+          ...getAttackedSquares(this.arrangement, 'K', index)
+        ]
 
         const color = this.getPieceColor(index)
         for (let i = 0; i < 64; i++) {
