@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from '@vue/reactivity'
+import { Square } from '../models/Square'
 import { useBoardStore } from '../store/board'
 import MyPiece from './MyPiece.vue'
 
@@ -15,30 +16,30 @@ function mouseDown(e: MouseEvent): void {
 
 /* UI VARIABLES */
 const isWhiteSquare = computed<boolean>(() => board.isWhiteSquare(index))
-const isLastMove = computed<boolean>(() => board.lastMove.includes(index))
-const isActive = computed<boolean>(() => index === board.activeIndex)
-const hasCursor = computed<boolean>(
-  () => board.turn === board.getPieceColor(index)
-)
+// const isLastMove = computed<boolean>(() => board.lastMove.includes(index))
+// const isActive = computed<boolean>(() => index === board.activeIndex)
+// const hasCursor = computed<boolean>(
+//   () => board.turn === board.getPieceColor(index)
+// )
 
-const isHover = computed<boolean>(() => {
-  return index !== board.activeIndex && index === board.hoverIndex
-})
+// const isHover = computed<boolean>(() => {
+//   return index !== board.activeIndex && index === board.hoverIndex
+// })
 
-const isAlly = computed<boolean>(() => {
-  return piece !== '' && board.getPieceColor(index) === board.turn
-})
+// const isAlly = computed<boolean>(() => {
+//   return piece !== '' && board.getPieceColor(index) === board.turn
+// })
 
-const isSafe = computed<boolean>(() => {
-  return (
-    (!board.underWhiteAttack[index] && board.turn === 'black') ||
-    (!board.underBlackAttack[index] && board.turn === 'white')
-  )
-})
+// const isSafe = computed<boolean>(() => {
+//   return (
+//     (!board.underWhiteAttack[index] && board.turn === 'black') ||
+//     (!board.underBlackAttack[index] && board.turn === 'white')
+//   )
+// })
 
-const isMoveable = computed<boolean>(() => {
-  return board.squaresForMove[index] && index !== board.activeIndex
-})
+// const isMoveable = computed<boolean>(() => {
+//   return board.squaresForMove[index] && index !== board.activeIndex
+// })
 
 const isAttacked = computed<boolean>(() => {
   return (
@@ -61,17 +62,7 @@ const isDefended = computed<boolean>(() => {
     @mousedown="mouseDown($event)"
     :class="[
       { square_background_white: isWhiteSquare },
-      { square_background_black: !isWhiteSquare },
-      { 'square_last-moves_for-white': isLastMove && isWhiteSquare },
-      { 'square_last-moves_for-black': isLastMove && !isWhiteSquare },
-      { square_cursor_pointer: hasCursor },
-      { square_active_safe: isActive && isSafe },
-      { square_active_unsafe: isActive && !isSafe },
-      { square_moveable_safe: isMoveable && isSafe && !isHover },
-      { square_moveable_unsafe: isMoveable && !isSafe && !isHover },
-      { square_immoveable: isHover && (!isMoveable || isAlly) },
-      { square_hover_safe: isHover && isSafe && isMoveable && !isAlly },
-      { square_hover_unsafe: isHover && !isSafe && isMoveable && !isAlly }
+      { square_background_black: !isWhiteSquare }
     ]">
     <MyPiece
       v-if="piece"

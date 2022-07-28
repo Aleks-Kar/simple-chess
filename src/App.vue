@@ -46,15 +46,15 @@ const update = () => key.value++
   </div>
 
   <div class="notation__container">
-    <BaseButton @click="newGame">Новая игра</BaseButton>
+    <!-- <BaseButton @click="newGame">Новая игра</BaseButton> -->
 
-    <TheNotation
+    <!-- <TheNotation
       :key="key"
       :arrangement="board.arrangement"
       :turn="turn"
       :move="board.lastMove"
       :had-captured="board.hadCaptured"
-      :auto-scroll="true" />
+      :auto-scroll="true" /> -->
   </div>
 </template>
 

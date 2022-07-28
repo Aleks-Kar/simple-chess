@@ -1,31 +1,14 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { useBoardStore } from '../store/board';
-import MySquare from './MySquare.vue';
+import { onMounted, reactive } from 'vue'
+// import { useBoardStore } from '../store/board'
+import { Board } from '../models/Board'
+import MySquare from './MySquare.vue'
 
-const board = useBoardStore()
+// const board = useBoardStore()
 
-function getKey(x: number, y: number): string {
-  return board.getPiece(x + y * 8) + String(x + y * 8)
-}
-
-onMounted(() => {
-  if (localStorage.board) {
-    const obj = JSON.parse(localStorage.board)
-    board.arrangement = obj.arrangement
-    board.turn = obj.turn
-    board.lastMove = obj.lastMove
-    board.lWhiteRookHadBeenMoved = obj.lWhiteRookHadBeenMoved
-    board.whiteKingHadBeenMoved = obj.whiteKingHadBeenMoved
-    board.rWhiteRookHadBeenMoved = obj.rWhiteRookHadBeenMoved
-    board.lBlackRookHadBeenMoved = obj.lBlackRookHadBeenMoved
-    board.blackKingHadBeenMoved = obj.blackKingHadBeenMoved
-    board.rBlackRookHadBeenMoved = obj.rBlackRookHadBeenMoved
-    board.calculateAttacks()
-  } else {
-    board.init()
-  }
-})
+// function getKey(x: number, y: number): string {
+//   return board.getPiece(x + y * 8) + String(x + y * 8)
+// }
 </script>
 
 <template>
@@ -33,16 +16,18 @@ onMounted(() => {
     <div class="board_naming_vertical">
       <div v-for="number in '87654321'">{{ number }}</div>
     </div>
+
     <div>
       <div class="board__field">
         <div v-for="(_, y) in 8" class="board__row">
           <MySquare
             v-for="(_, x) in 8"
-            :key="getKey(x, y)"
+            :key="x + y * 8"
             :id="`square${x + y * 8}`"
             :index="x + y * 8" />
         </div>
       </div>
+
       <div class="board_naming_horizontal">
         <div v-for="char in 'abcdefgh'">{{ char }}</div>
       </div>
