@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { onMounted, reactive } from 'vue'
-// import { useBoardStore } from '../store/board'
-import { Board } from '../models/Board'
+import { onMounted } from 'vue'
+import { useBoardStore } from '../store/board'
 import MySquare from './MySquare.vue'
 
-// const board = useBoardStore()
+const board = useBoardStore()
 
-// function getKey(x: number, y: number): string {
-//   return board.getPiece(x + y * 8) + String(x + y * 8)
-// }
+function getKey(x: number, y: number): string {
+  return board.getPiece(x + y * 8) + String(x + y * 8)
+}
 </script>
 
 <template>
@@ -16,18 +15,16 @@ import MySquare from './MySquare.vue'
     <div class="board_naming_vertical">
       <div v-for="number in '87654321'">{{ number }}</div>
     </div>
-
     <div>
       <div class="board__field">
         <div v-for="(_, y) in 8" class="board__row">
           <MySquare
             v-for="(_, x) in 8"
-            :key="x + y * 8"
+            :key="getKey(x, y)"
             :id="`square${x + y * 8}`"
             :index="x + y * 8" />
         </div>
       </div>
-
       <div class="board_naming_horizontal">
         <div v-for="char in 'abcdefgh'">{{ char }}</div>
       </div>
