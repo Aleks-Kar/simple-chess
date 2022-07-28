@@ -16,9 +16,9 @@ export class Board {
       const row: Square[] = []
       for (let j = 0; j < 8; j++) {
         if ((i + j) % 2 !== 0) {
-          row.push(new Square(this, j, i, Colors.BLACK, null)) // black square
+          row.push(new Square(j, i, Colors.BLACK, null)) // black square
         } else {
-          row.push(new Square(this, j, i, Colors.WHITE, null)) // white square
+          row.push(new Square(j, i, Colors.WHITE, null)) // white square
         }
       }
 

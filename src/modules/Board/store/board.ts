@@ -6,6 +6,7 @@ import {
   getPawnMoves,
   getSquareIndexesInBetween
 } from '../../../services/helpers'
+import { Board } from '../models/Board'
 
 export const useBoardStore = defineStore('board', {
   state: () => {
