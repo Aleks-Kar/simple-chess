@@ -14,7 +14,7 @@ import MySquare from './MySquare.vue'
 const chessBoard: Board = new Board()
 chessBoard.initSquares()
 const squares: Square[][] = chessBoard.squares
-console.warn(squares[0])
+// console.warn(squares[0])
 </script>
 
 <template>
@@ -31,10 +31,13 @@ console.warn(squares[0])
             :id="`square${x + y * 8}`"
             :index="x + y * 8" />
         </div> -->
-        <!-- <div v-for="(_, y) in 8" class="board__row">
-          <div v-for="square in chessBoard.squares[y]">{{ square }}</div> -->
+
         <div v-for="(_, y) in 8" class="board__row">
-          <div v-for="square in squares[y]" class="square">{{ square.y }}</div>
+          <MySquare
+            v-for="(square, x) in squares[y]"
+            :key="x + y * 8"
+            :id="square.id"
+            :square="square" />
         </div>
       </div>
 
@@ -48,6 +51,8 @@ console.warn(squares[0])
 <style lang="scss">
 $width: 800px;
 $height: 800px;
+$color_safe: hsl(240, 70%, 50%);
+$color_unsafe: hsl(330, 75%, 50%);
 
 .board {
   display: flex;

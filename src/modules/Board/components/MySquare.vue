@@ -4,18 +4,19 @@ import { Square } from '../models/Square'
 import { useBoardStore } from '../store/board'
 import MyPiece from './MyPiece.vue'
 
-const props = defineProps<{ index: number }>()
-const board = useBoardStore()
+const props = defineProps<{ square: Square }>()
+// const board = useBoardStore()
 
-const piece = board.getPiece(props.index)
-const index = props.index
+// const piece = board.getPiece(props.index)
+// const index = props.index
 
 function mouseDown(e: MouseEvent): void {
-  board.mouseDownHandler(e, index)
+  // board.mouseDownHandler(e, index)
 }
 
 /* UI VARIABLES */
-const isWhiteSquare = computed<boolean>(() => board.isWhiteSquare(index))
+// const isWhiteSquare = computed<boolean>(() => board.isWhiteSquare(index))
+
 // const isLastMove = computed<boolean>(() => board.lastMove.includes(index))
 // const isActive = computed<boolean>(() => index === board.activeIndex)
 // const hasCursor = computed<boolean>(
@@ -41,19 +42,19 @@ const isWhiteSquare = computed<boolean>(() => board.isWhiteSquare(index))
 //   return board.squaresForMove[index] && index !== board.activeIndex
 // })
 
-const isAttacked = computed<boolean>(() => {
-  return (
-    (board.underWhiteAttack[index] && !board.isWhitePiece(index)) ||
-    (board.underBlackAttack[index] && board.isWhitePiece(index))
-  )
-})
+// const isAttacked = computed<boolean>(() => {
+//   return (
+//     (board.underWhiteAttack[index] && !board.isWhitePiece(index)) ||
+//     (board.underBlackAttack[index] && board.isWhitePiece(index))
+//   )
+// })
 
-const isDefended = computed<boolean>(() => {
-  return (
-    (board.underWhiteAttack[index] && board.isWhitePiece(index)) ||
-    (board.underBlackAttack[index] && !board.isWhitePiece(index))
-  )
-})
+// const isDefended = computed<boolean>(() => {
+//   return (
+//     (board.underWhiteAttack[index] && board.isWhitePiece(index)) ||
+//     (board.underBlackAttack[index] && !board.isWhitePiece(index))
+//   )
+// })
 </script>
 
 <template>
@@ -61,16 +62,17 @@ const isDefended = computed<boolean>(() => {
     class="square"
     @mousedown="mouseDown($event)"
     :class="[
-      { square_background_white: isWhiteSquare },
-      { square_background_black: !isWhiteSquare }
+      { square_background_white: props.square.isWhiteSquare() },
+      { square_background_black: !props.square.isWhiteSquare() }
     ]">
-    <MyPiece
+    {{ square.id }}
+    <!-- <MyPiece
       v-if="piece"
       :piece="piece"
       :index="index"
       :color="board.getPieceColor(index)"
       :attacked="isAttacked"
-      :defended="isDefended" />
+      :defended="isDefended" /> -->
   </div>
 </template>
 

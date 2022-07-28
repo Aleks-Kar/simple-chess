@@ -11,6 +11,8 @@ import { Board } from '../models/Board'
 export const useBoardStore = defineStore('board', {
   state: () => {
     return {
+      squares: [],
+
       arrangement: Array<string>(64),
       turn: 'white',
       lastMove: Array<number>(2),

@@ -2,27 +2,35 @@ import { Colors } from './Color'
 import { Square } from './Square'
 
 export class Board {
-  // squares: string[] = []
   squares: Square[][] = []
+  lastMove: number[] = [64, 64]
+  activeIndex: number = 64
 
-  public initSquares() {
+  initSquares() {
     // const whitePieces: string = 'RNBQKBNRPPPPPPPP'
     // const blackPieces: string = 'pppppppprnbqkbnr'
     // for (let i = 0; i < 16; i++) this.squares[i] = whitePieces[i]
     // for (let i = 16; i < 48; i++) this.squares[i] = ''
     // for (let i = 48; i < 64; i++) this.squares[i] = blackPieces[i - 48]
 
-    for (let i = 0; i < 8; i++) {
+    for (let y = 0; y < 8; y++) {
       const row: Square[] = []
-      for (let j = 0; j < 8; j++) {
-        if ((i + j) % 2 !== 0) {
-          row.push(new Square(j, i, Colors.BLACK, null)) // black square
+      for (let x = 0; x < 8; x++) {
+        if ((x + y) % 2 !== 0) {
+          row.push(new Square(x, y, Colors.BLACK, null)) // black square
         } else {
-          row.push(new Square(j, i, Colors.WHITE, null)) // white square
+          row.push(new Square(x, y, Colors.WHITE, null)) // white square
         }
       }
 
       this.squares.push(row)
     }
   }
+
+  setSquare(index: string): void {}
+
+  // isActive() {
+  //   const index = this.x * this.y
+  //   return index === board.activeIndex
+  // }
 }
