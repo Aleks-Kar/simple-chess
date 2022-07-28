@@ -61,10 +61,7 @@ function mouseDown(e: MouseEvent): void {
   <div
     class="square"
     @mousedown="mouseDown($event)"
-    :class="[
-      { square_background_white: props.square.isWhiteSquare() },
-      { square_background_black: !props.square.isWhiteSquare() }
-    ]">
+    :class="[{ square_background_white: props.square.isWhiteSquare() }]">
     {{ square.id }}
     <!-- <MyPiece
       v-if="piece"
@@ -88,6 +85,7 @@ $color_unsafe: hsl(330, 75%, 50%);
   width: 90px;
   height: 90px;
   border: 5px solid transparent;
+  background-color: hsl(29, 34%, 55%);
   pointer-events: none;
   user-select: none;
 
@@ -101,10 +99,6 @@ $color_unsafe: hsl(330, 75%, 50%);
 
   &_background_white {
     background-color: hsl(40, 63%, 82%);
-  }
-
-  &_background_black {
-    background-color: hsl(29, 34%, 55%);
   }
 
   &_active_safe {

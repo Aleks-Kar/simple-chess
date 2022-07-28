@@ -16,11 +16,7 @@ export class Board {
     for (let y = 0; y < 8; y++) {
       const row: Square[] = []
       for (let x = 0; x < 8; x++) {
-        if ((x + y) % 2 !== 0) {
-          row.push(new Square(x, y, Colors.BLACK, null)) // black square
-        } else {
-          row.push(new Square(x, y, Colors.WHITE, null)) // white square
-        }
+        row.push(new Square(x, y, null))
       }
 
       this.squares.push(row)
