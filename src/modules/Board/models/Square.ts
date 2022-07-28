@@ -7,7 +7,7 @@ export class Square {
   readonly y: number
   // readonly color: Colors
   piece: Piece | null
-  available: boolean
+  available: boolean = true
   id: string
   active: boolean = false
 
@@ -15,7 +15,6 @@ export class Square {
     this.x = x
     this.y = y
     this.piece = piece
-    this.available = false
     this.id = String(x + y * 8)
   }
 

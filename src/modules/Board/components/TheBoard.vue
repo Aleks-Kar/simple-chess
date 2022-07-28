@@ -1,23 +1,41 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { Board } from '../models/Board'
 import { Square } from '../models/Square'
 import { useBoardStore } from '../store/board'
 import MySquare from './MySquare.vue'
 
-// const chessBoard = useBoardStore()
+const store = useBoardStore()
 
 // function getKey(x: number, y: number): string {
 //   return board.getPiece(x + y * 8) + String(x + y * 8)
 // }
 
+const key = ref(0)
+
 const chessBoard: Board = new Board()
 chessBoard.initSquares()
 const squares: Square[][] = chessBoard.squares
-// console.warn(squares[0])
+
+// chessBoard.setSquare(3, 'p')
+// console.warn(squares[7][0])
+// for (let y = 0; y < 8; y++) {
+//   store.p
+// }
+
+store.squares = squares
+
+const fn = function () {
+  chessBoard.setSquare(3, 'W')
+  key.value++
+}
+
+console.warn(store.squares[7][0])
 </script>
 
 <template>
+  <button @click="fn">ДЕЙСТВИЕ</button>
+
   <div class="board">
     <div class="board_notation_vertical">
       <div v-for="number in '87654321'">{{ number }}</div>
@@ -35,7 +53,7 @@ const squares: Square[][] = chessBoard.squares
         <div v-for="(_, y) in 8" class="board__row">
           <MySquare
             v-for="(square, x) in squares[y]"
-            :key="x + y * 8"
+            :key="x + y * 8 + key"
             :id="square.id"
             :square="square" />
         </div>
@@ -53,6 +71,12 @@ $width: 800px;
 $height: 800px;
 $color_safe: hsl(240, 70%, 50%);
 $color_unsafe: hsl(330, 75%, 50%);
+
+button {
+  width: 200px;
+  height: 70px;
+  font-size: 30px;
+}
 
 .board {
   display: flex;

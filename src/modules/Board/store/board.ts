@@ -7,11 +7,13 @@ import {
   getSquareIndexesInBetween
 } from '../../../services/helpers'
 import { Board } from '../models/Board'
+import { Square } from '../models/Square'
 
 export const useBoardStore = defineStore('board', {
   state: () => {
     return {
-      squares: [],
+      // squares: Array<Array<number>>,
+      squares: [] as Square[][],
 
       arrangement: Array<string>(64),
       turn: 'white',

@@ -62,7 +62,7 @@ function mouseDown(e: MouseEvent): void {
     class="square"
     @mousedown="mouseDown($event)"
     :class="[{ square_background_white: props.square.isWhiteSquare() }]">
-    {{ square.id }}
+    _{{ square.piece }}_ {{square.id}}
     <!-- <MyPiece
       v-if="piece"
       :piece="piece"
@@ -84,6 +84,7 @@ $color_unsafe: hsl(330, 75%, 50%);
   align-items: center;
   width: 90px;
   height: 90px;
+  font-size: 30px;
   border: 5px solid transparent;
   background-color: hsl(29, 34%, 55%);
   pointer-events: none;
