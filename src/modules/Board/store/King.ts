@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { useBoardStore } from '../../store/board'
+import { useBoardStore } from './board'
 
 export const useKingStore = defineStore('king', {
   state: () => {

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { useKingStore } from '../models/pieces/King'
+import { useKingStore } from './King'
 import {
   getAttackedSquares,
   getHoverIndex,
