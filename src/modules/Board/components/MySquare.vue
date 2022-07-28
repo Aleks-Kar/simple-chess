@@ -5,7 +5,7 @@ import { useBoardStore } from '../store/board'
 import MyPiece from './MyPiece.vue'
 
 const props = defineProps<{ square: Square }>()
-// const board = useBoardStore()
+const board = useBoardStore()
 
 // const piece = board.getPiece(props.index)
 // const index = props.index
@@ -62,7 +62,7 @@ function mouseDown(e: MouseEvent): void {
     class="square"
     @mousedown="mouseDown($event)"
     :class="[{ square_background_white: props.square.isWhiteSquare() }]">
-    _{{ square.piece }}_ {{square.id}}
+    {{ square.piece }} {{ square.id }}
     <!-- <MyPiece
       v-if="piece"
       :piece="piece"

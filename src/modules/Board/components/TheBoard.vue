@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onBeforeMount, onMounted, ref } from 'vue'
 import { Board } from '../models/Board'
 import { Square } from '../models/Square'
 import { useBoardStore } from '../store/board'
@@ -13,24 +13,15 @@ const store = useBoardStore()
 
 const key = ref(0)
 
-const chessBoard: Board = new Board()
-chessBoard.initSquares()
-const squares: Square[][] = chessBoard.squares
-
-// chessBoard.setSquare(3, 'p')
-// console.warn(squares[7][0])
-// for (let y = 0; y < 8; y++) {
-//   store.p
-// }
-
-store.squares = squares
-
 const fn = function () {
-  chessBoard.setSquare(3, 'W')
   key.value++
 }
 
-console.warn(store.squares[7][0])
+onBeforeMount(() => {
+  const chessBoard: Board = new Board()
+  chessBoard.initSquares()
+  store.squares = chessBoard.squares
+})
 </script>
 
 <template>
@@ -52,7 +43,7 @@ console.warn(store.squares[7][0])
 
         <div v-for="(_, y) in 8" class="board__row">
           <MySquare
-            v-for="(square, x) in squares[y]"
+            v-for="(square, x) in store.squares[y]"
             :key="x + y * 8 + key"
             :id="square.id"
             :square="square" />
