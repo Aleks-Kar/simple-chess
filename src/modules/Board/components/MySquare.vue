@@ -8,20 +8,29 @@ const props = defineProps<{ square: Square }>()
 const board = useBoardStore()
 
 // const piece = board.getPiece(props.index)
-// const index = props.index
+const index = props.square.index
 
 function mouseDown(e: MouseEvent): void {
   // board.mouseDownHandler(e, index)
 }
 
 /* UI VARIABLES */
-// const isWhiteSquare = computed<boolean>(() => board.isWhiteSquare(index))
+const isWhiteSquare = computed<boolean>(() => props.square.isWhiteSquare())
+// const isAvailable
+const isLastMove = computed<boolean>(() => props.square.isLast())
+const isActive = computed<boolean>(() => props.square.isActive())
 
-// const isLastMove = computed<boolean>(() => board.lastMove.includes(index))
-// const isActive = computed<boolean>(() => index === board.activeIndex)
 // const hasCursor = computed<boolean>(
 //   () => board.turn === board.getPieceColor(index)
 // )
+
+// const isSafe = computed<boolean>(() => {
+//   return (
+//     (!board.underWhiteAttack[index] && board.turn === 'black') ||
+//     (!board.underBlackAttack[index] && board.turn === 'white')
+//   )
+// })
+const isSafe = computed<boolean>(() => props.square.isSafe())
 
 // const isHover = computed<boolean>(() => {
 //   return index !== board.activeIndex && index === board.hoverIndex
@@ -29,13 +38,6 @@ function mouseDown(e: MouseEvent): void {
 
 // const isAlly = computed<boolean>(() => {
 //   return piece !== '' && board.getPieceColor(index) === board.turn
-// })
-
-// const isSafe = computed<boolean>(() => {
-//   return (
-//     (!board.underWhiteAttack[index] && board.turn === 'black') ||
-//     (!board.underBlackAttack[index] && board.turn === 'white')
-//   )
 // })
 
 // const isMoveable = computed<boolean>(() => {
@@ -61,8 +63,15 @@ function mouseDown(e: MouseEvent): void {
   <div
     class="square"
     @mousedown="mouseDown($event)"
-    :class="[{ square_background_white: props.square.isWhiteSquare() }]">
-    {{ square.piece }} {{ square.id }}
+    :class="[
+      { square_background_white: isWhiteSquare },
+      { 'square_last-moves_for-white': isLastMove && isWhiteSquare },
+      { 'square_last-moves_for-black': isLastMove && !isWhiteSquare },
+
+      { square_active_safe: isActive && isSafe },
+      { square_active_unsafe: isActive && !isSafe }
+    ]">
+    {{ square.piece }} {{ square.index }}
     <!-- <MyPiece
       v-if="piece"
       :piece="piece"

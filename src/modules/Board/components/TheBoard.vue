@@ -14,13 +14,18 @@ const store = useBoardStore()
 const key = ref(0)
 
 const fn = function () {
-  key.value++
+  store.chessBoard.setLastMove(24, 25)
+  console.warn(store.chessBoard.turn);
+  
 }
 
 onBeforeMount(() => {
   const chessBoard: Board = new Board()
-  chessBoard.initSquares()
-  store.squares = chessBoard.squares
+  chessBoard.initArrangement()
+  // console.warn(chessBoard.squares[1][0])
+
+  store.chessBoard = chessBoard
+  // store.squares = chessBoard.squares
 })
 </script>
 
@@ -33,19 +38,11 @@ onBeforeMount(() => {
     </div>
     <div>
       <div class="board__field">
-        <!-- <div v-for="(_, y) in 8" class="board__row">
-          <MySquare
-            v-for="(_, x) in 8"
-            :key="x + y * 8"
-            :id="`square${x + y * 8}`"
-            :index="x + y * 8" />
-        </div> -->
-
         <div v-for="(_, y) in 8" class="board__row">
           <MySquare
-            v-for="(square, x) in store.squares[y]"
+            v-for="(square, x) in store.chessBoard.squares[y]"
             :key="x + y * 8 + key"
-            :id="square.id"
+            :id="square.index"
             :square="square" />
         </div>
       </div>

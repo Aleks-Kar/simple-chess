@@ -13,11 +13,12 @@ export const useBoardStore = defineStore('board', {
   state: () => {
     return {
       // squares: Array<Array<number>>,
-      squares: [] as Square[][],
+      chessBoard: {} as Board,
 
       arrangement: Array<string>(64),
       turn: 'white',
       lastMove: Array<number>(2),
+      
       lWhiteRookHadBeenMoved: false,
       whiteKingHadBeenMoved: false,
       rWhiteRookHadBeenMoved: false,
