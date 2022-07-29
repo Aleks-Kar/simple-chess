@@ -1,4 +1,4 @@
-import { Color } from './PieceColors'
+import { Color } from './PieceColors.js'
 
 export abstract class Piece {
   // color: Colors = Colors.WHITE

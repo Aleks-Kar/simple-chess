@@ -1,10 +1,10 @@
-import { Rook } from './pieces/Rook'
-import { Knight } from './pieces/Knight'
-import { Piece } from './pieces/Piece'
-import { Bishop } from './pieces/Bishop'
-import { Pawn } from './pieces/Pawn'
-import { Square } from './Square'
-import { Color } from './pieces/PieceColors'
+import { Rook } from './pieces/Rook.js'
+import { Knight } from './pieces/Knight.js'
+import { Piece } from './pieces/Piece.js'
+import { Bishop } from './pieces/Bishop.js'
+import { Pawn } from './pieces/Pawn.js'
+import { Square } from './Square.js'
+import { Color } from './pieces/PieceColors.js'
 
 export class Board {
   squares: Square[][] = []

@@ -1,5 +1,5 @@
 // import { Board } from './Board'
-import { Piece } from './pieces/Piece'
+import { Piece } from './pieces/Piece.js'
 import { Bishop } from './pieces/Bishop'
 import { Pawn } from './pieces/Pawn'
 import { Knight } from './pieces/Knight'

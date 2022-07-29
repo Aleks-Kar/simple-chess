@@ -1,5 +1,5 @@
-import { Piece } from './Piece'
-import { Color } from './PieceColors'
+import { Piece } from './Piece.js'
+import { Color } from './PieceColors.js'
 
 export class Rook extends Piece {
   iconUrl: string
