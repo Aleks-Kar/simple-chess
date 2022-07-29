@@ -8,6 +8,8 @@ import { Rook } from '../models/pieces/Rook'
 const props = defineProps<{ square: Square }>()
 // const board = useBoardStore()
 
+const pc = props.square.piece
+
 // const piece = board.getPiece(props.index)
 const index = props.square.index
 
@@ -80,6 +82,7 @@ const isSafe = computed<boolean>(() => props.square.isSafe())
       :color="board.getPieceColor(index)"
       :attacked="isAttacked"
       :defended="isDefended" /> -->
+
     <MyPiece v-if="square.piece" :piece="square.piece" />
   </div>
 </template>

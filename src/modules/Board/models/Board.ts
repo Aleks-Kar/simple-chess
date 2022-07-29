@@ -1,8 +1,10 @@
-import { Colors } from './Constants'
-import { Piece } from './Piece'
-import { Bishop } from './pieces/Bishop'
 import { Rook } from './pieces/Rook'
+import { Knight } from './pieces/Knight'
+import { Piece } from './pieces/Piece'
+import { Bishop } from './pieces/Bishop'
+import { Pawn } from './pieces/Pawn'
 import { Square } from './Square'
+import { Color } from './pieces/PieceColors'
 
 export class Board {
   squares: Square[][] = []
@@ -10,20 +12,38 @@ export class Board {
   lastMove: number[] = [64, 64]
   activeIndex: number = 64
 
+  constructor() {
+    this.init()
+  }
+
   private getCoordinatesFromIndex(index: number): number[] {
     const y = Math.trunc(index / 8)
     const x = index - y * 8
     return [x, y]
   }
 
-  initArrangement() {
-    // const whitePieces: string = 'RNBQKBNRPPPPPPPP'
-    // const blackPieces: string = 'pppppppprnbqkbnr'
+  private getPieceFromString(char: string): Piece {
+    const color = char === char.toUpperCase() ? Color.WHITE : Color.BLACK
+    if (char.toUpperCase() === 'R') {
+      return new Rook(color)
+    } else if (char.toUpperCase() === 'N') {
+      return new Knight(color)
+    } else if (char.toUpperCase() === 'B') {
+      return new Bishop(color)
+    } else {
+      return new Pawn(color)
+    }
+  }
+
+  init() {
+    const whitePieces: string = 'RNBQKBNRPPPPPPPP'
+    const blackPieces: string = 'pppppppprnbqkbnr'
 
     for (let y = 0; y < 8; y++) {
       if (y >= 0 && y <= 1) {
         const row: Square[] = []
-        for (let x = 0; x < 8; x++) row.push(new Square(x, y, new Rook(Colors.WHITE)))
+        for (let x = 0; x < 8; x++)
+          row.push(new Square(x, y, new Rook(Color.WHITE)))
         this.squares.push(row)
       } else if (y >= 2 && y <= 5) {
         const row: Square[] = []
@@ -31,7 +51,8 @@ export class Board {
         this.squares.push(row)
       } else {
         const row: Square[] = []
-        for (let x = 0; x < 8; x++) row.push(new Square(x, y, new Bishop(Colors.BLACK)))
+        for (let x = 0; x < 8; x++)
+          row.push(new Square(x, y, new Bishop(Color.BLACK)))
         this.squares.push(row)
       }
     }

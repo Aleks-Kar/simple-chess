@@ -1,24 +1,27 @@
 // import { Board } from './Board'
-import { Piece } from './Piece'
+import { Piece } from './pieces/Piece'
 import { Bishop } from './pieces/Bishop'
+import { Pawn } from './pieces/Pawn'
+import { Knight } from './pieces/Knight'
 import { Rook } from './pieces/Rook'
 
 export class Square {
   readonly x: number
   readonly y: number
-  piece: Rook | Bishop | null
+  piece: Piece | null
   index: string
 
   available: boolean = true
-  last: boolean = false
+  last: boolean 
   active: boolean = false
   safe: boolean = true
 
-  constructor(x: number, y: number, piece: Rook | Bishop | null) {
+  constructor(x: number, y: number, piece: Piece | null = null) {
     this.x = x
     this.y = y
     this.piece = piece
     this.index = String(x + y * 8)
+    this.last = false
   }
 
   isWhiteSquare() {

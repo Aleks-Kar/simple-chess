@@ -4,8 +4,14 @@ import { Board } from '../models/Board'
 import { Square } from '../models/Square'
 import { useBoardStore } from '../store/board'
 import MySquare from './MySquare.vue'
+import { Rook } from '../models/pieces/Rook'
+import { Piece } from '../models/pieces/Piece'
 
 const store = useBoardStore()
+
+store.chessBoard = new Board()
+// console.warn(store.chessBoard.squares[0][0])
+const rk = store.chessBoard.squares[0][0].piece
 
 // function getKey(x: number, y: number): string {
 //   return board.getPiece(x + y * 8) + String(x + y * 8)
@@ -15,18 +21,12 @@ const key = ref(0)
 
 const fn = function () {
   store.chessBoard.setLastMove(24, 25)
-  console.warn(store.chessBoard.turn);
-  
+  console.warn(store.chessBoard.turn)
 }
 
-onBeforeMount(() => {
-  const chessBoard: Board = new Board()
-  chessBoard.initArrangement()
-  // console.warn(chessBoard.squares[1][0])
-
-  store.chessBoard = chessBoard
-  // store.squares = chessBoard.squares
-})
+// onBeforeMount(() => {
+//   store.chessBoard = new Board()
+// })
 </script>
 
 <template>
@@ -36,6 +36,7 @@ onBeforeMount(() => {
     <div class="board_notation_vertical">
       <div v-for="number in '87654321'">{{ number }}</div>
     </div>
+    
     <div>
       <div class="board__field">
         <div v-for="(_, y) in 8" class="board__row">

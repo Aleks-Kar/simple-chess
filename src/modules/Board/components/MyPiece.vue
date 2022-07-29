@@ -2,7 +2,7 @@
 import { computed } from '@vue/reactivity'
 import exp from 'constants'
 // import { useBoardStore } from '../store/board'
-import { Piece } from '../models/Piece'
+import { Piece } from '../models/pieces/Piece'
 import { Rook } from '../models/pieces/Rook'
 import { Bishop } from '../models/pieces/Bishop'
 
@@ -23,7 +23,7 @@ import { Bishop } from '../models/pieces/Bishop'
 // const props = defineProps<{ piece: Rook | null }>()
 
 export interface Props {
-  piece: Rook | Bishop | null
+  piece: Piece | null
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -48,7 +48,7 @@ const props = withDefaults(defineProps<Props>(), {
 // const urlWhitePiece = computed<string>(() => `url(${getUrlWhite()})`)
 // const urlBlackPiece = computed<string>(() => `url(${getUrlBlack()})`)
 
-const urlPiece = computed<string | undefined>(() => props.piece?.iconUrl)
+const urlPiece = computed<string | undefined>(() => props.piece?.color)
 
 // const urlSvgAttack = computed<string>(() => {
 //   if (
