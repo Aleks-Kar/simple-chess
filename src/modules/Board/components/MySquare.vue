@@ -3,9 +3,10 @@ import { computed } from '@vue/reactivity'
 import { Square } from '../models/Square'
 import { useBoardStore } from '../store/board'
 import MyPiece from './MyPiece.vue'
+import { Rook } from '../models/pieces/Rook'
 
 const props = defineProps<{ square: Square }>()
-const board = useBoardStore()
+// const board = useBoardStore()
 
 // const piece = board.getPiece(props.index)
 const index = props.square.index
@@ -71,7 +72,7 @@ const isSafe = computed<boolean>(() => props.square.isSafe())
       { square_active_safe: isActive && isSafe },
       { square_active_unsafe: isActive && !isSafe }
     ]">
-    {{ square.piece }} {{ square.index }}
+    <!-- {{ square.index }} -->
     <!-- <MyPiece
       v-if="piece"
       :piece="piece"
@@ -79,6 +80,7 @@ const isSafe = computed<boolean>(() => props.square.isSafe())
       :color="board.getPieceColor(index)"
       :attacked="isAttacked"
       :defended="isDefended" /> -->
+    <MyPiece v-if="square.piece" :piece="square.piece" />
   </div>
 </template>
 

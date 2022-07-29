@@ -1,18 +1,20 @@
 // import { Board } from './Board'
-import { Piece } from './pieces/Piece'
+import { Piece } from './Piece'
+import { Bishop } from './pieces/Bishop'
+import { Rook } from './pieces/Rook'
 
 export class Square {
   readonly x: number
   readonly y: number
-  piece: Piece | null
+  piece: Rook | Bishop | null
   index: string
 
   available: boolean = true
   last: boolean = false
   active: boolean = false
-  safe: boolean = true 
+  safe: boolean = true
 
-  constructor(x: number, y: number, piece: Piece | null) {
+  constructor(x: number, y: number, piece: Rook | Bishop | null) {
     this.x = x
     this.y = y
     this.piece = piece

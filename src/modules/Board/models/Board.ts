@@ -1,3 +1,7 @@
+import { Colors } from './Constants'
+import { Piece } from './Piece'
+import { Bishop } from './pieces/Bishop'
+import { Rook } from './pieces/Rook'
 import { Square } from './Square'
 
 export class Board {
@@ -13,15 +17,13 @@ export class Board {
   }
 
   initArrangement() {
-    const whitePieces: string = 'RNBQKBNRPPPPPPPP'
-    const blackPieces: string = 'pppppppprnbqkbnr'
+    // const whitePieces: string = 'RNBQKBNRPPPPPPPP'
+    // const blackPieces: string = 'pppppppprnbqkbnr'
 
     for (let y = 0; y < 8; y++) {
       if (y >= 0 && y <= 1) {
         const row: Square[] = []
-        for (let x = 0; x < 8; x++) {
-          row.push(new Square(x, y, whitePieces[x + y * 8]))
-        }
+        for (let x = 0; x < 8; x++) row.push(new Square(x, y, new Rook(Colors.WHITE)))
         this.squares.push(row)
       } else if (y >= 2 && y <= 5) {
         const row: Square[] = []
@@ -29,9 +31,7 @@ export class Board {
         this.squares.push(row)
       } else {
         const row: Square[] = []
-        for (let x = 0; x < 8; x++) {
-          row.push(new Square(x, y, blackPieces[x + y * 8 - 48]))
-        }
+        for (let x = 0; x < 8; x++) row.push(new Square(x, y, new Bishop(Colors.BLACK)))
         this.squares.push(row)
       }
     }
@@ -43,11 +43,11 @@ export class Board {
     square.active = true
   }
 
-  setPiece(index: number, piece: string): void {
-    const coordinates = this.getCoordinatesFromIndex(index)
-    const square = this.squares[coordinates[1]][coordinates[0]]
-    square.piece = piece
-  }
+  // setPiece(index: number, piece: Piece): void {
+  //   const coordinates = this.getCoordinatesFromIndex(index)
+  //   const square = this.squares[coordinates[1]][coordinates[0]]
+  //   square.piece = Rook
+  // }
 
   setLastMove(index1: number, index2: number) {
     // sets previous set of square to false
